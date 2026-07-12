@@ -24,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 export const Ratios: Story = {
   name: "비율",
   render: () => (
-    <div className="flex w-[720px] items-start gap-4">
+    <div className="flex w-180 items-start gap-4">
       <ImagePlaceholder ratio="16/9" label="16:9" className="w-64" />
       <ImagePlaceholder ratio="4/3" label="4:3" className="w-48" />
       <ImagePlaceholder ratio="1/1" label="1:1" className="w-36" />

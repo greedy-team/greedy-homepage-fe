@@ -20,7 +20,7 @@ const meta = {
   args: { title: "활동" },
   decorators: [
     (Story) => (
-      <div className="w-[640px]">
+      <div className="w-160">
         <Story />
       </div>
     ),
