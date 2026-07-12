@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/cn";
+import { cn, focusRing } from "@/lib/cn";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md font-semibold transition-colors disabled:pointer-events-none disabled:bg-disabled disabled:text-white",
+  cn(
+    "inline-flex items-center justify-center rounded-md font-semibold transition-colors disabled:pointer-events-none disabled:bg-disabled disabled:text-white",
+    focusRing,
+  ),
   {
     variants: {
       variant: {
@@ -13,7 +16,7 @@ const buttonVariants = cva(
         "outline-white": "border border-white text-white hover:bg-white/10",
       },
       size: {
-        sm: "h-8 px-3.5 text-body-sm",
+        sm: "h-8 px-4 text-body-sm",
         md: "h-10 px-4 text-body-sm",
         lg: "h-12 px-6 text-body",
       },

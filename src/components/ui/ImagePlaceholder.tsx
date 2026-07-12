@@ -8,7 +8,7 @@ const imagePlaceholderVariants = cva(
       /** 이미지 비율은 세 가지만 사용 */
       ratio: {
         "16/9": "aspect-video",
-        "4/3": "aspect-[4/3]",
+        "4/3": "aspect-4/3",
         "1/1": "aspect-square",
       },
     },

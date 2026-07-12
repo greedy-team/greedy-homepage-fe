@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/cn";
+import { cn, focusRing } from "@/lib/cn";
 
-const textLinkVariants = cva("text-body-sm transition-colors", {
+const textLinkVariants = cva(cn("text-body-sm transition-colors", focusRing), {
   variants: {
     variant: {
       /** 눌러볼 만한 다음 화면을 알리는 링크. 브랜드색 */
