@@ -1,12 +1,12 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 
-@theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --font-sans: "Pretendard Variable", Pretendard, sans-serif;
 }
 
 body {
   background: var(--color-bg);
   color: var(--color-text);
+  font-family: var(--font-sans);
 }
