@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -17,14 +19,19 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "^10.5.0",
+    "@storybook/addon-docs": "^10.5.0",
+    "@storybook/nextjs-vite": "^10.5.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "eslint-plugin-storybook": "^10.5.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8",
+    "storybook": "^10.5.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
