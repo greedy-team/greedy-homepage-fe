@@ -1,4 +1,4 @@
-import { cn } from "@/lib/cn";
+import { cn } from "@/shared/lib/cn";
 
 type StatProps = {
   /** 어림 표기 없이 확인된 값만 써요 */

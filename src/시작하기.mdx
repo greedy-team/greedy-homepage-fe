@@ -19,10 +19,10 @@ import { Meta } from "@storybook/addon-docs/blocks";
 2. **초록 배경(primary) 버튼은 한 화면에 하나만.** 화면에서 제일 밀어주는 행동이 무엇인지 색이 말해줘요.
 3. **화면 이동은 링크(a), 상태 변경은 버튼.** 버튼 모양이어도 이동이면 `href`를 줘요.
 
-전체 규칙은 레포의 [docs/design-system.md](https://github.com/greedy-team/website/blob/main/docs/design-system.md)에 있어요.
+전체 규칙은 레포의 [docs/design-system.md](https://github.com/greedy-team/greedy-homepage-fe/blob/main/docs/design-system.md)에 있어요.
 
 ## 새 컴포넌트를 추가하려면
 
 1. "디자인 시스템 변경" 이슈를 먼저 만들어요. 공용 컴포넌트는 모든 페이지가 함께 쓰는 기반이에요.
-2. `src/components/ui`에 컴포넌트를 만들고, 옆에 있는 `*.stories.tsx` 하나를 복사해 스토리를 붙여요.
+2. `src/shared/ui`에 컴포넌트를 만들고, 옆에 있는 `*.stories.tsx` 하나를 복사해 스토리를 붙여요.
 3. `docs/design-system.md`의 컴포넌트 표에 한 줄을 더해요.

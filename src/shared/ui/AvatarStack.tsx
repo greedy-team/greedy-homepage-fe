@@ -1,5 +1,5 @@
-import { Avatar, avatarVariants } from "@/components/ui/Avatar";
-import { cn } from "@/lib/cn";
+import { Avatar, avatarVariants } from "@/shared/ui/Avatar";
+import { cn } from "@/shared/lib/cn";
 
 type AvatarStackProps = {
   people: { name: string; src?: string }[];

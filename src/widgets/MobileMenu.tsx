@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
-import { APPLY_FORM_URL, NAV_ITEMS, RECRUIT_FORM_URL } from "@/lib/site";
-import { cn, focusRing } from "@/lib/cn";
+import { Button } from "@/shared/ui/Button";
+import { APPLY_FORM_URL, NAV_ITEMS, RECRUIT_FORM_URL } from "@/shared/config/site";
+import { cn, focusRing } from "@/shared/lib/cn";
 
 type MobileMenuProps = {
   recruiting: boolean;

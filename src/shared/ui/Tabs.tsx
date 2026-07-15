@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { cn, focusRing } from "@/lib/cn";
+import { cn, focusRing } from "@/shared/lib/cn";
 
 type TabItem = { label: string; value: string };
 

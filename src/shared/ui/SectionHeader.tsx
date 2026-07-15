@@ -1,5 +1,5 @@
-import { cn } from "@/lib/cn";
-import { TextLink } from "@/components/ui/TextLink";
+import { cn } from "@/shared/lib/cn";
+import { TextLink } from "@/shared/ui/TextLink";
 
 type SectionHeaderProps = {
   title: string;

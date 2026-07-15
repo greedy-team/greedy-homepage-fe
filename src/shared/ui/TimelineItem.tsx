@@ -1,4 +1,4 @@
-import { cn } from "@/lib/cn";
+import { cn } from "@/shared/lib/cn";
 
 type TimelineItemProps = {
   /** 왼쪽에 붙는 날짜나 주차 라벨 */

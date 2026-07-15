@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn, focusRing } from "@/lib/cn";
+import { cn, focusRing } from "@/shared/lib/cn";
 
 const textLinkVariants = cva(cn("text-body-sm transition-colors", focusRing), {
   variants: {

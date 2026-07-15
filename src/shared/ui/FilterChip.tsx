@@ -1,4 +1,4 @@
-import { cn, focusRing } from "@/lib/cn";
+import { cn, focusRing } from "@/shared/lib/cn";
 
 type FilterChipProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   /** 선택되면 초록 배경으로 바뀌어요 */

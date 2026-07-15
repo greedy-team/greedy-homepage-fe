@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/Button";
-import { cn } from "@/lib/cn";
+import { Button } from "@/shared/ui/Button";
+import { cn } from "@/shared/lib/cn";
 
 type BottomCtaProps = {
   href: string;

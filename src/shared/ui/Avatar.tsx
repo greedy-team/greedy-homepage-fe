@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/cn";
+import { cn } from "@/shared/lib/cn";
 
 export const avatarVariants = cva(
   "inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full font-semibold",
