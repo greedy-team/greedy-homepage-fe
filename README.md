@@ -34,19 +34,18 @@ http://localhost:3000 에서 확인해요.
 
 ### 폴더 구조
 
+레이어로 나누고, import는 위에서 아래로 한 방향만 흘러요 (`eslint-plugin-boundaries`로 강제).
+
 ```
 src/
-  app/              라우트. 조립만 하고 로직은 두지 않아요
-  components/
-    ui/             디자인 시스템 컴포넌트 (Button, Badge, Card ...)
-    layout/         GNB, 푸터처럼 모든 페이지가 쓰는 것
-  data/             하드코딩 콘텐츠 (스터디 커리큘럼 등)
-  services/         페이지가 데이터를 가져가는 유일한 통로
-  api/              백엔드 API 호출과 응답 타입
-  lib/              사이트 상수 (모집 상태, 링크)
+  app/         라우트 + 페이지 조립. 그 페이지 전용 섹션도 여기
+  widgets/     여러 페이지가 쓰는 조합 블록 (GNB, 푸터 ...)
+  features/    동아리원이 붙이는 기능. 하나가 폴더 하나 (지금은 비어 있음)
+  entities/    도메인 (project, member, activity) - api·model
+  shared/      ui(디자인 시스템)·lib·config·styles·api
 ```
 
-콘텐츠(data)와 코드를 분리한 이유는 [ADR 003](docs/adr/003-콘텐츠-코드-분리.md)에 있어요.
+레이어를 왜 이렇게 나눴는지는 [ADR 005](docs/adr/005-폴더-구조-축소형-FSD.md)에, 콘텐츠와 코드를 분리한 이유는 [ADR 003](docs/adr/003-콘텐츠-코드-분리.md)에 있어요.
 
 ### 문서 지도
 
