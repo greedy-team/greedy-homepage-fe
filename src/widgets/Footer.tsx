@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { LINKS, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
-import { TextLink } from "@/components/ui/TextLink";
+import { LINKS, SITE_DESCRIPTION, SITE_NAME } from "@/shared/config/site";
+import { TextLink } from "@/shared/ui/TextLink";
 
 /** 모든 페이지 맨 아래의 푸터. 연락처와 채널로 가는 조용한 링크만 둬요 */
 export function Footer() {

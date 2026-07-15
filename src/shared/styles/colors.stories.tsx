@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { Input } from "@/components/ui/Input";
+import { Button } from "@/shared/ui/Button";
+import { Badge } from "@/shared/ui/Badge";
+import { Input } from "@/shared/ui/Input";
 
 /** 스와치는 CSS 변수를 그대로 그려서 tokens.css와 항상 같은 값을 보여줘요 */
 function TokenSquare({ token, className }: { token: string; className?: string }) {
@@ -38,7 +38,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "색은 이 토큰만 써요. 화면에서는 원색보다 시맨틱 별칭을 먼저 쓰고, 빨강은 오류 표시에만 써요. 값의 원본은 src/styles/tokens.css예요.",
+          "색은 이 토큰만 써요. 화면에서는 원색보다 시맨틱 별칭을 먼저 쓰고, 빨강은 오류 표시에만 써요. 값의 원본은 src/shared/styles/tokens.css예요.",
       },
     },
   },

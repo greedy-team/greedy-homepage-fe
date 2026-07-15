@@ -1,4 +1,4 @@
-import { cn, focusRing } from "@/lib/cn";
+import { cn, focusRing } from "@/shared/lib/cn";
 
 type NavArrowButtonProps = {
   direction: "prev" | "next";

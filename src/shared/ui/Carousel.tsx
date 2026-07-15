@@ -1,8 +1,8 @@
 "use client";
 
 import { Children, useCallback, useEffect, useRef, useState } from "react";
-import { NavArrowButton } from "@/components/ui/PrevNextNav";
-import { cn } from "@/lib/cn";
+import { NavArrowButton } from "@/shared/ui/PrevNextNav";
+import { cn } from "@/shared/lib/cn";
 
 type CarouselProps = {
   /** 카드들. 각 자식이 한 칸이에요 */

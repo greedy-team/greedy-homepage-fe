@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/cn";
+import { cn } from "@/shared/lib/cn";
 
 const cardVariants = cva("rounded-lg p-6", {
   variants: {

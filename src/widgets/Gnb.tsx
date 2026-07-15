@@ -3,10 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/Button";
-import { MobileMenu } from "@/components/layout/MobileMenu";
-import { APPLY_FORM_URL, IS_RECRUITING, NAV_ITEMS, RECRUIT_FORM_URL, SITE_NAME } from "@/lib/site";
-import { cn, focusRing } from "@/lib/cn";
+import { Button } from "@/shared/ui/Button";
+import { MobileMenu } from "@/widgets/MobileMenu";
+import { APPLY_FORM_URL, IS_RECRUITING, NAV_ITEMS, RECRUIT_FORM_URL, SITE_NAME } from "@/shared/config/site";
+import { cn, focusRing } from "@/shared/lib/cn";
 
 type GnbProps = {
   /** 모집 상태. 기본값은 site.ts의 IS_RECRUITING이고, 스토리에서만 바꿔요 */

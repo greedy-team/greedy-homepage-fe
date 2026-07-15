@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
-import { Gnb } from "@/components/layout/Gnb";
-import { Footer } from "@/components/layout/Footer";
-import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import { Gnb } from "@/widgets/Gnb";
+import { Footer } from "@/widgets/Footer";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/shared/config/site";
 
 export const metadata: Metadata = {
   title: {

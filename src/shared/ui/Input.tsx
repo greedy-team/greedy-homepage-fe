@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { cn, focusRing } from "@/lib/cn";
+import { cn, focusRing } from "@/shared/lib/cn";
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   /** 입력창 위에 붙는 이름 */

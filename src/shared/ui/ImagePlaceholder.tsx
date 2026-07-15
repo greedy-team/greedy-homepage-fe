@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/cn";
+import { cn } from "@/shared/lib/cn";
 
 const imagePlaceholderVariants = cva(
   "flex items-center justify-center rounded-md bg-gray-100 text-caption text-text-subtle",
