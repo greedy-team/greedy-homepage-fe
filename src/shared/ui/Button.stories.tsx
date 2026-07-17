@@ -62,6 +62,35 @@ export const Sizes: Story = {
   ),
 };
 
+export const TouchTarget: Story = {
+  name: "규칙: 눌리는 영역 44px",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "버튼이 작으면 손가락으로 정확히 누르기 어려워요. 그래서 누르는 요소는 최소 44px가 되도록 해요. sm(32px)과 md(40px)는 이보다 작지만, 버튼을 키우면 디자인이 달라져요. 그래서 버튼 크기는 그대로 두고, 눌리는 범위만 44px로 넓혔어요. 아래 점선이 그 범위이고, 실제 화면에서는 보이지 않아요. lg는 이미 48px라 넓힐 필요가 없어서 점선이 버튼 안에 있어요.",
+      },
+    },
+  },
+  render: (args) => (
+    <>
+      {/* 눌리는 영역은 원래 보이지 않아요. 이 스토리에서만 점선으로 드러내요 */}
+      <style>{".touch-target :is(button, a)::after { outline: 1px dashed var(--color-text-subtle) }"}</style>
+      <div className="touch-target flex items-end gap-3">
+        <Button {...args} size="sm">
+          sm 32
+        </Button>
+        <Button {...args} size="md">
+          md 40
+        </Button>
+        <Button {...args} size="lg">
+          lg 48
+        </Button>
+      </div>
+    </>
+  ),
+};
+
 export const Disabled: Story = { args: { disabled: true, children: "마감됐어요" } };
 
 export const AsLink: Story = {
