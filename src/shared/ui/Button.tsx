@@ -4,7 +4,9 @@ import { cn, focusRing } from "@/shared/lib/cn";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex items-center justify-center rounded-md font-semibold transition-colors disabled:pointer-events-none disabled:bg-disabled disabled:text-white",
+    "relative inline-flex items-center justify-center rounded-md font-semibold transition-colors disabled:pointer-events-none disabled:bg-disabled disabled:text-white",
+    // 겉모습이 44px보다 작아도 눌리는 영역은 44px를 지켜요. 이미 큰 lg는 영역이 안쪽에 들어가 그대로예요
+    "after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2",
     focusRing,
   ),
   {

@@ -21,7 +21,7 @@ const meta = {
     size: {
       control: "select",
       options: ["sm", "md", "lg"],
-      description: "sm은 표나 카드 안, lg는 랜딩의 주요 버튼. 모바일에서 sm은 md로 키워요",
+      description: "sm은 표나 카드 안, lg는 랜딩의 주요 버튼. 어느 크기든 눌리는 영역은 44px라 그냥 써도 돼요",
     },
     href: { control: "text", description: "값을 주면 버튼 모양의 링크(a)로 렌더링" },
     disabled: { control: "boolean" },
