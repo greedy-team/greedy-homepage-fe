@@ -104,12 +104,10 @@ export function Carousel({ children, itemClassName = "w-80", className }: Carous
   return (
     <div className={cn("flex flex-col gap-5", className)}>
       <div className="flex items-center gap-4">
-        <NavArrowButton
-          direction="prev"
-          onClick={() => goTo(page - 1)}
-          disabled={page === 0}
-          className="hidden sm:inline-flex"
-        />
+        {/* hidden을 버튼에 직접 주면 숨겨지지 않아요. 이유는 design-system.md의 컴포넌트 규칙에 있어요 */}
+        <div className="hidden sm:block">
+          <NavArrowButton direction="prev" onClick={() => goTo(page - 1)} disabled={page === 0} />
+        </div>
         <div
           ref={trackRef}
           onScroll={handleScroll}
@@ -119,12 +117,9 @@ export function Carousel({ children, itemClassName = "w-80", className }: Carous
             <div className={cn("shrink-0 snap-start", itemClassName)}>{child}</div>
           ))}
         </div>
-        <NavArrowButton
-          direction="next"
-          onClick={() => goTo(page + 1)}
-          disabled={page >= pageCount - 1}
-          className="hidden sm:inline-flex"
-        />
+        <div className="hidden sm:block">
+          <NavArrowButton direction="next" onClick={() => goTo(page + 1)} disabled={page >= pageCount - 1} />
+        </div>
       </div>
       <div className="flex justify-center gap-2" aria-hidden>
         {Array.from({ length: pageCount }, (_, i) => (
