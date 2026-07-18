@@ -3,10 +3,10 @@ import { Card } from "@/shared/ui/Card";
 import { Carousel } from "@/shared/ui/Carousel";
 import { ImagePlaceholder } from "@/shared/ui/ImagePlaceholder";
 import { SectionHeader } from "@/shared/ui/SectionHeader";
-import type { Project } from "@/entities/project/model";
+import type { ProjectSummary } from "@/entities/project/model";
 
 type ProjectShowcaseProps = {
-  projects: Project[];
+  projects: ProjectSummary[];
 };
 
 /** 대표 프로젝트 캐러셀. 좁은 화면에서는 스와이프로 넘겨요. */
