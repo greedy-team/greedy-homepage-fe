@@ -1,10 +1,10 @@
 import { ImagePlaceholder } from "@/shared/ui/ImagePlaceholder";
 import { SectionHeader } from "@/shared/ui/SectionHeader";
 import { cn } from "@/shared/lib/cn";
-import type { ActivityItem } from "@/entities/activity/model";
+import type { ActivitySummary } from "@/entities/activity/model";
 
 type ActivityPreviewProps = {
-  activities: ActivityItem[];
+  activities: ActivitySummary[];
 };
 
 /** 최근 활동 미리보기. 데스크톱은 3개, 좁은 화면은 대표 1개만 보여줘요. */
