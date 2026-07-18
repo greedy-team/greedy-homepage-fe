@@ -2,7 +2,8 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/shared/lib/cn";
 
 const badgeVariants = cva(
-  "inline-flex w-fit items-center rounded-full px-3 py-1 text-caption font-semibold",
+  // 배지는 두 단어 이하의 정보라 어디서든 한 줄이에요. 좁은 flex에서 쥐어짜여 꺾이지 않게 해요
+  "inline-flex w-fit shrink-0 items-center whitespace-nowrap rounded-full px-3 py-1 text-caption font-semibold",
   {
     variants: {
       variant: {
