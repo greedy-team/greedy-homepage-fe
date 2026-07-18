@@ -4,6 +4,8 @@
 
 <p align="center">세종대학교 개발 동아리 그리디의 공식 웹사이트예요.</p>
 
+<p align="center"><a href="https://greedy-homepage-fe.vercel.app">greedy-homepage-fe.vercel.app</a></p>
+
 그리디가 어떤 동아리인지 소개하고, 함께한 활동과 사람과 프로젝트를 기록해요. 모집 기간에는 지원 창구가 되고, 평시에는 다음 기수 모집 알림을 신청할 수 있어요.
 
 ## 페이지
