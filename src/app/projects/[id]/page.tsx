@@ -45,7 +45,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<Pa
         </div>
       </div>
       <ProjectIntro project={project} />
-      <ScreenGallery images={project.imageUrls} />
+      <ScreenGallery projectName={project.name} images={project.imageUrls} />
       <Contributors members={project.members} />
       <AdjacentNav prev={prev} next={next} />
     </div>
