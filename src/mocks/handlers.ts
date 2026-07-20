@@ -2,6 +2,7 @@
 // 백엔드 실제 스펙(openapi.yaml) 기준 타입이라, 나중에 entities/*/api.ts가 이 URL로 fetch를 붙이면 그대로 맞아요.
 import { http, HttpResponse } from "msw";
 import { PROJECT_DTOS } from "@/entities/project/dto";
+import { MEMBER_DTOS } from "@/entities/member/dto";
 
 export const handlers = [
   // 목록은 배열을 바로 안 주고 { items: [...] }로 감싸요(실제 스펙 확인함).
@@ -12,4 +13,7 @@ export const handlers = [
     if (!dto) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(dto);
   }),
+
+  // member는 entities/member/api.ts가 상세용 fetch 없이 이 목록만 써요(슬러그↔id 매핑표가 없어서).
+  http.get("*/members", () => HttpResponse.json({ items: MEMBER_DTOS })),
 ];

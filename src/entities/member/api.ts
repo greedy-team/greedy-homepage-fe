@@ -1,7 +1,47 @@
-// 멤버 명단. 기수 조사(노션) 데이터를 옮겼고, API 명세가 확정되면 이 함수 안만 fetch(ISR)로 바꿔요.
+// 멤버 명단. 큐레이션(MEMBERS)에 백엔드 응답(dto)을 합쳐 화면에 내보내요.
 // id는 서버 id가 나올 때까지 이름을 그대로 써요. 사진은 깃허브 아바타(github.com/유저명.png)를 써요.
 // 자기소개(intro)는 이력에 맞춰 임의로 넣은 임시 문구예요. 본인이 보내주는 대로 바꿔요.
+//
+// project와 달리 슬러그↔백엔드id 매핑표가 없어요(지금 id가 이름이라 백엔드 숫자 id와 안 맞음).
+// 그래서 상세 하나만 콕 집어 fetch하지 않고, 목록(/members)을 한 번 불러서 이름으로 찾아요.
+// 인원이 100명이 안 돼서(백엔드도 "필터 없이 전체 반환" 방침) 이 방식이 매핑표 관리보다 간단해요.
 import type { Member } from "./model";
+import type { MemberDto } from "./dto";
+
+const API_BASE_URL = process.env.API_BASE_URL;
+
+/**
+ * 백엔드 응답(dto)과 지금 사이트의 큐레이션 콘텐츠(curated)를 합쳐요.
+ * githubUrl·photoUrl만 백엔드 값으로 덮어쓰고, role·affiliation·cohorts·tracks·history·intro는
+ * 큐레이션을 그대로 유지해요(이유는 dto.ts 상단 주석 참고 — enum이 아직 이 콘텐츠를 다 못 담아요).
+ * dto가 없으면(백엔드 미배포, fetch 실패, 또는 이 멤버가 아직 매핑 안 됨) curated를 그대로 반환해요.
+ */
+function mergeMemberProfile(curated: Member, dto: MemberDto | undefined): Member {
+  if (!dto) return curated;
+
+  return {
+    ...curated,
+    githubUrl: dto.githubUrl ?? curated.githubUrl,
+    photoUrl: dto.imageUrl ?? curated.photoUrl,
+  };
+}
+
+/**
+ * 목록 응답을 가져와요. 실패하거나 API_BASE_URL이 없으면(백엔드 미배포) 빈 배열 —
+ * mergeMemberProfile이 빈 배열을 "dto 없음"으로 처리해서 큐레이션 그대로 나가요.
+ * 실제 스펙은 { items: [...] }로 감싸서 응답해요(프로젝트와 동일한 포맷).
+ */
+async function fetchMemberDtos(): Promise<MemberDto[]> {
+  if (!API_BASE_URL) return [];
+  try {
+    const res = await fetch(`${API_BASE_URL}/members`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const body = (await res.json()) as { items: MemberDto[] };
+    return body.items;
+  } catch {
+    return [];
+  }
+}
 
 const MEMBERS: Member[] = [
   {
@@ -678,15 +718,21 @@ const MEMBERS: Member[] = [
   },
 ];
 
+async function getMergedMembers(): Promise<Member[]> {
+  const dtos = await fetchMemberDtos();
+  const dtoByName = new Map(dtos.map((dto) => [dto.name, dto]));
+  return MEMBERS.map((curated) => mergeMemberProfile(curated, dtoByName.get(curated.name)));
+}
+
 /** 목록 전체. 운영진 → 리뷰어 → 멤버 → 든든한 리뷰어 순서로 담겨 있어요 */
 export async function getMembers(): Promise<Member[]> {
-  // TODO: 백엔드 API 연동 (멤버는 서버에서 관리)
-  return MEMBERS;
+  return getMergedMembers();
 }
 
 /** 프로필 한 명. 없으면 undefined를 줘서 화면이 not-found로 넘겨요 */
 export async function getMember(id: string): Promise<Member | undefined> {
-  return MEMBERS.find((member) => member.id === id);
+  const merged = await getMergedMembers();
+  return merged.find((member) => member.id === id);
 }
 
 /** 기수 필터 목록 */

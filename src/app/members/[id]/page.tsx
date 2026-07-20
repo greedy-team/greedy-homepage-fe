@@ -15,6 +15,8 @@ export async function generateStaticParams() {
   return members.map((member) => ({ id: member.id }));
 }
 
+// 💡 활용 기회: 백엔드 MemberDetail.teamProjects가 이 join을 이미 서버에서 해서 준다
+// (entities/member/dto.ts 참고). MemberDto에 그 필드를 추가하면 이 함수 전체를 없앨 수 있다.
 /** 이 멤버가 함께 만든, 완료된 기수의 프로젝트만 골라요 */
 async function getMemberProjects(name: string): Promise<ProjectSummary[]> {
   const summaries = await getProjects();
