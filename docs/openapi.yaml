@@ -28,7 +28,7 @@ paths:
   /projects:
     get:
       tags: [projects]
-      summary: 전체 프로젝트 목록
+      summary: 전체 프로젝트 목록 (카드용 요약만 — 상세 필드는 /projects/{id}에서)
       responses:
         "200":
           description: OK
@@ -36,7 +36,7 @@ paths:
             application/json:
               schema:
                 type: array
-                items: { $ref: "#/components/schemas/ProjectDetail" }
+                items: { $ref: "#/components/schemas/ProjectSummary" }
 
   /projects/{id}:
     get:
@@ -163,35 +163,43 @@ components:
         name: { type: string }
         stackPosition: { $ref: "#/components/schemas/StackPosition" }
 
-    ProjectDetail:
+    ProjectSummary:
       type: object
-      required: [id, name, summary, thumbnailUrl, generationNumber, siteUrl, backendGithubUrl, frontendGithubUrl, backendStack, frontendStack, imageUrls, memberPreview]
+      description: "목록 카드용 요약."
+      required: [id, name, summary, thumbnailUrl, generationNumber]
       properties:
         id: { type: integer, description: "1~6 고정 배정 — /projects/{id} 설명 참고." }
         name: { type: string }
         summary: { type: string, description: "카드 한 줄 요약." }
         thumbnailUrl: { type: string, nullable: true }
         generationNumber: { type: integer, description: "기수 번호." }
-        purpose: { type: string, nullable: true, description: "어떤 문제를 풀었나요." }
-        mainFunction: { type: string, nullable: true, description: "주요 기능 한 문장." }
-        siteUrl: { type: string, nullable: true, description: "배포 URL." }
-        backendGithubUrl: { type: string, nullable: true }
-        frontendGithubUrl: { type: string, nullable: true }
-        backendStack:
-          type: array
-          items: { type: string }
-          example: ["Java", "Spring Boot", "JPA", "PostgreSQL"]
-        frontendStack:
-          type: array
-          items: { type: string }
-          example: ["React", "TypeScript", "Vite", "Tailwind CSS"]
-        imageUrls:
-          type: array
-          items: { type: string }
-          description: "갤러리 이미지 URL 배열."
-        memberPreview:
-          type: array
-          items: { $ref: "#/components/schemas/ProjectMemberRef" }
+
+    ProjectDetail:
+      allOf:
+        - $ref: "#/components/schemas/ProjectSummary"
+        - type: object
+          required: [siteUrl, backendGithubUrl, frontendGithubUrl, backendStack, frontendStack, imageUrls, memberPreview]
+          properties:
+            purpose: { type: string, nullable: true, description: "어떤 문제를 풀었나요." }
+            mainFunction: { type: string, nullable: true, description: "주요 기능 한 문장." }
+            siteUrl: { type: string, nullable: true, description: "배포 URL." }
+            backendGithubUrl: { type: string, nullable: true }
+            frontendGithubUrl: { type: string, nullable: true }
+            backendStack:
+              type: array
+              items: { type: string }
+              example: ["Java", "Spring Boot", "JPA", "PostgreSQL"]
+            frontendStack:
+              type: array
+              items: { type: string }
+              example: ["React", "TypeScript", "Vite", "Tailwind CSS"]
+            imageUrls:
+              type: array
+              items: { type: string }
+              description: "갤러리 이미지 URL 배열."
+            memberPreview:
+              type: array
+              items: { $ref: "#/components/schemas/ProjectMemberRef" }
 
     # ── activities ────────────────────────────────────────────
     Activity:

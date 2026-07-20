@@ -5,7 +5,12 @@
 // 문구는 사이트 말투(해요체)에 맞췄고, 기술 스택은 핵심(언어·프레임워크·DB·주요 라이브러리)만
 // 추렸어요. 서비스(배포) 주소는 아직 없어서 GitHub 링크만 넣었어요.
 import type { MemberPosition, Project, ProjectMember, ProjectSummary } from "./model";
-import { PROJECT_SLUG_TO_BACKEND_ID, type ProjectDetailDto, type ProjectMemberDto } from "./dto";
+import {
+  PROJECT_SLUG_TO_BACKEND_ID,
+  type ProjectDetailDto,
+  type ProjectMemberDto,
+  type ProjectSummaryDto,
+} from "./dto";
 
 const API_BASE_URL = process.env.API_BASE_URL;
 
@@ -235,15 +240,15 @@ function backendIdOf(slug: string): number | undefined {
 }
 
 /**
- * 목록 응답을 가져와요. 실패하거나 API_BASE_URL이 없으면(백엔드 미배포) 빈 배열 —
- * mergeProjectDetail이 빈 배열을 "dto 없음"으로 처리해서 큐레이션 그대로 나가요.
+ * 목록 응답(카드용 요약)을 가져와요. 실패하거나 API_BASE_URL이 없으면(백엔드 미배포) 빈 배열 —
+ * 병합 단계가 빈 배열을 "dto 없음"으로 처리해서 큐레이션 그대로 나가요.
  */
-async function fetchProjectDtos(): Promise<ProjectDetailDto[]> {
+async function fetchProjectSummaryDtos(): Promise<ProjectSummaryDto[]> {
   if (!API_BASE_URL) return [];
   try {
     const res = await fetch(`${API_BASE_URL}/projects`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
-    return (await res.json()) as ProjectDetailDto[];
+    return (await res.json()) as ProjectSummaryDto[];
   } catch {
     return [];
   }
@@ -261,13 +266,24 @@ async function fetchProjectDto(backendId: number): Promise<ProjectDetailDto | un
   }
 }
 
+/** 목록 응답(요약)은 카드에 쓰는 summary·thumbnailUrl만 덮어써요. 나머지는 상세 조회에서 병합해요. */
+function mergeProjectSummary(curated: Project, dto: ProjectSummaryDto | undefined): Project {
+  if (!dto) return curated;
+
+  return {
+    ...curated,
+    summary: dto.summary,
+    thumbnailUrl: dto.thumbnailUrl ?? curated.thumbnailUrl,
+  };
+}
+
 async function getMergedProjectList(): Promise<Project[]> {
-  const dtos = await fetchProjectDtos();
+  const dtos = await fetchProjectSummaryDtos();
   const dtoByBackendId = new Map(dtos.map((dto) => [dto.id, dto]));
   return PROJECTS.map((curated) => {
     const backendId = backendIdOf(curated.id);
     const dto = backendId !== undefined ? dtoByBackendId.get(backendId) : undefined;
-    return mergeProjectDetail(curated, dto);
+    return mergeProjectSummary(curated, dto);
   });
 }
 

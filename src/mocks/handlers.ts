@@ -1,13 +1,18 @@
 // MSW 핸들러. entities/*/dto.ts에 이미 있는 목데이터를 그대로 응답으로 써요.(나중에 백앤드 배포되어도 예외대비용으로 남겨둘 수 있어요)
 // docs/openapi.yaml(기준 스펙) 그대로 응답해요 — 나중에 백엔드가 그 스펙대로 배포되면 이 목서버와 응답이 같아요.
 import { http, HttpResponse } from "msw";
-import { PROJECT_DTOS } from "@/entities/project/dto";
+import { PROJECT_DTOS, type ProjectSummaryDto } from "@/entities/project/dto";
 import { MEMBER_DTOS } from "@/entities/member/dto";
 import { ACTIVITY_DTOS } from "@/entities/activity/dto";
 
+/** 목록은 상세가 아니라 카드용 요약만 응답해요(docs/openapi.yaml의 ProjectSummary). */
+function toProjectSummaryDto({ id, name, summary, thumbnailUrl, generationNumber }: ProjectSummaryDto): ProjectSummaryDto {
+  return { id, name, summary, thumbnailUrl, generationNumber };
+}
+
 export const handlers = [
   // 목록은 배열을 그대로 응답해요.
-  http.get("*/projects", () => HttpResponse.json(PROJECT_DTOS)),
+  http.get("*/projects", () => HttpResponse.json(PROJECT_DTOS.map(toProjectSummaryDto))),
   http.get("*/projects/:id", ({ params }) => {
     const id = Number(params.id);
     const dto = PROJECT_DTOS.find((project) => project.id === id);
