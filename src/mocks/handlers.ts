@@ -3,6 +3,7 @@
 import { http, HttpResponse } from "msw";
 import { PROJECT_DTOS } from "@/entities/project/dto";
 import { MEMBER_DTOS } from "@/entities/member/dto";
+import { ACTIVITY_DTOS } from "@/entities/activity/dto";
 
 export const handlers = [
   // 목록은 배열을 바로 안 주고 { items: [...] }로 감싸요(실제 스펙 확인함).
@@ -13,7 +14,10 @@ export const handlers = [
     if (!dto) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(dto);
   }),
-
+  
   // member는 entities/member/api.ts가 상세용 fetch 없이 이 목록만 써요(슬러그↔id 매핑표가 없어서).
   http.get("*/members", () => HttpResponse.json({ items: MEMBER_DTOS })),
+
+  // activity도 member와 같은 이유로 목록만 써요. ACTIVITY_DTOS는 백엔드 미구현이라 아직 빈 배열이에요.
+  http.get("*/activities", () => HttpResponse.json({ items: ACTIVITY_DTOS })),
 ];
