@@ -1,0 +1,281 @@
+openapi: 3.0.3
+info:
+  title: 그리디 홈페이지 백엔드 API
+  version: "0.2.0-draft"
+  description: |
+    그리디 홈페이지(greedy-homepage-fe)가 소비하는 백엔드 계약. **이 파일이 기준이에요** —
+    1차 초안(그리디 허브 마이그레이션 레포 docs/openapi.yaml 0.1.0-draft)에서 무엇이 왜 달라졌는지는
+    docs/openapi-1차-대비-변경점.md 참고.
+
+    이 스펙은 프론트가 실제로 fetch·병합·화면 렌더까지 전부 붙여보고 검증한 형태예요
+    (src/mocks/handlers.ts의 MSW 목서버가 이 스펙 그대로 응답하고, src/entities/*/api.ts가 소비).
+    **여기 적힌 4개 엔드포인트·응답 형태 그대로만 구현하면 프론트는 추가 작업 없이 붙어요.**
+
+    공통 규칙:
+    - 목록 응답은 배열을 바로 주지 않고 `{ "items": [...] }` 객체로 감싸요.
+    - 목록은 필터 파라미터 없이 전체를 반환하고, 필터링·정렬은 전부 프론트가 해요.
+    - 쓰기(POST/PATCH)는 전부 Phase 2 — 이 스펙은 읽기 GET만 다뤄요.
+    - stats(홈 통계)·study(커리큘럼)는 백엔드 없이 프론트에서 처리 확정(2026-07-14) — 이 스펙에 없어요.
+    - 기수는 응답에 Generation 객체가 아니라 generationNumber(정수)로만 노출해요(엔티티는 백엔드 내부 유지).
+    - projectType(FESTIVAL/TASK_FORCE/GENERATION)은 백엔드 내부 분류라 응답에서 제외해요.
+
+servers:
+  - url: /api
+
+tags:
+  - name: projects
+    description: "목록 + 상세. 프론트가 슬러그↔id 매핑표를 갖고 있어 id별 상세 조회를 해요."
+  - name: members
+    description: "목록만. 프론트가 이름으로 매칭해요(상세 엔드포인트는 현재 미사용 — 변경점 문서 참고)."
+  - name: activities
+    description: "목록만. 프론트가 제목(name)으로 매칭해요. 백엔드 구현 전 — 이 스펙이 프론트의 제안이에요."
+
+paths:
+  /projects:
+    get:
+      tags: [projects]
+      summary: 전체 프로젝트 목록
+      description: |
+        **목록 항목이 ProjectDetail 전체 스키마예요**(1차의 Summary 축소판 아님 — 변경점 문서 §2 참고).
+        프로젝트가 6건뿐이라 목록·상세를 같은 스키마로 통일했어요.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/ProjectDetail" }
+
+  /projects/{id}:
+    get:
+      tags: [projects]
+      summary: 프로젝트 상세
+      description: |
+        ⚠️ **id는 1~6으로 고정 배정해야 해요**(프론트가 슬러그↔id 매핑표를 하드코딩:
+        따라행=1, 모꼬지=2, 슬기로운 세종생활=3, 세종 줍줍=4, 두구두구=5, MeetLink=6).
+        시드 데이터 넣을 때 이 순서를 지켜주세요. 새 프로젝트는 7부터 이어 붙이면 돼요.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectDetail" }
+        "404":
+          description: 존재하지 않는 프로젝트
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /members:
+    get:
+      tags: [members]
+      summary: 전체 멤버 목록
+      description: |
+        프론트는 이 목록을 한 번 받아 **name(한글 이름)으로 큐레이션 데이터와 매칭**해요.
+        따라서 name은 노션 "그리디 멤버 최종 정리" 명단의 표기와 정확히 일치해야 해요.
+        (동명이인이 생기면 이 방식이 깨져요 — 그때는 프론트에 id 매핑표를 추가할게요.)
+        백엔드 명단에 없는 사람(외부 리뷰어 10명 등)이 프론트 화면에 있어도 괜찮아요 —
+        매칭 안 된 사람은 큐레이션 그대로 나가요. 백엔드가 신경 쓸 필요 없어요.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/Member" }
+
+  /activities:
+    get:
+      tags: [activities]
+      summary: 전체 활동 목록
+      description: |
+        활동 도메인은 백엔드 구현 전이라 **이 스키마가 프론트의 확정 제안**이에요.
+        1차 초안의 tag·generationNumber·summary·location·participants·images(sortOrder)는
+        전부 뺐어요 — 디스코드 파싱 기반 수급이라 안정적으로 얻을 수 없는 필드들이에요
+        (근거는 변경점 문서 §4). 프론트는 name(제목)으로 큐레이션과 매칭해요.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/Activity" }
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: string, example: "NOT_FOUND" }
+            message: { type: string }
+
+    # ── 공통 enum ──────────────────────────────────────────────
+    StackPosition:
+      type: string
+      enum: [BACKEND, FRONTEND, FULL_STACK]
+      description: "Member·ProjectMember 공통. 외부 디자이너는 명단 제외 결정 — DESIGN 없음."
+
+    ActivityType:
+      type: string
+      enum: [CO_FOUNDER, MAINTAINER, STUDY_LEAD, STUDY_MEMBER, REVIEWER]
+      description: |
+        멤버의 기수별 역할(MemberActivity.activityType).
+        ⚠️ 회장·영입리드는 대응값이 없어요 — CLUB_LEAD 등 추가 여부 백엔드 확인 필요(변경점 문서 §3).
+
+    Department:
+      type: string
+      enum: [COMPUTER_SCIENCE, SOFTWARE, INFO_COMMUNICATION, AI, ETC]
+      description: "학과. 실제 학과 목록으로 확정 필요(현재 예시 코드)."
+
+    # ── members ───────────────────────────────────────────────
+    MemberActivityEntry:
+      type: object
+      description: |
+        멤버의 (기수 × 역할) 1건. 다중 기수·다중 역할은 이 배열의 여러 건으로 표현해요.
+        기수별 트랙(예: 2기 FE → 3기 BE)은 이 스키마로 표현 불가 —
+        MemberActivity.stackPosition 신설을 요청해둔 상태예요(변경점 문서 §3).
+      required: [activityType]
+      properties:
+        activityType: { $ref: "#/components/schemas/ActivityType" }
+        generationNumber:
+          type: integer
+          nullable: true
+          description: "기수 번호. 창립(CO_FOUNDER) 등 기수에 안 속하면 null."
+
+    Member:
+      type: object
+      description: |
+        프론트가 현재 병합에 쓰는 필드는 name(매칭 키)·githubUrl·imageUrl 뿐이에요.
+        나머지(mainStackPosition·departments·memberActivities)는 지금은 큐레이션이 우선하지만,
+        enum 보강(회장 등)이 끝나면 큐레이션을 대체할 후보라 응답에 유지해요.
+      required: [id, name, mainStackPosition, departments, memberActivities]
+      properties:
+        id: { type: integer }
+        name: { type: string, description: "한글 이름. 프론트 매칭 키 — 명단 표기와 정확히 일치해야 해요." }
+        githubUrl: { type: string, nullable: true }
+        imageUrl: { type: string, nullable: true, description: "프로필 사진 URL. null이면 프론트가 깃허브 아바타로 대체해요." }
+        mainStackPosition: { $ref: "#/components/schemas/StackPosition" }
+        departments:
+          type: array
+          items: { $ref: "#/components/schemas/Department" }
+        memberActivities:
+          type: array
+          items: { $ref: "#/components/schemas/MemberActivityEntry" }
+      example:
+        id: 18
+        name: "강동현"
+        githubUrl: "https://github.com/mintcoke123"
+        imageUrl: null
+        mainStackPosition: "BACKEND"
+        departments: ["COMPUTER_SCIENCE"]
+        memberActivities:
+          - { activityType: "STUDY_MEMBER", generationNumber: 2 }
+          - { activityType: "STUDY_MEMBER", generationNumber: 3 }
+
+    # ── projects ──────────────────────────────────────────────
+    ProjectMemberRef:
+      type: object
+      description: |
+        프로젝트 팀원. memberId=null이면 외부 기여자 — 프론트가 이 null로 '외부' 뱃지·프로필 링크 유무를 판정해요.
+        stackPosition은 '이 프로젝트에서의 역할'(멤버의 주 포지션과 다를 수 있음).
+      required: [memberId, name, stackPosition]
+      properties:
+        memberId: { type: integer, nullable: true }
+        name: { type: string }
+        stackPosition: { $ref: "#/components/schemas/StackPosition" }
+
+    ProjectDetail:
+      type: object
+      description: |
+        목록·상세 공용 스키마(목록도 이 형태 그대로 items에 담아요).
+        cohortLabel("N기")은 generationNumber에서 프론트가 파생해요.
+      required: [id, name, summary, thumbnailUrl, generationNumber, siteUrl, backendGithubUrl, frontendGithubUrl, backendStack, frontendStack, imageUrls, memberPreview]
+      properties:
+        id: { type: integer, description: "1~6 고정 배정 — /projects/{id} 설명 참고." }
+        name: { type: string }
+        summary: { type: string, description: "카드 한 줄 요약." }
+        thumbnailUrl: { type: string, nullable: true }
+        generationNumber: { type: integer, description: "기수 번호." }
+        purpose: { type: string, nullable: true, description: "어떤 문제를 풀었나요." }
+        mainFunction:
+          type: string
+          nullable: true
+          description: "주요 기능 한 문장. ⚠️ 프론트 현재 미사용(화면의 기능 불릿 리스트는 프론트 큐레이션) — 저장은 유지."
+        siteUrl: { type: string, nullable: true, description: "배포 URL." }
+        backendGithubUrl: { type: string, nullable: true }
+        frontendGithubUrl: { type: string, nullable: true }
+        backendStack:
+          type: array
+          items: { type: string }
+          description: |
+            ⚠️ **자유 문자열 리스트**(1차의 닫힌 enum에서 변경 — 변경점 문서 §2).
+            실데이터에 JPA·QueryDSL·Flyway·OpenAI API·MOTIS 등 enum 밖 값이 이미 있어요.
+          example: ["Java", "Spring Boot", "JPA", "PostgreSQL"]
+        frontendStack:
+          type: array
+          items: { type: string }
+          description: "backendStack과 동일하게 자유 문자열."
+          example: ["React", "TypeScript", "Vite", "Tailwind CSS"]
+        imageUrls:
+          type: array
+          items: { type: string }
+          description: "화면 갤러리 이미지 URL들. 현재 실이미지 수급 전이라 빈 배열 가능."
+        memberPreview:
+          type: array
+          items: { $ref: "#/components/schemas/ProjectMemberRef" }
+
+    # ── activities ────────────────────────────────────────────
+    Activity:
+      type: object
+      description: |
+        활동 1건. 디스코드에서 안정적으로 얻을 수 있는 필드만 담아요(프론트 확정 제안).
+        목록 카드의 날짜("2026.07")·상세 헤더의 날짜 문구("2026년 7월 4일")는 전부 startDate에서 프론트가 파생해요.
+      required: [id, name, thumbnailUrl, imageUrls, description, startDate, endDate]
+      properties:
+        id: { type: integer }
+        name: { type: string, description: "활동 제목. 프론트 매칭 키 — 큐레이션 제목과 정확히 일치해야 해요." }
+        thumbnailUrl: { type: string, nullable: true, description: "대표 사진. null이면 프론트가 자리표시자를 보여줘요." }
+        imageUrls:
+          type: array
+          items: { type: string }
+          description: "갤러리 사진 전체. 정렬 순서는 배열 순서 그대로 써요(별도 sortOrder 없음)."
+        description:
+          type: string
+          nullable: true
+          description: "본문. 문단 구분은 \\n\\n. 사진만 있는 활동이면 null."
+        startDate: { type: string, format: date, example: "2026-07-04" }
+        endDate:
+          type: string
+          format: date
+          description: "단일 날짜 활동은 startDate와 같은 값."
+      example:
+        id: 1
+        name: "3기 데모데이"
+        thumbnailUrl: null
+        imageUrls: []
+        description: "3기 프로젝트 다섯 팀이 한 학기 결과물을 발표했어요.\n\n행사 후 네트워킹까지 함께했어요."
+        startDate: "2025-12-20"
+        endDate: "2025-12-20"
