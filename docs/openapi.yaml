@@ -12,7 +12,7 @@ info:
     **여기 적힌 4개 엔드포인트·응답 형태 그대로만 구현하면 프론트는 추가 작업 없이 붙어요.**
 
     공통 규칙:
-    - 목록 응답은 배열을 바로 주지 않고 `{ "items": [...] }` 객체로 감싸요.
+    - 목록 응답은 배열을 그대로 반환해요.
     - 목록은 필터 파라미터 없이 전체를 반환하고, 필터링·정렬은 전부 프론트가 해요.
     - 쓰기(POST/PATCH)는 전부 Phase 2 — 이 스펙은 읽기 GET만 다뤄요.
     - stats(홈 통계)·study(커리큘럼)는 백엔드 없이 프론트에서 처리 확정(2026-07-14) — 이 스펙에 없어요.
@@ -44,12 +44,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required: [items]
-                properties:
-                  items:
-                    type: array
-                    items: { $ref: "#/components/schemas/ProjectDetail" }
+                type: array
+                items: { $ref: "#/components/schemas/ProjectDetail" }
 
   /projects/{id}:
     get:
@@ -92,12 +88,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required: [items]
-                properties:
-                  items:
-                    type: array
-                    items: { $ref: "#/components/schemas/Member" }
+                type: array
+                items: { $ref: "#/components/schemas/Member" }
 
   /activities:
     get:
@@ -114,12 +106,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required: [items]
-                properties:
-                  items:
-                    type: array
-                    items: { $ref: "#/components/schemas/Activity" }
+                type: array
+                items: { $ref: "#/components/schemas/Activity" }
 
 components:
   schemas:
@@ -210,7 +198,7 @@ components:
     ProjectDetail:
       type: object
       description: |
-        목록·상세 공용 스키마(목록도 이 형태 그대로 items에 담아요).
+        목록·상세 공용 스키마(목록도 이 객체들의 배열로 응답해요).
         cohortLabel("N기")은 generationNumber에서 프론트가 파생해요.
       required: [id, name, summary, thumbnailUrl, generationNumber, siteUrl, backendGithubUrl, frontendGithubUrl, backendStack, frontendStack, imageUrls, memberPreview]
       properties:

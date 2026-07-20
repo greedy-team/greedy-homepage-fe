@@ -6,8 +6,8 @@ import { MEMBER_DTOS } from "@/entities/member/dto";
 import { ACTIVITY_DTOS } from "@/entities/activity/dto";
 
 export const handlers = [
-  // 목록은 배열을 바로 안 주고 { items: [...] }로 감싸요(실제 스펙 확인함).
-  http.get("*/projects", () => HttpResponse.json({ items: PROJECT_DTOS })),
+  // 목록은 배열을 그대로 응답해요.
+  http.get("*/projects", () => HttpResponse.json(PROJECT_DTOS)),
   http.get("*/projects/:id", ({ params }) => {
     const id = Number(params.id);
     const dto = PROJECT_DTOS.find((project) => project.id === id);
@@ -16,8 +16,8 @@ export const handlers = [
   }),
   
   // member는 entities/member/api.ts가 상세용 fetch 없이 이 목록만 써요(슬러그↔id 매핑표가 없어서).
-  http.get("*/members", () => HttpResponse.json({ items: MEMBER_DTOS })),
+  http.get("*/members", () => HttpResponse.json(MEMBER_DTOS)),
 
   // activity도 member와 같은 이유로 목록만 써요. ACTIVITY_DTOS는 백엔드 미구현이라 아직 빈 배열이에요.
-  http.get("*/activities", () => HttpResponse.json({ items: ACTIVITY_DTOS })),
+  http.get("*/activities", () => HttpResponse.json(ACTIVITY_DTOS)),
 ];

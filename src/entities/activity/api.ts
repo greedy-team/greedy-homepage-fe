@@ -91,8 +91,7 @@ async function fetchActivityDtos(): Promise<ActivityDto[]> {
   try {
     const res = await fetch(`${API_BASE_URL}/activities`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
-    const body = (await res.json()) as { items: ActivityDto[] };
-    return body.items;
+    return (await res.json()) as ActivityDto[];
   } catch {
     return [];
   }

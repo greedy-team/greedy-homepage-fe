@@ -237,15 +237,13 @@ function backendIdOf(slug: string): number | undefined {
 /**
  * 목록 응답을 가져와요. 실패하거나 API_BASE_URL이 없으면(백엔드 미배포) 빈 배열 —
  * mergeProjectDetail이 빈 배열을 "dto 없음"으로 처리해서 큐레이션 그대로 나가요.
- * 실제 스펙은 { items: [...] }로 감싸서 응답해요(배열을 바로 안 줌).
  */
 async function fetchProjectDtos(): Promise<ProjectDetailDto[]> {
   if (!API_BASE_URL) return [];
   try {
     const res = await fetch(`${API_BASE_URL}/projects`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
-    const body = (await res.json()) as { items: ProjectDetailDto[] };
-    return body.items;
+    return (await res.json()) as ProjectDetailDto[];
   } catch {
     return [];
   }
