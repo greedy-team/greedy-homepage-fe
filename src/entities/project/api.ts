@@ -1,9 +1,13 @@
-// 팀 프로젝트 데이터. 지금은 정적 데이터를 반환하고, API 명세가 확정되면
-// 이 함수 안만 fetch(ISR)로 바꿔요. 정렬(최신 기수 우선)도 서버로 옮겨갈 수 있어요.
+// 팀 프로젝트 데이터. 큐레이션(PROJECTS)에 백엔드 응답(dto)을 합쳐 화면에 내보내요.
+// API_BASE_URL이 없으면(로컬에서 설정 안 했거나 백엔드 미배포) fetch를 아예 안 하고
+// 큐레이션 그대로 나가요 — 백엔드가 없어도 사이트는 안 죽는다는 ADR 002 약속이 이 부분이에요.
 //
 // 문구는 사이트 말투(해요체)에 맞췄고, 기술 스택은 핵심(언어·프레임워크·DB·주요 라이브러리)만
 // 추렸어요. 서비스(배포) 주소는 아직 없어서 GitHub 링크만 넣었어요.
-import type { Project, ProjectSummary } from "./model";
+import type { MemberPosition, Project, ProjectMember, ProjectSummary } from "./model";
+import { PROJECT_SLUG_TO_BACKEND_ID, type ProjectDetailDto, type ProjectMemberDto } from "./dto";
+
+const API_BASE_URL = process.env.API_BASE_URL;
 
 const PROJECTS: Project[] = [
   {
@@ -185,6 +189,90 @@ const PROJECTS: Project[] = [
   },
 ];
 
+const STACK_POSITION_TO_MEMBER_POSITION: Record<ProjectMemberDto["stackPosition"], MemberPosition> = {
+  FRONTEND: "FE",
+  BACKEND: "BE",
+  // 백엔드 응답엔 아직 FULL_STACK 사례가 없어요. 생기면 실제 담당에 맞춰 조정해요.
+  FULL_STACK: "FE",
+};
+
+function toProjectMember(dto: ProjectMemberDto): ProjectMember {
+  return {
+    name: dto.name,
+    position: STACK_POSITION_TO_MEMBER_POSITION[dto.stackPosition],
+    external: dto.memberId === null,
+    profileHref: dto.memberId !== null ? `/members/${encodeURIComponent(dto.name)}` : undefined,
+  };
+}
+
+/**
+ * 백엔드 응답(dto)과 지금 사이트의 큐레이션 콘텐츠(curated)를 합쳐 화면 모델을 만들어요.
+ * mainFunction 불릿 리스트는 백엔드에 없는 프론트 전용 콘텐츠라 curated 값을 그대로 써요.
+ * dto가 아직 없으면(백엔드 미배포, fetch 실패, 또는 이 프로젝트가 아직 매핑 안 됨) curated를 그대로 반환해요.
+ */
+function mergeProjectDetail(curated: Project, dto: ProjectDetailDto | undefined): Project {
+  if (!dto) return curated;
+
+  return {
+    ...curated,
+    summary: dto.summary,
+    thumbnailUrl: dto.thumbnailUrl ?? curated.thumbnailUrl,
+    purpose: dto.purpose ?? curated.purpose,
+    // mainFunction: 의도적으로 curated 유지(백엔드는 문장 1개뿐이라 화면엔 안 씀)
+    imageUrls: dto.imageUrls.length > 0 ? dto.imageUrls : curated.imageUrls,
+    siteUrl: dto.siteUrl ?? curated.siteUrl,
+    frontendGithubUrl: dto.frontendGithubUrl ?? curated.frontendGithubUrl,
+    backendGithubUrl: dto.backendGithubUrl ?? curated.backendGithubUrl,
+    frontendStack: dto.frontendStack.length > 0 ? dto.frontendStack : curated.frontendStack,
+    backendStack: dto.backendStack.length > 0 ? dto.backendStack : curated.backendStack,
+    members: dto.memberPreview.length > 0 ? dto.memberPreview.map(toProjectMember) : curated.members,
+  };
+}
+
+/** 이 슬러그가 백엔드 숫자 id로 매핑돼 있으면 그 id, 아니면 undefined */
+function backendIdOf(slug: string): number | undefined {
+  return PROJECT_SLUG_TO_BACKEND_ID[slug];
+}
+
+/**
+ * 목록 응답을 가져와요. 실패하거나 API_BASE_URL이 없으면(백엔드 미배포) 빈 배열 —
+ * mergeProjectDetail이 빈 배열을 "dto 없음"으로 처리해서 큐레이션 그대로 나가요.
+ * 실제 스펙은 { items: [...] }로 감싸서 응답해요(배열을 바로 안 줌).
+ */
+async function fetchProjectDtos(): Promise<ProjectDetailDto[]> {
+  if (!API_BASE_URL) return [];
+  try {
+    const res = await fetch(`${API_BASE_URL}/projects`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const body = (await res.json()) as { items: ProjectDetailDto[] };
+    return body.items;
+  } catch {
+    return [];
+  }
+}
+
+/** 상세 응답 한 건. getProject(id) 전용 — 목록 전체를 안 가져오고 이 프로젝트만 요청해요. */
+async function fetchProjectDto(backendId: number): Promise<ProjectDetailDto | undefined> {
+  if (!API_BASE_URL) return undefined;
+  try {
+    const res = await fetch(`${API_BASE_URL}/projects/${backendId}`, { next: { revalidate: 3600 } });
+    if (!res.ok) return undefined;
+    return (await res.json()) as ProjectDetailDto;
+  } catch {
+    return undefined;
+  }
+}
+
+async function getMergedProjectList(): Promise<Project[]> {
+  const dtos = await fetchProjectDtos();
+  const dtoByBackendId = new Map(dtos.map((dto) => [dto.id, dto]));
+  return PROJECTS.map((curated) => {
+    const backendId = backendIdOf(curated.id);
+    const dto = backendId !== undefined ? dtoByBackendId.get(backendId) : undefined;
+    return mergeProjectDetail(curated, dto);
+  });
+}
+
 /** 최신 기수부터. 목록·상세의 정렬 기준이에요 */
 const COHORT_ORDER = ["4기", "3기", "2기", "1기"];
 
@@ -199,13 +287,18 @@ function toSummary(project: Project): ProjectSummary {
 
 /** 프로젝트 페이지 목록. 최신 기수부터 보여줘요 */
 export async function getProjects(): Promise<ProjectSummary[]> {
-  // TODO: 백엔드 API 연동 (프로젝트는 서버에서 관리)
-  return [...PROJECTS].map(toSummary).sort(byCohortDesc);
+  const merged = await getMergedProjectList();
+  return merged.map(toSummary).sort(byCohortDesc);
 }
 
 /** 상세 한 건. 없으면 undefined를 줘서 화면이 not-found로 넘겨요 */
 export async function getProject(id: string): Promise<Project | undefined> {
-  return PROJECTS.find((project) => project.id === id);
+  const curated = PROJECTS.find((project) => project.id === id);
+  if (!curated) return undefined;
+
+  const backendId = backendIdOf(id);
+  const dto = backendId !== undefined ? await fetchProjectDto(backendId) : undefined;
+  return mergeProjectDetail(curated, dto);
 }
 
 /** 필터에 쓰는 기수 목록. 프로젝트가 아직 없는 현재 기수(4기)도 넣어 빈 상태를 보여줘요 */
@@ -215,5 +308,6 @@ export async function getCohorts(): Promise<string[]> {
 
 /** 랜딩 캐러셀에 쓰는 대표 프로젝트. 최신 기수부터 보여줘요 */
 export async function getFeaturedProjects(): Promise<ProjectSummary[]> {
-  return [...PROJECTS].map(toSummary).sort(byCohortDesc);
+  const merged = await getMergedProjectList();
+  return merged.map(toSummary).sort(byCohortDesc);
 }
