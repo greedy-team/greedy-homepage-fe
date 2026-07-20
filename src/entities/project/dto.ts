@@ -26,6 +26,11 @@ export type ProjectDetailDto = ProjectSummaryDto & {
   siteUrl: string | null;
   backendGithubUrl: string | null;
   frontendGithubUrl: string | null;
+  // ⚠️ 백엔드에 요청할 것: 실제 swagger는 이 둘을 닫힌 enum(백엔드 기준 Java·Spring Boot·MySQL·
+  // PostgreSQL·Redis뿐)으로 정의해뒀는데, 우리 큐레이션엔 JPA·QueryDSL·Flyway·MOTIS·OpenAI API처럼
+  // 그 enum에 없는 값이 이미 있다. mergeProjectDetail이 dto 값이 오면 덮어쓰므로, enum 그대로 배포되면
+  // 이 상세 스택 정보가 조용히 사라진다. enum 대신 자유 문자열 리스트로 바꿔달라고 요청할 것
+  // (기술 스택은 계속 늘어나는 값이라 매번 enum을 늘리는 것보다 자유 문자열이 낫다).
   backendStack: string[];
   frontendStack: string[];
   imageUrls: string[];
