@@ -18,8 +18,7 @@
 1차에 기록돼 있던 다음 결정들도 그대로 유지돼요(새 기준 문서에 승계):
 
 - **stats(홈 통계)·study(커리큘럼)는 백엔드 제외** — 프론트 파생값·상수로 처리(2026-07-14 확정).
-- **기수는 generationNumber(정수)로만 노출** — Generation 엔티티는 백엔드 내부 유지, API엔 숫자만.
-- **projectType(FESTIVAL/TASK_FORCE/GENERATION)은 응답 제외** — 백엔드 내부 분류, 화면 미사용.
+- **기수는 generationNumber(정수)로만 노출** — 백엔드 Generation.number 값을 그대로 줘요(객체 통째로 X).
 
 ## §2 projects
 

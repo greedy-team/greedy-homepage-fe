@@ -16,8 +16,6 @@ info:
     - 목록은 필터 파라미터 없이 전체를 반환하고, 필터링·정렬은 전부 프론트가 해요.
     - 쓰기(POST/PATCH)는 전부 Phase 2 — 이 스펙은 읽기 GET만 다뤄요.
     - stats(홈 통계)·study(커리큘럼)는 백엔드 없이 프론트에서 처리 확정(2026-07-14) — 이 스펙에 없어요.
-    - 기수는 응답에 Generation 객체가 아니라 generationNumber(정수)로만 노출해요(엔티티는 백엔드 내부 유지).
-    - projectType(FESTIVAL/TASK_FORCE/GENERATION)은 백엔드 내부 분류라 응답에서 제외해요.
 
 servers:
   - url: /api
