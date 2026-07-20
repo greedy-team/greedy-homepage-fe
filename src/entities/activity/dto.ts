@@ -1,7 +1,5 @@
-// 백엔드 응답 형태(예정). activity는 project·member와 달리 백엔드가 아직 구현을 시작 안 해서
-// 실제 확정 스펙이 없어요 — 이 타입은 우리 쪽에서 화면·엔티티·정합 논의를 바탕으로 먼저 제안하는 형태예요.
-// tag·generationNumber·location·participants·summary는 논의 끝에 없애기로 했어요(model.ts 주석 참고).
-// date는 startDate·endDate 두 필드로 옵니다 — 단일 날짜 활동은 startDate=endDate로 온다고 들었어요.
+// 백엔드 응답 형태. 기준 스펙은 docs/openapi.yaml, 논의점은 docs/openapi-1차-대비-변경점.md §4.
+// 백엔드 엔티티와 필드 일치 확인됨(2026-07-20). date는 startDate·endDate로 와요(단일 날짜는 둘이 같음).
 
 export type ActivityDto = {
   id: number;

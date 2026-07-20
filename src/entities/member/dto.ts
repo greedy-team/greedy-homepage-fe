@@ -1,12 +1,7 @@
-// 백엔드 확정 API 응답 형태(그리디 허브 마이그레이션 레포 docs/openapi.yaml, docs/backend-api-spec.md §1 기준).
+// 백엔드 API 응답 형태. 기준 스펙은 docs/openapi.yaml, 미해결 논의점은 docs/openapi-1차-대비-변경점.md §5.
 //
-// ⚠️ Project와 달리 Member는 자동 병합할 수 있는 범위가 좁다. 지금 화면의 role·history·intro는
-// 백엔드 enum(MemberActivityType)보다 훨씬 풍부한 큐레이션 콘텐츠라서:
-// - "회장"·"영입리드" 같은 직함은 MemberActivityType에 없음(동아리장 enum 미확정 — 추후 요청 예정)
-// - 기수별 트랙 변경 이력(예: 2기 FE → 3기 BE)은 mainStackPosition이 "현재값 1개"만 줘서 복원 불가
-//   (MemberActivity.stackPosition 추후 요청 예정)
-// 그래서 지금은 githubUrl·imageUrl처럼 손실 없이 그대로 대체 가능한 필드만 병합하고,
-// role·affiliation·cohorts·tracks·history·intro는 큐레이션 그대로 유지한다.
+// 병합은 githubUrl·imageUrl만 덮어써요. role·affiliation·cohorts·tracks·history·intro는 큐레이션 유지 —
+// 백엔드 enum이 회장·영입리드 같은 직함과 기수별 트랙 이력(2기 FE → 3기 BE)을 아직 표현 못 해서예요.
 
 export type MemberStackPosition = "BACKEND" | "FRONTEND" | "FULL_STACK";
 export type MemberActivityType = "CO_FOUNDER" | "MAINTAINER" | "STUDY_LEAD" | "STUDY_MEMBER" | "REVIEWER";
@@ -27,18 +22,7 @@ export type MemberDto = {
   memberActivities: MemberActivityDto[];
 };
 
-// 💡 활용 기회: 실제 swagger의 MemberDetail(GET /members/{id})엔 이 타입에 아직 없는 필드가 둘 더 있다.
-// - description(자기소개): 지금 화면의 intro는 전부 임시 큐레이션 문구인데, 본인이 직접 쓸 수 있는
-//   진짜 필드가 이미 있다. 로그인 자기편집(Phase 2) 붙을 때 이걸로 교체 가능.
-// - teamProjects(참여 프로젝트): app/members/[id]/page.tsx의 getMemberProjects()가 지금 프로젝트
-//   전체를 불러와서 이름으로 하나하나 대조하는데, 이 필드를 쓰면 백엔드가 이미 join해서 주니까
-//   그 함수 전체가 필요 없어진다. 지금은 범위 밖이라 안 붙였을 뿐, MemberDto에 추가하면 바로 쓸 수 있다.
-
-/**
- * MSW 목서버가 돌려주는 픽스처 데이터. 실제 그리디 46명 명단(그리디 허브 마이그레이션 레포
- * src/mocks/data/members.ts, 노션 "그리디 멤버 최종 정리" 기준)을 이 레포의 MemberDto 형태로 옮겼어요.
- * description·teamProjects는 원본에 있었지만 지금 merge 로직이 아직 안 써서 뺐어요.
- */
+/** MSW 목서버 픽스처. 실제 그리디 46명 명단(노션 "그리디 멤버 최종 정리")을 MemberDto 형태로 옮긴 데이터예요. */
 export const MEMBER_DTOS: MemberDto[] = [
   {
     id: 1,

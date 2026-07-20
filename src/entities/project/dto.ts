@@ -1,7 +1,5 @@
-// 백엔드 확정 API 응답 형태(그리디 허브 마이그레이션 레포 docs/openapi.yaml, docs/backend-api-spec.md §2 기준. 초안 상태).
-// 실 연동 시 GET /projects(목록은 { items: ProjectDetailDto[] }로 감싸서 응답), GET /projects/{id}(상세는 이 타입 그대로) 응답이 이 형태로 온다.
-// PROJECT_DTOS는 아직 백엔드가 배포 전이라 넣어둔 목데이터 — 지금은 entities/project/api.ts가 직접 안 쓰고
-// src/mocks/handlers.ts가 MSW 응답 픽스처로만 써요(MSW_ENABLED=true인 로컬 dev에서 fetch를 가로챔).
+// 백엔드 API 응답 형태. 기준 스펙은 docs/openapi.yaml, 미해결 논의점은 docs/openapi-1차-대비-변경점.md §5.
+// PROJECT_DTOS는 백엔드 배포 전까지 src/mocks/handlers.ts가 쓰는 MSW 픽스처예요.
 
 export type ProjectStackPosition = "BACKEND" | "FRONTEND" | "FULL_STACK";
 
@@ -26,18 +24,14 @@ export type ProjectDetailDto = ProjectSummaryDto & {
   siteUrl: string | null;
   backendGithubUrl: string | null;
   frontendGithubUrl: string | null;
-  // ⚠️ 백엔드에 요청할 것: 실제 swagger는 이 둘을 닫힌 enum(백엔드 기준 Java·Spring Boot·MySQL·
-  // PostgreSQL·Redis뿐)으로 정의해뒀는데, 우리 큐레이션엔 JPA·QueryDSL·Flyway·MOTIS·OpenAI API처럼
-  // 그 enum에 없는 값이 이미 있다. mergeProjectDetail이 dto 값이 오면 덮어쓰므로, enum 그대로 배포되면
-  // 이 상세 스택 정보가 조용히 사라진다. enum 대신 자유 문자열 리스트로 바꿔달라고 요청할 것
-  // (기술 스택은 계속 늘어나는 값이라 매번 enum을 늘리는 것보다 자유 문자열이 낫다).
+  // string[]로 받아요. 백엔드가 enum으로 주면 값·표시 라벨 확인 필요 — 논의점: 변경점 문서 §5-1.
   backendStack: string[];
   frontendStack: string[];
   imageUrls: string[];
   memberPreview: ProjectMemberDto[];
 };
 
-/** 슬러그(entities/project 기존 id) ↔ 백엔드 숫자 id. docs/backend-api-spec.md §2 확정 값. */
+/** 슬러그(entities/project 기존 id) ↔ 백엔드 숫자 id. docs/openapi.yaml의 "id 1~6 고정 배정"과 한 몸이에요. */
 export const PROJECT_SLUG_TO_BACKEND_ID: Record<string, number> = {
   ddarahang: 1,
   mokkoji: 2,

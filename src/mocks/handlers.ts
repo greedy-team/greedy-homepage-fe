@@ -1,5 +1,5 @@
 // MSW 핸들러. entities/*/dto.ts에 이미 있는 목데이터를 그대로 응답으로 써요.(나중에 백앤드 배포되어도 예외대비용으로 남겨둘 수 있어요)
-// 백엔드 실제 스펙(openapi.yaml) 기준 타입이라, 나중에 entities/*/api.ts가 이 URL로 fetch를 붙이면 그대로 맞아요.
+// docs/openapi.yaml(기준 스펙) 그대로 응답해요 — 나중에 백엔드가 그 스펙대로 배포되면 이 목서버와 응답이 같아요.
 import { http, HttpResponse } from "msw";
 import { PROJECT_DTOS } from "@/entities/project/dto";
 import { MEMBER_DTOS } from "@/entities/member/dto";
