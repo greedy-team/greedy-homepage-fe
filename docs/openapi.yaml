@@ -22,7 +22,7 @@ tags:
   - name: members
     description: "목록 + 상세"
   - name: activities
-    description: "목록만 (백엔드 구현 전)"
+    description: "목록 + 상세 (백엔드 구현 전)"
 
 paths:
   /projects:
@@ -101,7 +101,7 @@ paths:
   /activities:
     get:
       tags: [activities]
-      summary: 전체 활동 목록
+      summary: 전체 활동 목록 (타임라인 카드용 요약만 — 갤러리·본문은 /activities/{id}에서)
       responses:
         "200":
           description: OK
@@ -109,7 +109,30 @@ paths:
             application/json:
               schema:
                 type: array
-                items: { $ref: "#/components/schemas/Activity" }
+                items: { $ref: "#/components/schemas/ActivitySummary" }
+
+  /activities/{id}:
+    get:
+      tags: [activities]
+      summary: 활동 상세 (갤러리 사진 전체·본문 포함)
+      description: |
+        프론트는 목록에서 제목(name)으로 활동을 찾아 id를 얻은 뒤, 이 엔드포인트로 상세 전용 필드를 받아요.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ActivityDetail" }
+        "404":
+          description: 존재하지 않는 활동
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
 
 components:
   schemas:
@@ -262,26 +285,34 @@ components:
               items: { $ref: "#/components/schemas/ProjectMemberRef" }
 
     # ── activities ────────────────────────────────────────────
-    Activity:
+    ActivitySummary:
       type: object
-      required: [id, name, thumbnailUrl, imageUrls, description, startDate, endDate]
+      description: "타임라인 카드용 요약."
+      required: [id, name, thumbnailUrl, startDate]
       properties:
         id: { type: integer }
         name: { type: string, description: "활동 제목. 프론트 매칭 키 — 큐레이션 제목과 정확히 일치해야 해요." }
         thumbnailUrl: { type: string, nullable: true, description: "대표 사진." }
-        imageUrls:
-          type: array
-          items: { type: string }
-          description: "갤러리 사진 전체. 순서는 배열 순서대로 써요."
-        description:
-          type: string
-          nullable: true
-          description: "본문. 문단 구분은 \\n\\n. 사진만 있는 활동이면 null."
         startDate: { type: string, format: date, example: "2026-07-04" }
-        endDate:
-          type: string
-          format: date
-          description: "단일 날짜 활동은 startDate와 같은 값."
+
+    ActivityDetail:
+      allOf:
+        - $ref: "#/components/schemas/ActivitySummary"
+        - type: object
+          required: [imageUrls, description, endDate]
+          properties:
+            imageUrls:
+              type: array
+              items: { type: string }
+              description: "갤러리 사진 전체. 순서는 배열 순서대로 써요."
+            description:
+              type: string
+              nullable: true
+              description: "본문. 문단 구분은 \\n\\n. 사진만 있는 활동이면 null."
+            endDate:
+              type: string
+              format: date
+              description: "단일 날짜 활동은 startDate와 같은 값."
       example:
         id: 1
         name: "3기 데모데이"
