@@ -1,0 +1,323 @@
+openapi: 3.0.3
+info:
+  title: 그리디 홈페이지 백엔드 API
+  version: "0.2.0-draft"
+  description: |
+    그리디 홈페이지(greedy-homepage-fe)가 소비하는 백엔드 계약 초안.
+    백엔드 응답이 확정되면 이 문서를 거기에 맞춰요(강제 기준 아님).
+    1차 초안 대비 변경점과 열린 논의점은 docs/openapi-1차-대비-변경점.md 참고.
+
+    공통 규칙:
+    - 목록 응답은 배열을 그대로 반환해요.
+    - 목록은 필터 파라미터 없이 전체를 반환하고, 필터링·정렬은 프론트가 해요.
+    - 읽기 GET만 다뤄요(쓰기는 Phase 2).
+    - stats(홈 통계)·study(커리큘럼)는 백엔드 없이 프론트에서 처리 — 이 스펙에 없어요.
+
+servers:
+  - url: /api
+
+tags:
+  - name: projects
+    description: "목록 + 상세"
+  - name: members
+    description: "목록 + 상세"
+  - name: activities
+    description: "목록 + 상세 (백엔드 구현 전)"
+
+paths:
+  /projects:
+    get:
+      tags: [projects]
+      summary: 전체 프로젝트 목록 (카드용 요약만 — 상세 필드는 /projects/{id}에서)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ProjectSummary" }
+
+  /projects/{id}:
+    get:
+      tags: [projects]
+      summary: 프로젝트 상세
+      description: |
+        id는 1~6 고정 배정이에요: 따라행=1, 모꼬지=2, 슬기로운 세종생활=3, 세종 줍줍=4, 두구두구=5, MeetLink=6.
+        (프론트가 슬러그↔id 매핑표를 하드코딩. 시드 데이터를 이 순서로, 새 프로젝트는 7부터.)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectDetail" }
+        "404":
+          description: 존재하지 않는 프로젝트
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /members:
+    get:
+      tags: [members]
+      summary: 전체 멤버 목록
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Member" }
+
+  /members/{id}:
+    get:
+      tags: [members]
+      summary: 멤버 상세 (자기소개·참여 프로젝트 포함)
+      description: |
+        프론트는 목록에서 이름으로 멤버를 찾아 id를 얻은 뒤, 이 엔드포인트로 상세 전용 필드를 받아요.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MemberDetail" }
+        "404":
+          description: 존재하지 않는 멤버
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /activities:
+    get:
+      tags: [activities]
+      summary: 전체 활동 목록 (타임라인 카드용 요약만 — 갤러리·본문은 /activities/{id}에서)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ActivitySummary" }
+
+  /activities/{id}:
+    get:
+      tags: [activities]
+      summary: 활동 상세 (갤러리 사진 전체·본문 포함)
+      description: |
+        프론트는 목록에서 제목(name)으로 활동을 찾아 id를 얻은 뒤, 이 엔드포인트로 상세 전용 필드를 받아요.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ActivityDetail" }
+        "404":
+          description: 존재하지 않는 활동
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: string, example: "NOT_FOUND" }
+            message: { type: string }
+
+    # ── 공통 enum ──────────────────────────────────────────────
+    StackPosition:
+      type: string
+      enum: [BACKEND, FRONTEND, FULL_STACK]
+      description: "Member·ProjectMember 공통."
+
+    ActivityType:
+      type: string
+      enum: [CO_FOUNDER, MAINTAINER, STUDY_LEAD, STUDY_MEMBER, REVIEWER]
+      description: "멤버의 기수별 역할(MemberActivity.activityType)."
+
+    Department:
+      type: string
+      enum: [COMPUTER_SCIENCE, SOFTWARE, INFO_COMMUNICATION, AI, ETC]
+      description: "학과 (실제 목록 확정 필요 — 현재 예시)."
+
+    # ── members ───────────────────────────────────────────────
+    MemberActivityEntry:
+      type: object
+      description: "멤버의 (기수 × 역할) 1건. 다중 기수·역할은 배열의 여러 건으로 표현해요."
+      required: [activityType]
+      properties:
+        activityType: { $ref: "#/components/schemas/ActivityType" }
+        generationNumber:
+          type: integer
+          nullable: true
+          description: "기수 번호. 창립(CO_FOUNDER) 등 기수에 안 속하면 null."
+
+    Member:
+      type: object
+      required: [id, name, mainStackPosition, departments, memberActivities]
+      properties:
+        id: { type: integer }
+        name: { type: string, description: "한글 이름. 프론트 매칭 키 — 명단 표기와 정확히 일치해야 해요." }
+        githubUrl: { type: string, nullable: true }
+        imageUrl: { type: string, nullable: true, description: "프로필 사진 URL." }
+        mainStackPosition: { $ref: "#/components/schemas/StackPosition" }
+        departments:
+          type: array
+          items: { $ref: "#/components/schemas/Department" }
+        memberActivities:
+          type: array
+          items: { $ref: "#/components/schemas/MemberActivityEntry" }
+      example:
+        id: 18
+        name: "강동현"
+        githubUrl: "https://github.com/mintcoke123"
+        imageUrl: null
+        mainStackPosition: "BACKEND"
+        departments: ["COMPUTER_SCIENCE"]
+        memberActivities:
+          - { activityType: "STUDY_MEMBER", generationNumber: 2 }
+          - { activityType: "STUDY_MEMBER", generationNumber: 3 }
+
+    MemberProjectRef:
+      type: object
+      description: "멤버가 참여한 프로젝트(ProjectMember 조인). stackPosition은 그 프로젝트에서의 역할."
+      required: [projectId, name, stackPosition]
+      properties:
+        projectId: { type: integer }
+        name: { type: string }
+        stackPosition: { $ref: "#/components/schemas/StackPosition" }
+
+    MemberDetail:
+      allOf:
+        - $ref: "#/components/schemas/Member"
+        - type: object
+          required: [description, teamProjects]
+          properties:
+            description:
+              type: string
+              nullable: true
+              description: "자기소개."
+            teamProjects:
+              type: array
+              items: { $ref: "#/components/schemas/MemberProjectRef" }
+      example:
+        id: 18
+        name: "강동현"
+        githubUrl: "https://github.com/mintcoke123"
+        imageUrl: null
+        mainStackPosition: "BACKEND"
+        departments: ["COMPUTER_SCIENCE"]
+        memberActivities:
+          - { activityType: "STUDY_MEMBER", generationNumber: 2 }
+          - { activityType: "STUDY_MEMBER", generationNumber: 3 }
+        description: "화면을 만들다가 서버가 궁금해져 트랙을 옮겼어요."
+        teamProjects:
+          - { projectId: 4, name: "세종 줍줍", stackPosition: "FRONTEND" }
+          - { projectId: 5, name: "두구두구", stackPosition: "BACKEND" }
+
+    # ── projects ──────────────────────────────────────────────
+    ProjectMemberRef:
+      type: object
+      description: "memberId=null이면 외부 기여자예요. stackPosition은 이 프로젝트에서의 역할(멤버 주 포지션과 다를 수 있음)."
+      required: [memberId, name, stackPosition]
+      properties:
+        memberId: { type: integer, nullable: true }
+        name: { type: string }
+        stackPosition: { $ref: "#/components/schemas/StackPosition" }
+
+    ProjectSummary:
+      type: object
+      description: "목록 카드용 요약."
+      required: [id, name, summary, thumbnailUrl, generationNumber]
+      properties:
+        id: { type: integer, description: "1~6 고정 배정 — /projects/{id} 설명 참고." }
+        name: { type: string }
+        summary: { type: string, description: "카드 한 줄 요약." }
+        thumbnailUrl: { type: string, nullable: true }
+        generationNumber: { type: integer, description: "기수 번호." }
+
+    ProjectDetail:
+      allOf:
+        - $ref: "#/components/schemas/ProjectSummary"
+        - type: object
+          required: [siteUrl, backendGithubUrl, frontendGithubUrl, backendStack, frontendStack, imageUrls, memberPreview]
+          properties:
+            purpose: { type: string, nullable: true, description: "어떤 문제를 풀었나요." }
+            mainFunction: { type: string, nullable: true, description: "주요 기능 한 문장." }
+            siteUrl: { type: string, nullable: true, description: "배포 URL." }
+            backendGithubUrl: { type: string, nullable: true }
+            frontendGithubUrl: { type: string, nullable: true }
+            backendStack:
+              type: array
+              items: { type: string }
+              example: ["Java", "Spring Boot", "JPA", "PostgreSQL"]
+            frontendStack:
+              type: array
+              items: { type: string }
+              example: ["React", "TypeScript", "Vite", "Tailwind CSS"]
+            imageUrls:
+              type: array
+              items: { type: string }
+              description: "갤러리 이미지 URL 배열."
+            memberPreview:
+              type: array
+              items: { $ref: "#/components/schemas/ProjectMemberRef" }
+
+    # ── activities ────────────────────────────────────────────
+    ActivitySummary:
+      type: object
+      description: "타임라인 카드용 요약."
+      required: [id, name, thumbnailUrl, startDate]
+      properties:
+        id: { type: integer }
+        name: { type: string, description: "활동 제목. 프론트 매칭 키 — 큐레이션 제목과 정확히 일치해야 해요." }
+        thumbnailUrl: { type: string, nullable: true, description: "대표 사진." }
+        startDate: { type: string, format: date, example: "2026-07-04" }
+
+    ActivityDetail:
+      allOf:
+        - $ref: "#/components/schemas/ActivitySummary"
+        - type: object
+          required: [imageUrls, description, endDate]
+          properties:
+            imageUrls:
+              type: array
+              items: { type: string }
+              description: "갤러리 사진 전체. 순서는 배열 순서대로 써요."
+            description:
+              type: string
+              nullable: true
+              description: "본문. 문단 구분은 \\n\\n. 사진만 있는 활동이면 null."
+            endDate:
+              type: string
+              format: date
+              description: "단일 날짜 활동은 startDate와 같은 값."
+      example:
+        id: 1
+        name: "3기 데모데이"
+        thumbnailUrl: null
+        imageUrls: []
+        description: "3기 프로젝트 다섯 팀이 한 학기 결과물을 발표했어요.\n\n행사 후 네트워킹까지 함께했어요."
+        startDate: "2025-12-20"
+        endDate: "2025-12-20"
