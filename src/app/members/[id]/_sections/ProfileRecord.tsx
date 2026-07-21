@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/shared/ui/Badge";
 import { Card } from "@/shared/ui/Card";
@@ -59,7 +60,19 @@ export function ProfileRecord({
                     className={cn("block rounded-lg", focusRing)}
                   >
                     <Card className="flex h-full flex-col gap-3 transition-colors hover:border-gray-300">
-                      <ImagePlaceholder ratio="16/9" label="화면" />
+                      {project.thumbnailUrl ? (
+                        <div className="relative aspect-video overflow-hidden rounded-md bg-gray-100">
+                          <Image
+                            src={project.thumbnailUrl}
+                            alt=""
+                            fill
+                            sizes="(max-width: 640px) 100vw, 300px"
+                            className="object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <ImagePlaceholder ratio="16/9" label="화면" />
+                      )}
                       <div className="flex flex-col gap-1">
                         <span className="text-body font-semibold text-text">{project.name}</span>
                         <span className="text-body-sm text-text-subtle">

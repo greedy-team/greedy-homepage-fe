@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ImagePlaceholder } from "@/shared/ui/ImagePlaceholder";
 import { getProject, getProjects } from "@/entities/project/api";
@@ -37,8 +38,13 @@ export default async function ProjectDetailPage({ params }: { params: Promise<Pa
       <DetailHeader project={project} />
       {/* 이미지와 (모바일) 버튼은 한 묶음이라 가깝게 둬요. 다음 구획과는 더 벌어져요 */}
       <div className="flex flex-col gap-6">
-        {/* 대표 이미지 주소가 확정되면 썸네일을 넣어요. 지금은 자리표시자를 보여줘요 */}
-        <ImagePlaceholder ratio="16/9" label="대표 화면" />
+        {project.thumbnailUrl ? (
+          <div className="relative aspect-video overflow-hidden rounded-md bg-gray-100">
+            <Image src={project.thumbnailUrl} alt="" fill sizes="100vw" className="object-cover" />
+          </div>
+        ) : (
+          <ImagePlaceholder ratio="16/9" label="대표 화면" />
+        )}
         {/* 모바일에서는 링크 버튼을 이미지 아래 전체폭으로 쌓아요. 데스크톱은 헤더에 있어요 */}
         <div className="md:hidden">
           <ProjectLinks project={project} fullWidth />

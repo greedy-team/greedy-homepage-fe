@@ -1,9 +1,13 @@
 // 팀 프로젝트 데이터. 지금은 정적 데이터를 반환하고, API 명세가 확정되면
 // 이 함수 안만 fetch(ISR)로 바꿔요. 정렬(최신 기수 우선)도 서버로 옮겨갈 수 있어요.
 //
-// 문구는 사이트 말투(해요체)에 맞췄고, 기술 스택은 핵심(언어·프레임워크·DB·주요 라이브러리)만
-// 추렸어요. 서비스(배포) 주소는 아직 없어서 GitHub 링크만 넣었어요.
+// 문구는 사이트 말투(해요체)에 맞췄고, 기술 스택은 핵심(언어·프레임워크·DB·주요 라이브러리)만 추렸어요.
 import type { Project, ProjectSummary } from "./model";
+
+/** public/projects/<id>/1.webp부터 순서대로. 화면 이미지는 각 팀 레포 README에서 가져왔고, 두구두구는 배포 사이트 화면이에요 */
+function shots(id: string, count: number) {
+  return Array.from({ length: count }, (_, index) => `/projects/${id}/${index + 1}.webp`);
+}
 
 const PROJECTS: Project[] = [
   {
@@ -23,7 +27,8 @@ const PROJECTS: Project[] = [
     siteUrl: "https://doogoodoogoo.kr/",
     frontendGithubUrl: "https://github.com/greedy-team/doogoo-fe",
     backendGithubUrl: "https://github.com/greedy-team/doogoo-be",
-    imageUrls: [],
+    thumbnailUrl: "/projects/doogoo/1.webp",
+    imageUrls: shots("doogoo", 2),
     frontendStack: ["React", "TypeScript", "Vite", "TanStack Query", "Zustand", "Tailwind CSS"],
     backendStack: ["Java", "Spring Boot", "JPA", "PostgreSQL", "OpenAI API"],
     members: [
@@ -51,7 +56,9 @@ const PROJECTS: Project[] = [
     siteUrl: "https://meetlink.now/",
     frontendGithubUrl: "https://github.com/greedy-team/meetlink-fe",
     backendGithubUrl: "https://github.com/greedy-team/meetlink-be",
-    imageUrls: [],
+    // 세로 화면은 16:9 크롭이 어색해서, 폰 화면 두 장을 나란히 둔 전용 썸네일을 써요
+    thumbnailUrl: "/projects/meetlink/thumb.webp",
+    imageUrls: shots("meetlink", 4),
     frontendStack: ["React", "TypeScript", "Vite", "TanStack Query", "Tailwind CSS", "Kakao Maps API"],
     backendStack: ["Java", "Spring Boot", "JPA", "PostgreSQL", "Flyway", "MOTIS"],
     members: [
@@ -79,7 +86,8 @@ const PROJECTS: Project[] = [
     siteUrl: "https://www.sejong-zupzup.kr/",
     frontendGithubUrl: "https://github.com/greedy-team/zup-zup-fe",
     backendGithubUrl: "https://github.com/greedy-team/zup-zup-be",
-    imageUrls: [],
+    thumbnailUrl: "/projects/zupzup/1.webp",
+    imageUrls: shots("zupzup", 6),
     frontendStack: ["React", "TypeScript", "Vite", "TanStack Query", "Zustand", "Tailwind CSS"],
     backendStack: ["Java", "Spring Boot", "JPA", "MySQL"],
     members: [
@@ -108,7 +116,8 @@ const PROJECTS: Project[] = [
     siteUrl: "https://sejong-life-fe.vercel.app/",
     frontendGithubUrl: "https://github.com/greedy-team/sejong-life-fe",
     backendGithubUrl: "https://github.com/greedy-team/sejong-life-be",
-    imageUrls: [],
+    thumbnailUrl: "/projects/sejong-life/1.webp",
+    imageUrls: shots("sejong-life", 6),
     frontendStack: ["React", "TypeScript", "Vite", "TanStack Query", "Tailwind CSS"],
     backendStack: ["Java", "Spring Boot", "JPA", "QueryDSL", "MySQL", "Redis"],
     members: [
@@ -138,7 +147,9 @@ const PROJECTS: Project[] = [
     siteUrl: "https://www.mokkoji.site/",
     frontendGithubUrl: "https://github.com/greedy-team/mokkoji-fe-next",
     backendGithubUrl: "https://github.com/greedy-team/mokkoji-be",
-    imageUrls: [],
+    // 대표는 검색 히어로를 16:9로 잘라 쓴 전용 썸네일이에요
+    thumbnailUrl: "/projects/mokkoji/thumb.webp",
+    imageUrls: shots("mokkoji", 6),
     frontendStack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
     backendStack: ["Java", "Spring Boot", "JPA", "QueryDSL", "MySQL", "Redis"],
     members: [
@@ -171,7 +182,8 @@ const PROJECTS: Project[] = [
     // 배포가 중단돼서 siteUrl은 두지 않아요 (서비스 버튼이 죽은 링크로 가지 않게).
     frontendGithubUrl: "https://github.com/greedy-team/ddarahang-fe",
     backendGithubUrl: "https://github.com/greedy-team/ddarahang-be",
-    imageUrls: [],
+    thumbnailUrl: "/projects/ddarahang/1.webp",
+    imageUrls: shots("ddarahang", 3),
     // 비공개 레포라 README·언어 구성으로 확인 가능한 범위까지만 적었어요.
     frontendStack: ["React", "TypeScript"],
     backendStack: ["Java", "Spring Boot"],
