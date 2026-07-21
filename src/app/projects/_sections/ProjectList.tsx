@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/shared/ui/Badge";
 import { Card } from "@/shared/ui/Card";
@@ -41,7 +42,19 @@ export function ProjectList({ projects, cohorts }: ProjectListProps) {
             <li key={project.id}>
               <Link href={`/projects/${project.id}`} className={cn("block rounded-lg", focusRing)}>
                 <Card className="flex h-full flex-col gap-4 transition-colors hover:border-gray-300">
-                  <ImagePlaceholder ratio="16/9" />
+                  {project.thumbnailUrl ? (
+                    <div className="relative aspect-video overflow-hidden rounded-md bg-gray-100">
+                      <Image
+                        src={project.thumbnailUrl}
+                        alt=""
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <ImagePlaceholder ratio="16/9" />
+                  )}
                   <div className="flex flex-col items-start gap-2">
                     <Badge variant="brand">{project.cohort}</Badge>
                     <h2 className="text-h3 text-text">{project.name}</h2>
