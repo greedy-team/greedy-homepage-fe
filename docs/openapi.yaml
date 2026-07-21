@@ -20,7 +20,7 @@ tags:
   - name: projects
     description: "목록 + 상세"
   - name: members
-    description: "목록만"
+    description: "목록 + 상세"
   - name: activities
     description: "목록만 (백엔드 구현 전)"
 
@@ -74,6 +74,29 @@ paths:
               schema:
                 type: array
                 items: { $ref: "#/components/schemas/Member" }
+
+  /members/{id}:
+    get:
+      tags: [members]
+      summary: 멤버 상세 (자기소개·참여 프로젝트 포함)
+      description: |
+        프론트는 목록에서 이름으로 멤버를 찾아 id를 얻은 뒤, 이 엔드포인트로 상세 전용 필드를 받아요.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MemberDetail" }
+        "404":
+          description: 존재하지 않는 멤버
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
 
   /activities:
     get:
@@ -152,6 +175,43 @@ components:
         memberActivities:
           - { activityType: "STUDY_MEMBER", generationNumber: 2 }
           - { activityType: "STUDY_MEMBER", generationNumber: 3 }
+
+    MemberProjectRef:
+      type: object
+      description: "멤버가 참여한 프로젝트(ProjectMember 조인). stackPosition은 그 프로젝트에서의 역할."
+      required: [projectId, name, stackPosition]
+      properties:
+        projectId: { type: integer }
+        name: { type: string }
+        stackPosition: { $ref: "#/components/schemas/StackPosition" }
+
+    MemberDetail:
+      allOf:
+        - $ref: "#/components/schemas/Member"
+        - type: object
+          required: [description, teamProjects]
+          properties:
+            description:
+              type: string
+              nullable: true
+              description: "자기소개."
+            teamProjects:
+              type: array
+              items: { $ref: "#/components/schemas/MemberProjectRef" }
+      example:
+        id: 18
+        name: "강동현"
+        githubUrl: "https://github.com/mintcoke123"
+        imageUrl: null
+        mainStackPosition: "BACKEND"
+        departments: ["COMPUTER_SCIENCE"]
+        memberActivities:
+          - { activityType: "STUDY_MEMBER", generationNumber: 2 }
+          - { activityType: "STUDY_MEMBER", generationNumber: 3 }
+        description: "화면을 만들다가 서버가 궁금해져 트랙을 옮겼어요."
+        teamProjects:
+          - { projectId: 4, name: "세종 줍줍", stackPosition: "FRONTEND" }
+          - { projectId: 5, name: "두구두구", stackPosition: "BACKEND" }
 
     # ── projects ──────────────────────────────────────────────
     ProjectMemberRef:

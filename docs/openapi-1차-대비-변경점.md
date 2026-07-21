@@ -35,7 +35,7 @@
 
 | 항목 | 1차 | 현재 | 이유 |
 | --- | --- | --- | --- |
-| `GET /members/{id}` (상세) | 있음 (숫자 PK 또는 깃허브 슬러그) | **스펙에서 제외** | 프론트 멤버 페이지 URL이 이름 기반이라 백엔드 id와 연결고리가 없어요. 46명 전체 목록을 한 번 받아 이름으로 매칭하는 게 매핑표 관리보다 단순해요. 상세에만 있던 `description`(자기소개)·`teamProjects`(참여 프로젝트 조인)는 지금 화면이 안 써서 같이 빠졌어요 — **Phase 2(로그인 자기편집)에서 되살릴 가치가 있으니 백엔드 저장 필드는 유지 추천.** |
+| `GET /members/{id}` (상세) | 있음 (숫자 PK 또는 깃허브 슬러그) | **유지 — 단 id는 정수만** | 한때 "이름 매칭이면 충분하다"고 뺐다가 되살렸어요: 프로필 페이지의 자기소개(`description`)·참여 프로젝트(`teamProjects`)는 상세 전용 필드가 맞아서요. id는 목록에서 이름으로 찾아 얻으니 깃허브 슬러그 허용은 불필요 — 정수 id만 받으면 돼요. 활동 이력(`memberActivities`)은 목록 카드도 쓰므로 **목록 스키마에 유지**(상세로 옮기지 않음). |
 | `name` | 일반 필드 | **매칭 키로 승격** | 프론트가 이름으로 큐레이션과 병합해요. 노션 명단 표기와 정확히 일치해야 하고, 동명이인이 생기면 그때 id 매핑표를 프론트에 추가해요. |
 | `ActivityType` enum | 회장·영입리드 없음 (⚠️로 표시만) | 동일 — **추가 여부 확인 요청** | 현재 화면의 역할 표기(회장, 운영진, 영입리드, 리드+리뷰어 겸임 등)는 이 enum으로 표현이 안 돼서, 프론트가 큐레이션 문구를 그대로 쓰고 있어요. CLUB_LEAD 등이 추가되면 백엔드 값으로 대체 가능해요. |
 | 기수별 트랙 (`MemberActivity.stackPosition`) | 신설 요청으로 기재 | 동일 — **여전히 요청 상태** | "2기 FE → 3기 BE" 같은 이력이 `mainStackPosition` 하나로는 복원 불가. 이게 없으면 멤버 카드의 기수·트랙 이력은 계속 큐레이션 유지예요. |
@@ -98,8 +98,9 @@
    (백엔드가 MemberActivityType → **MemberRole**로 개명함. 현재 값은 1차와 동일.)
 9. **[members] MemberAction.stackPosition(기수별 트랙) 신설 여부** — 기존 요청 유지 (§3).
    (백엔드가 MemberActivity 엔티티 → **MemberAction**으로 개명함. 아직 stackPosition 없음.)
-10. **[members] description·teamProjects 유지 여부** — description은 **Member 엔티티에 이미 있음**(확인됨).
-   teamProjects(참여 프로젝트 조인)는 응답에 포함될지 DTO PR 때 확인. Phase 2 대비 (§3).
+10. **[members] `/members/{id}` 상세의 description·teamProjects 컨펌** — 스펙에 복원했어요(§3).
+    description은 **Member 엔티티에 이미 있음**(확인됨). 자기소개(현재 임시 큐레이션 문구)와 프로필의
+    참여 프로젝트를 API로 대체하는 데 필요해요.
 11. **[공통] Department enum 실제 학과 목록 확정** — 백엔드도 현재 비어 있음(`//Todo`).
 12. **[공통] 이미지 URL의 호스트(도메인) 확정** — thumbnailUrl·imageUrl 등이 어떤 도메인(S3 버킷 주소 등)으로
     나올지 알려주세요. 프론트의 next/image는 허용 도메인을 빌드 설정에 미리 등록해야 해서(next.config.ts
