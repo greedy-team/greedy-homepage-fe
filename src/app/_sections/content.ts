@@ -35,9 +35,10 @@ export const VALUES = [
   { title: "HUMAN COMMUNITY", description: "사람 사는 공동체답게" },
 ] as const;
 
-// 동아리 요약 숫자. 백엔드가 아니라 기수마다 직접 갱신해요. (누적 멤버 56 = 내부 46 + 든든한 리뷰어 10)
+// 동아리 요약 숫자. 백엔드가 아니라 기수마다 직접 갱신해요.
+// 누적 멤버는 내부 멤버만 세요 (외부 든든한 리뷰어 제외)
 export const STATS = [
-  { value: "56", label: "누적 멤버" },
+  { value: "46", label: "누적 멤버" },
   { value: "4기", label: "진행 기수" },
   { value: "FE, BE", label: "트랙" },
   { value: "6", label: "팀 프로젝트" },
