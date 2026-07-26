@@ -21,8 +21,4 @@ export const PROFILE = {
   github: "GitHub 보기",
   historyTitle: "활동 이력",
   projectsTitle: "프로젝트",
-  /** 지금 기수에 활동 중인 멤버의 프로젝트 자리 */
-  projectsPending: "4기 프로젝트는 데모데이가 끝나면 올라와요.",
-  activitiesTitle: "참여한 활동",
-  activitiesEmpty: "참여한 활동이 올라오면 여기에 보여요.",
 } as const;
