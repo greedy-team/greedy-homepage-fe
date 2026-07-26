@@ -14,7 +14,7 @@ function latestTrack(member: Member): string | undefined {
 
 /**
  * 상단 가로 헤더. 사진 · 이름 · 배지 · 자기소개(본인 작성, 없으면 숨김) · GitHub.
- * 소개는 본문 폭(max-w-prose)으로 흘러요. 길이가 제각각이어도 두어 줄 안에서 끝나요.
+ * 소개는 본문 폭을 그대로 써요.
  * 배지는 지금(최신) 기수의 역할만 보여줘요. 지난 역할은 활동 이력 카드가 말해줘요.
  */
 export function ProfileHeader({ member }: { member: Member }) {
@@ -33,7 +33,7 @@ export function ProfileHeader({ member }: { member: Member }) {
             <Badge variant="outline">{member.role}</Badge>
           </div>
         </div>
-        {member.intro && <p className="max-w-prose text-body text-gray-700">{member.intro}</p>}
+        {member.intro && <p className="whitespace-pre-line text-body text-gray-700">{member.intro}</p>}
       </div>
       {/* 좁은 화면은 꽉 찬 버튼으로 쌓이고, md부터 헤더 오른쪽 끝에 붙어요 */}
       {member.githubUrl && (

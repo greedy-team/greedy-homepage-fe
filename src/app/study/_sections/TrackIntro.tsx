@@ -6,7 +6,7 @@ export function TrackIntro({ track }: { track: Track }) {
   return (
     <section className="mt-10">
       <h2 className="text-h2 text-text">{track.title}</h2>
-      <p className="mt-3 max-w-lg text-body text-text-subtle">{track.description}</p>
+      <p className="mt-3 whitespace-pre-line text-body text-text-subtle">{track.description}</p>
       <ul className="mt-5 flex flex-wrap gap-2">
         {track.skills.map((skill) => (
           <li key={skill}>
