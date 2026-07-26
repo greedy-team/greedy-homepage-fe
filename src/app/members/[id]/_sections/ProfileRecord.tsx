@@ -19,9 +19,9 @@ function HistoryCard({ cohort, title }: { cohort: string; title: string }) {
 }
 
 /**
- * 오른쪽에 쌓이는 기록. 활동 이력 → 프로젝트 → 참여한 활동 순서예요.
- * 이력은 최근 두 기수만 펼치고 이전은 접어요. 해당 없는 칸은 숨기고,
- * 아직 없는 기록만 빈 상태로 남겨서 채워질 자리라는 걸 알려줘요.
+ * 헤더 아래 쌓이는 기록. 활동 이력 → 프로젝트 순서예요.
+ * 칸은 데이터가 주는 대로 그려요 — 기록이 있으면 목록, 없으면 칸을 숨겨요.
+ * 왜 비었는지는 화면이 추측하지 않아요. 서버 명세에 그 정보가 생기면 그때 보여줘요.
  */
 export function ProfileRecord({
   member,
@@ -30,11 +30,6 @@ export function ProfileRecord({
   member: Member;
   projects: ProjectSummary[];
 }) {
-  // 지금 기수에 활동 중이면 이번 기수 프로젝트가 아직 없다는 안내를 붙여요.
-  // 든든한 리뷰어는 팀 프로젝트를 하지 않아서 칸 자체가 해당 없어요
-  const activeNow = member.history[0]?.cohort === "4기" && member.role !== "든든한 리뷰어";
-  const showProjects = projects.length > 0 || activeNow;
-
   return (
     <div className="flex flex-col gap-10">
       <section className="flex flex-col gap-4">
@@ -48,51 +43,43 @@ export function ProfileRecord({
         </ul>
       </section>
 
-      {showProjects && (
+      {projects.length > 0 && (
         <section className="flex flex-col gap-4">
           <h2 className="text-h3 text-text">{PROFILE.projectsTitle}</h2>
-          {projects.length > 0 && (
-            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-              {projects.map((project) => (
-                <li key={project.id}>
-                  <Link
-                    href={`/projects/${project.id}`}
-                    className={cn("block rounded-lg", focusRing)}
-                  >
-                    <Card className="flex h-full flex-col gap-3 transition-colors hover:border-gray-300">
-                      {project.thumbnailUrl ? (
-                        <div className="relative aspect-video overflow-hidden rounded-md bg-gray-100">
-                          <Image
-                            src={project.thumbnailUrl}
-                            alt=""
-                            fill
-                            sizes="(max-width: 640px) 100vw, 300px"
-                            className="object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <ImagePlaceholder ratio="16/9" label="화면" />
-                      )}
-                      <div className="flex flex-col gap-1">
-                        <span className="text-body font-semibold text-text">{project.name}</span>
-                        <span className="text-body-sm text-text-subtle">
-                          {project.cohort} 팀 프로젝트
-                        </span>
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+            {projects.map((project) => (
+              <li key={project.id}>
+                <Link
+                  href={`/projects/${project.id}`}
+                  className={cn("block rounded-lg", focusRing)}
+                >
+                  <Card className="flex h-full flex-col gap-3 transition-colors hover:border-gray-300">
+                    {project.thumbnailUrl ? (
+                      <div className="relative aspect-video overflow-hidden rounded-md bg-gray-100">
+                        <Image
+                          src={project.thumbnailUrl}
+                          alt=""
+                          fill
+                          sizes="(max-width: 640px) 100vw, 300px"
+                          className="object-cover"
+                        />
                       </div>
-                    </Card>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-          {activeNow && <p className="text-body-sm text-text-subtle">{PROFILE.projectsPending}</p>}
+                    ) : (
+                      <ImagePlaceholder ratio="16/9" label="화면" />
+                    )}
+                    <div className="flex flex-col gap-1">
+                      <span className="text-body font-semibold text-text">{project.name}</span>
+                      <span className="text-body-sm text-text-subtle">
+                        {project.cohort} 팀 프로젝트
+                      </span>
+                    </div>
+                  </Card>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
-
-      <section className="flex flex-col gap-4">
-        <h2 className="text-h3 text-text">{PROFILE.activitiesTitle}</h2>
-        <p className="text-body-sm text-text-subtle">{PROFILE.activitiesEmpty}</p>
-      </section>
     </div>
   );
 }
