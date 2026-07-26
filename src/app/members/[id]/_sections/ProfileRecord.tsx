@@ -36,7 +36,7 @@ export function ProfileRecord({
   const showProjects = projects.length > 0 || activeNow;
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col gap-10">
+    <div className="flex flex-col gap-10">
       <section className="flex flex-col gap-4">
         <h2 className="text-h3 text-text">{PROFILE.historyTitle}</h2>
         <ul className="flex flex-col gap-3">
@@ -52,7 +52,7 @@ export function ProfileRecord({
         <section className="flex flex-col gap-4">
           <h2 className="text-h3 text-text">{PROFILE.projectsTitle}</h2>
           {projects.length > 0 && (
-            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
               {projects.map((project) => (
                 <li key={project.id}>
                   <Link
