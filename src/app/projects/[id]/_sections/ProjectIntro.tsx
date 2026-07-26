@@ -20,21 +20,22 @@ function StackRow({ label, items }: { label: string; items: string[] }) {
 
 /**
  * 대표 이미지 아래에 오는 소개. 한 줄 요약을 먼저 읽고, 문제와 기능으로 이어져요.
- * 글은 읽기 좋게 폭을 좁히고, 기술 스택 배지는 전체 폭을 써서 프론트/백엔드로 나눠 보여줘요.
+ * 글의 줄바꿈은 화면 폭이 아니라 콘텐츠의 문장 단위로 정해요 (whitespace-pre-line).
+ * 기술 스택 배지는 프론트/백엔드로 나눠 보여줘요.
  */
 export function ProjectIntro({ project }: { project: Project }) {
   const hasStack = project.frontendStack.length > 0 || project.backendStack.length > 0;
 
   return (
     <section className="flex flex-col gap-8">
-      <p className="max-w-2xl text-body text-gray-700">{project.summary}</p>
+      <p className="whitespace-pre-line text-body text-gray-700">{project.summary}</p>
 
-      <div className="flex max-w-2xl flex-col gap-2">
+      <div className="flex flex-col gap-2">
         <h2 className="text-h3 text-text">어떤 문제를 풀었나요</h2>
-        <p className="text-body text-gray-700">{project.purpose}</p>
+        <p className="whitespace-pre-line text-body text-gray-700">{project.purpose}</p>
       </div>
 
-      <div className="flex max-w-2xl flex-col gap-2">
+      <div className="flex flex-col gap-2">
         <h2 className="text-h3 text-text">주요 기능</h2>
         <ul className="flex list-disc flex-col gap-1 pl-5 text-body text-gray-700 marker:text-text-subtle">
           {project.mainFunction.map((item) => (

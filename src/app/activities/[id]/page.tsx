@@ -74,9 +74,9 @@ export default async function ActivityDetailPage({ params }: { params: Promise<P
       )}
 
       {activity.body.length > 0 && (
-        <section className="flex max-w-2xl flex-col gap-4">
+        <section className="flex flex-col gap-4">
           {activity.body.map((paragraph) => (
-            <p key={paragraph} className="text-body text-gray-700">
+            <p key={paragraph} className="whitespace-pre-line text-body text-gray-700">
               {paragraph}
             </p>
           ))}
