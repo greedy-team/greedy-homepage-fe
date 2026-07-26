@@ -31,20 +31,11 @@ function roleAt(member: Member, cohort: string): string | undefined {
   return "멤버";
 }
 
-/** 그 시점의 트랙. 기수를 고르면 그 기수에 맡은 트랙으로만 걸러요 */
-function tracksAt(member: Member, cohort: string): string[] {
-  if (cohort === ALL) return member.tracks;
-  const title = member.history.find((item) => item.cohort === cohort)?.title ?? "";
-  const tracks: string[] = [];
-  if (title.includes("프론트엔드")) tracks.push("FE");
-  if (title.includes("백엔드")) tracks.push("BE");
-  return tracks;
-}
-
+/** 역할군 필터. 리드는 기수를 이끄는 쪽이라 운영진에, 든든한 리뷰어는 리뷰어에 묶여요 */
 function matchesRole(member: Member, cohort: string, filter: string) {
   if (filter === ALL) return true;
-  if (filter === "FE" || filter === "BE") return tracksAt(member, cohort).includes(filter);
   const role = roleAt(member, cohort);
+  if (filter === "운영진") return role === "운영진" || role === "리드";
   if (filter === "리뷰어") return role === "리뷰어" || role === "든든한 리뷰어";
   return role === filter;
 }
