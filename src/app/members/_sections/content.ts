@@ -8,8 +8,8 @@ export const PAGE = {
 /** 필터에서 "전체"를 가리키는 값 */
 export const ALL = "전체";
 
-/** 역할 필터. FE/BE는 트랙으로, 나머지는 역할로 걸러요 */
-export const ROLE_FILTERS = ["FE", "BE", "운영진", "리뷰어"] as const;
+/** 역할 필터. 리드는 운영진에, 든든한 리뷰어는 리뷰어에 포함돼요 */
+export const ROLE_FILTERS = ["멤버", "운영진", "리뷰어"] as const;
 
 export const EMPTY = {
   title: "조건에 맞는 멤버가 없어요",
