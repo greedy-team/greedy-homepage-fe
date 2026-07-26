@@ -5,8 +5,8 @@ import { getMember, getMembers } from "@/entities/member/api";
 import { getProject, getProjects } from "@/entities/project/api";
 import type { ProjectSummary } from "@/entities/project/model";
 import { PROFILE } from "../_sections/content";
+import { ProfileHeader } from "./_sections/ProfileHeader";
 import { ProfileRecord } from "./_sections/ProfileRecord";
-import { ProfileSidebar } from "./_sections/ProfileSidebar";
 
 type Params = { id: string };
 
@@ -53,11 +53,9 @@ export default async function MemberProfilePage({ params }: { params: Promise<Pa
       <TextLink variant="back" href="/members">
         {PROFILE.back}
       </TextLink>
-      {/* 왼쪽은 변하지 않는 정보, 오른쪽은 쌓이는 기록. 모바일은 위아래로 쌓여요 */}
-      <div className="flex flex-col gap-10 md:flex-row md:gap-16">
-        <ProfileSidebar member={member} />
-        <ProfileRecord member={member} projects={projects} />
-      </div>
+      {/* 위는 명함(변하지 않는 정보), 아래는 쌓이는 기록 */}
+      <ProfileHeader member={member} />
+      <ProfileRecord member={member} projects={projects} />
     </div>
   );
 }
