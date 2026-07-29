@@ -4,15 +4,11 @@
 
 ## 준비
 
-org 레포를 직접 건드리지 않고, **개인 계정으로 포크한 레포**에서 작업해요.
-
-1. GitHub에서 `greedy-team/greedy-homepage-fe`를 **Fork** 해요.
-2. 포크한 레포를 클론하고, 원본을 `upstream`으로 연결해요.
+팀 멤버는 org 레포를 클론하고 **레포에서 바로 브랜치를 만들어** 작업해요. 포크는 동아리 밖에서 기여할 때만 써요.
 
 ```bash
-git clone https://github.com/<내-계정>/greedy-homepage-fe.git
+git clone https://github.com/greedy-team/greedy-homepage-fe.git
 cd greedy-homepage-fe
-git remote add upstream https://github.com/greedy-team/greedy-homepage-fe.git
 
 npm i -g pnpm   # pnpm이 없다면 한 번만
 pnpm install
@@ -23,15 +19,17 @@ pnpm dev
 
 ## 흐름
 
-이슈 → (포크에서) 브랜치 → 포크로 push → upstream에 PR → 리뷰 → squash 머지. 모든 작업은 이슈에서 시작해요.
+이슈 → 브랜치 → push → PR → 리뷰 → squash 머지. 모든 작업은 이슈에서 시작해요.
 
-1. **이슈 만들기** - upstream(org) 레포에 템플릿(기능, 버그, 콘텐츠 갱신, 디자인 시스템 변경) 중 하나로 만들어요.
-2. **최신에서 브랜치 따기** - `git fetch upstream && git switch -c 브랜치 upstream/main`. 원본 최신을 기준으로 시작해요.
+1. **이슈 만들기** - 템플릿(기능, 버그, 콘텐츠 갱신, 디자인 시스템 변경) 중 하나로 만들어요.
+2. **최신에서 브랜치 따기** - `git fetch origin && git switch -c 브랜치 origin/main`. 최신 main을 기준으로 시작해요.
 3. **브랜치 이름** - `feat/12-study-page`처럼 `종류/이슈번호-설명` 형식이에요.
 4. **작업하고 커밋하기** - 커밋 컨벤션은 아래를 봐 주세요.
-5. **포크로 push** - `git push -u origin 브랜치`. `origin`은 내 포크예요.
-6. **PR 올리기** - 내 포크 브랜치에서 upstream `main`으로 PR을 열어요. 템플릿 체크리스트를 채우고 스크린샷을 붙여요.
-7. **리뷰 후 squash 머지** - PR 하나가 커밋 하나로 남아요. 히스토리가 그대로 프로젝트 연대기가 돼요.
+5. **push** - `git push -u origin 브랜치`.
+6. **PR 올리기** - `main`으로 PR을 열어요. 템플릿 체크리스트를 채우고 스크린샷을 붙여요. PR을 올리면 Vercel 프리뷰가 자동으로 달려요.
+7. **리뷰 후 squash 머지** - PR 하나가 커밋 하나로 남아요. 히스토리가 그대로 프로젝트 연대기가 돼요. 머지된 브랜치는 지워요.
+
+동아리 밖에서 기여한다면 레포를 포크해서 같은 흐름으로 PR을 올리면 돼요. 포크 PR은 프리뷰 배포에 팀의 승인이 한 번 필요해요.
 
 ## 디자인 시스템을 바꿀 때
 
@@ -71,8 +69,8 @@ chore: CI에 타입 검사 추가 (#3)
 
 ## 브랜치 규칙
 
-- upstream의 `main`은 보호 브랜치예요. 직접 푸시하지 않고 포크에서 올린 PR로만 합쳐요.
-- 브랜치는 내 포크에 만들고 push해요. 포크마다 분리돼 있어 이름이 겹쳐도 충돌하지 않아요.
+- `main`은 보호 브랜치예요. 직접 푸시하지 않고 PR로만 합쳐요.
+- 브랜치는 레포에 직접 만들어요. 모두가 쓰는 공간이라 이름 규칙을 지키고, 머지된 브랜치는 지워요.
 - 브랜치 이름: `종류/이슈번호-설명`. 소문자 영문과 하이픈만 쓰고, 종류는 커밋 타입과 같고, 설명은 2~3단어로 해요. ex) `feat/1-design-tokens`, `fix/15-gnb-overflow`
 
 ## 코드 규칙
