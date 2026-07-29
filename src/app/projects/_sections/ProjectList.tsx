@@ -14,13 +14,14 @@ import { ALL, EMPTY } from "./content";
 
 type ProjectListProps = {
   projects: ProjectSummary[];
-  cohorts: string[];
+  cohorts: number[];
 };
 
 /** 기수 칩으로 거른 프로젝트 카드 그리드. 고른 기수에 프로젝트가 없으면 준비 중 화면을 보여줘요 */
 export function ProjectList({ projects, cohorts }: ProjectListProps) {
-  const [cohort, setCohort] = useState<string>(ALL);
-  const filtered = cohort === ALL ? projects : projects.filter((project) => project.cohort === cohort);
+  const [cohort, setCohort] = useState<number | typeof ALL>(ALL);
+  const filtered =
+    cohort === ALL ? projects : projects.filter((project) => project.generationNumber === cohort);
   const empty = cohort === ALL ? EMPTY.all : EMPTY.cohort(cohort);
 
   return (
@@ -31,7 +32,7 @@ export function ProjectList({ projects, cohorts }: ProjectListProps) {
         </FilterChip>
         {cohorts.map((item) => (
           <FilterChip key={item} selected={cohort === item} onClick={() => setCohort(item)}>
-            {item}
+            {item}기
           </FilterChip>
         ))}
       </div>
@@ -56,7 +57,7 @@ export function ProjectList({ projects, cohorts }: ProjectListProps) {
                     <ImagePlaceholder ratio="16/9" />
                   )}
                   <div className="flex flex-col items-start gap-2">
-                    <Badge variant="brand">{project.cohort}</Badge>
+                    <Badge variant="brand">{project.generationNumber}기</Badge>
                     <h2 className="text-h3 text-text">{project.name}</h2>
                     <p className="text-body-sm text-text-subtle">{project.summary}</p>
                   </div>

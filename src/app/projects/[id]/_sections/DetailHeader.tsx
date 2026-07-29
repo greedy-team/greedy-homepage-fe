@@ -13,7 +13,7 @@ export function DetailHeader({ project }: { project: Project }) {
       <TextLink variant="back" href="/projects">
         프로젝트로
       </TextLink>
-      <Badge variant="brand">{project.cohort}</Badge>
+      <Badge variant="brand">{project.generationNumber}기</Badge>
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <h1 className="text-display text-text">{project.name}</h1>
         <div className="hidden md:block">

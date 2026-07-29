@@ -38,7 +38,7 @@ export function ProjectIntro({ project }: { project: Project }) {
       <div className="flex flex-col gap-2">
         <h2 className="text-h3 text-text">주요 기능</h2>
         <ul className="flex list-disc flex-col gap-1 pl-5 text-body text-gray-700 marker:text-text-subtle">
-          {project.mainFunction.map((item) => (
+          {project.mainFunction.split("\n").map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>

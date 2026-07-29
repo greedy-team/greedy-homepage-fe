@@ -70,7 +70,7 @@ export function ProfileRecord({
                     <div className="flex flex-col gap-1">
                       <span className="text-body font-semibold text-text">{project.name}</span>
                       <span className="text-body-sm text-text-subtle">
-                        {project.cohort} 팀 프로젝트
+                        {project.generationNumber}기 팀 프로젝트
                       </span>
                     </div>
                   </Card>

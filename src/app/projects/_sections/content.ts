@@ -10,8 +10,8 @@ export const ALL = "전체";
 
 export const EMPTY = {
   /** 아직 프로젝트가 없는 기수를 골랐을 때 */
-  cohort: (cohort: string) => ({
-    title: `${cohort} 프로젝트를 준비하고 있어요`,
+  cohort: (generationNumber: number) => ({
+    title: `${generationNumber}기 프로젝트를 준비하고 있어요`,
     description: "첫 프로젝트가 만들어지면 여기에 올라와요.",
   }),
   /** 전체가 하나도 없을 때 (아직은 볼 일이 없어요) */

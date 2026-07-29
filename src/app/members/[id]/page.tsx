@@ -15,20 +15,24 @@ export async function generateStaticParams() {
   return members.map((member) => ({ id: member.id }));
 }
 
+// TODO: CURRENT_GENERATION이 site.ts로 중앙화되면(todo 참고) 이 4도 그 값을 참조해요.
+const CURRENT_GENERATION = 4;
+
 /** 이 멤버가 함께 만든, 완료된 기수의 프로젝트만 골라요 */
 async function getMemberProjects(name: string): Promise<ProjectSummary[]> {
   const summaries = await getProjects();
-  const projects = await Promise.all(summaries.map((summary) => getProject(summary.id)));
+  const projects = await Promise.all(summaries.map((summary) => getProject(String(summary.id))));
   return projects
     .filter((project) => project !== undefined)
     .filter(
       (project) =>
-        project.cohort !== "4기" && project.members.some((member) => member.name === name),
+        project.generationNumber !== CURRENT_GENERATION &&
+        project.team.some((member) => member.name === name),
     )
-    .map(({ id, name: projectName, cohort, summary, thumbnailUrl }) => ({
+    .map(({ id, name: projectName, generationNumber, summary, thumbnailUrl }) => ({
       id,
       name: projectName,
-      cohort,
+      generationNumber,
       summary,
       thumbnailUrl,
     }));

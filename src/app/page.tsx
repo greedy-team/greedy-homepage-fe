@@ -7,16 +7,11 @@ import { StatBand } from "./_sections/StatBand";
 import { StudyFlow } from "./_sections/StudyFlow";
 import { ValueBand } from "./_sections/ValueBand";
 import { getActivities } from "@/entities/activity/api";
-import { getFeaturedProjects } from "@/entities/project/api";
+import { getProjects } from "@/entities/project/api";
 import { APPLY_FORM_URL, IS_RECRUITING } from "@/shared/config/site";
 
-// activities는 실제 API(fetch, ISR)로 바뀌었고, projects는 아직 정적 큐레이션이에요.
-// project도 API로 옮기면 이 페이지 전체가 fetch 기반이 돼요. 배경은 docs/adr/002 참고.
 export default async function Home() {
-  const [activities, projects] = await Promise.all([
-    getActivities(),
-    getFeaturedProjects(),
-  ]);
+  const [activities, projects] = await Promise.all([getActivities(), getProjects()]);
 
   return (
     <>
