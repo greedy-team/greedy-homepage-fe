@@ -5,9 +5,11 @@
  * 여기선 그 타이밍을 빌려서 MSW를 켜요.
  */
 export async function register() {
-  if (process.env.MSW_ENABLED === "true") {
+  // msw/node는 Node의 http/https를 직접 패치해서 Edge 런타임엔 없는 모듈을 가져와요.
+  // Next는 instrumentation.ts를 nodejs·edge 두 런타임 모두를 위해 번들링하는데,
+  // 이 체크가 없으면 edge용 번들이 그 모듈을 못 찾아서 빌드 자체가 깨져요(직접 겪음).
+  if (process.env.NEXT_RUNTIME === "nodejs" && process.env.MSW_ENABLED === "true") {
     const { server } = await import("../mocks/node");
-    server.listen({ onUnhandledRequest: "warn" }); 
-    // 핸들러 빠뜨린 요청은 실백엔드로 나가되 콘솔에 경고를 남겨요
+    server.listen({ onUnhandledRequest: "warn" }); // 핸들러 빠뜨린 요청은 실백엔드로 나가되 콘솔에 경고를 남겨요
   }
 }
