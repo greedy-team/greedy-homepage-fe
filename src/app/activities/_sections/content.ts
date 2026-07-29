@@ -13,6 +13,4 @@ export const EMPTY = {
 export const DETAIL = {
   back: "활동으로",
   galleryTitle: "사진",
-  /** 아바타 스택 옆 문구. n에 함께한 인원이 들어가요 */
-  together: (n: number) => `외 ${n}명이 함께했어요`,
 } as const;
