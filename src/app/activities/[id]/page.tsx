@@ -54,6 +54,7 @@ export default async function ActivityDetailPage({ params }: { params: Promise<P
         <ImagePlaceholder ratio="16/9" label="대표 사진" />
       )}
 
+      {/* description은 문자열 하나이고, \n으로 문단을 구분해요 */}
       <section className="flex flex-col gap-4">
         {activity.description.split("\n").map((paragraph) => (
           <p key={paragraph} className="whitespace-pre-line text-body text-gray-700">
