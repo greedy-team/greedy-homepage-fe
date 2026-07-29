@@ -4,6 +4,9 @@
 export const SITE_NAME = "그리디";
 export const SITE_DESCRIPTION = "세종대학교 개발 동아리 그리디예요. 스터디와 프로젝트로 함께 성장해요.";
 
+/** 사이트 대표 주소. OG 카드·사이트맵이 이 값을 봐요 */
+export const SITE_URL = "https://www.greedy-homepage.com";
+
 /** 모집 상태 스위치. GNB 버튼, 히어로, 하단 고정 CTA가 이 값 하나를 봐요. */
 export const IS_RECRUITING = false;
 

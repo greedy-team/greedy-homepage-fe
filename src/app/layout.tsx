@@ -3,10 +3,10 @@ import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 import { Gnb } from "@/widgets/Gnb";
 import { Footer } from "@/widgets/Footer";
-import { SITE_DESCRIPTION, SITE_NAME } from "@/shared/config/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/shared/config/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://greedy-homepage-fe.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: `${SITE_NAME} - 세종대학교 개발 동아리`,
     template: `%s - ${SITE_NAME}`,
