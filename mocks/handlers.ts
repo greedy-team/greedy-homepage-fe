@@ -17,6 +17,7 @@ const ACTIVITY_SUMMARIES: ActivitySummary[] = [
     startDate: "2026-07-18",
     endDate: "2026-07-18",
     imageCount: 4,
+    /** todos: 백앤드 api 이미지 url포멧 나오면 링크 형식 맞추기 */
     thumbnailUrls: shots("chorok-meetup-2026", 3),
   },
   {
