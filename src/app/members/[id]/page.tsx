@@ -18,6 +18,10 @@ export async function generateStaticParams() {
 // TODO(기수 중앙화): app/_sections/content.ts의 RECRUITING_COHORT 옆 TODO 참고
 const CURRENT_GENERATION = 4;
 
+// TODO(members 마이그레이션): /members/{id} 스웨거에 이미 teamProjects: { projectId, name }[]가
+// 있어요. Member 타입에 이 필드를 추가하고 나면, 전체 프로젝트를 다 뒤져 이름으로 역매칭하는
+// 지금 방식 대신 member.teamProjects[].projectId로 바로 getProject를 호출하면 돼요
+// (동명이인 버그도 없어지고, 프로젝트 전체를 안 가져와도 돼요).
 /** 이 멤버가 함께 만든, 완료된 기수의 프로젝트만 골라요 */
 async function getMemberProjects(name: string): Promise<ProjectSummary[]> {
   const summaries = await getProjects();
