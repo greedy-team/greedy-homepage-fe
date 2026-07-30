@@ -14,6 +14,7 @@ export async function getProject(id: string): Promise<Project | undefined> {
   return fetchJson<Project>(`/projects/${id}`, REVALIDATE_SECONDS);
 }
 
+// TODO(기수 중앙화): app/_sections/content.ts의 RECRUITING_COHORT 옆 TODO 참고
 /**
  * 필터에 쓰는 기수 목록. "전체 기수" API가 따로 없어서 직접 관리해요.
  * 프로젝트가 아직 없는 진행 중 기수도 넣어야 해서(빈 상태 노출), 기수가 바뀔 때마다

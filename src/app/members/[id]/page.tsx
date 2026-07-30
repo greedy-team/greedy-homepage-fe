@@ -15,7 +15,7 @@ export async function generateStaticParams() {
   return members.map((member) => ({ id: member.id }));
 }
 
-// TODO: CURRENT_GENERATION이 site.ts로 중앙화되면(todo 참고) 이 4도 그 값을 참조해요.
+// TODO(기수 중앙화): app/_sections/content.ts의 RECRUITING_COHORT 옆 TODO 참고
 const CURRENT_GENERATION = 4;
 
 /** 이 멤버가 함께 만든, 완료된 기수의 프로젝트만 골라요 */

@@ -1,6 +1,9 @@
 // 랜딩 페이지의 정적 문구. 서버에서 오지 않는, 우리가 직접 쓰는 카피예요.
 // 프로젝트·활동처럼 백엔드에서 올 데이터는 entities에 있어요.
 
+// TODO(기수 중앙화): shared/config/site.ts에 CURRENT_GENERATION(예: 4)을 두고
+// RECRUITING_COHORT, STATS의 "진행 기수", entities/project/api.ts의 COHORTS,
+// app/members/[id]/page.tsx의 CURRENT_GENERATION이 전부 그 값에서 파생되도록 리팩터링해요.
 /** 모집이 열릴 다음 기수. 모집 상태 문구에서 써요. */
 export const RECRUITING_COHORT = "5기";
 
@@ -39,7 +42,7 @@ export const VALUES = [
 // 누적 멤버는 내부 멤버만 세요 (외부 든든한 리뷰어 제외)
 export const STATS = [
   { value: "46", label: "누적 멤버" },
-  { value: "4기", label: "진행 기수" },
+  { value: "4기", label: "진행 기수" }, // TODO(기수 중앙화): RECRUITING_COHORT 옆 TODO 참고
   { value: "FE, BE", label: "트랙" },
   { value: "6", label: "팀 프로젝트" },
 ] as const;
