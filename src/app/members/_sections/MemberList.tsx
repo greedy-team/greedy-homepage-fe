@@ -8,7 +8,7 @@ import { Card } from "@/shared/ui/Card";
 import { EmptyState } from "@/shared/ui/EmptyState";
 import { FilterChip } from "@/shared/ui/FilterChip";
 import { cn, focusRing } from "@/shared/lib/cn";
-import { formatAffiliation, formatMemberRole, getAvatarUrl, roleAt } from "@/entities/member/lib";
+import { formatAffiliation, formatMemberBadge, getAvatarUrl, roleAt } from "@/entities/member/lib";
 import type { MemberRole, MemberSummary } from "@/entities/member/model";
 import { ALL, EMPTY, ROLE_FILTERS } from "./content";
 
@@ -27,7 +27,7 @@ function matchesRoleFilter(role: MemberRole, filter: RoleFilter | null): boolean
   return role === "STUDY_MEMBER";
 }
 
-/** 카드 정렬 순서: 이끄는 사람 → 돕는 사람 → 배우는 사람 */
+/** 카드 정렬 순서: 이끄는 사람 → 돕는 사람 → 배우는 사람. 든든한 리뷰어는 맨 뒤예요 */
 const ROLE_ORDER: Record<MemberRole, number> = {
   CO_FOUNDER: 0,
   MAINTAINER: 0,
@@ -35,6 +35,7 @@ const ROLE_ORDER: Record<MemberRole, number> = {
   REVIEWER: 2,
   STUDY_MEMBER: 3,
 };
+const EXTERNAL_REVIEWER_ORDER = 4;
 
 /** 화면에 그릴 카드 하나 */
 type MemberCard = {
@@ -48,7 +49,7 @@ type MemberCard = {
   order: number;
 };
 
-/** memberActions 기반으로 카드 하나를 만들어요. isExternal이면 배지를 "든든한 리뷰어"로 고정해요 */
+/** memberActions 기반으로 카드 하나를 만들어요 */
 function buildCard(person: MemberSummary, cohort: number | null, roleFilter: RoleFilter | null): MemberCard | null {
   if (cohort !== null && !person.memberActions.some((action) => action.generationNumber === cohort)) {
     return null;
@@ -61,10 +62,10 @@ function buildCard(person: MemberSummary, cohort: number | null, roleFilter: Rol
     href: `/members/${person.id}`,
     name: person.name,
     affiliation: formatAffiliation(person),
-    badge: person.isExternal ? "든든한 리뷰어" : formatMemberRole(role),
+    badge: formatMemberBadge(person, role),
     avatarSrc: getAvatarUrl(person),
     githubUrl: person.githubUrl,
-    order: ROLE_ORDER[role],
+    order: person.isExternal ? EXTERNAL_REVIEWER_ORDER : ROLE_ORDER[role],
   };
 }
 

@@ -4,7 +4,7 @@
 import type { MemberAction, MemberRole, StackPosition } from "./model";
 
 /** memberActions만 있으면 되는 함수들이 MemberSummary/Member 둘 다 받을 수 있게 구조적 타입으로 받아요 */
-type HasMemberActions = { memberActions: MemberAction[] };
+type HasMemberActions = { memberActions: MemberAction[]; isExternal?: boolean };
 
 const STACK_POSITION_LABEL: Record<StackPosition, string> = {
   FRONTEND: "FE",
@@ -48,12 +48,14 @@ function latestGenerationAction(
 /**
  * 카드 상단의 소속 문구 (예: "4기 BE"). 항상 최신 기수 기준이고, 기수 필터와 무관하게 고정이에요.
  * 창립 멤버 기록이 있으면 기수 대신 "창립 멤버"를 보여줘요.
+ * 든든한 리뷰어(외부)는 기수를 노출하지 않고 트랙 약어만 보여줘요(ADR009).
  */
 export function formatAffiliation(member: HasMemberActions): string | undefined {
   if (isFounder(member)) return "창립 멤버";
 
   const action = latestGenerationAction(member);
   if (!action) return undefined;
+  if (member.isExternal) return formatStackPosition(action.stackPosition);
   return `${action.generationNumber}기 ${formatStackPosition(action.stackPosition)}`;
 }
 
@@ -67,6 +69,11 @@ export function roleAt(member: HasMemberActions, generationNumber: number | null
       ?.memberRole;
   }
   return latestGenerationAction(member)?.memberRole ?? member.memberActions[0]?.memberRole;
+}
+
+/** 역할 배지 문구. 든든한 리뷰어(외부)는 역할과 무관하게 "든든한 리뷰어"로 고정해요 */
+export function formatMemberBadge(member: HasMemberActions, role: MemberRole): string {
+  return member.isExternal ? "든든한 리뷰어" : formatMemberRole(role);
 }
 
 /**

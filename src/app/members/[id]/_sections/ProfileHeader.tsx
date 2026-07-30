@@ -1,7 +1,7 @@
 import { Avatar } from "@/shared/ui/Avatar";
 import { Badge } from "@/shared/ui/Badge";
 import { Button } from "@/shared/ui/Button";
-import { formatAffiliation, formatMemberRole, getAvatarUrl, roleAt } from "@/entities/member/lib";
+import { formatAffiliation, formatMemberBadge, getAvatarUrl, roleAt } from "@/entities/member/lib";
 import type { Member } from "@/entities/member/model";
 import { PROFILE } from "../../_sections/content";
 
@@ -21,9 +21,7 @@ export function ProfileHeader({ member }: { member: Member }) {
           <h1 className="text-h1 text-text">{member.name}</h1>
           <div className="flex flex-wrap gap-2">
             {affiliation && <Badge variant="brand">{affiliation}</Badge>}
-            {role && (
-              <Badge variant="outline">{member.isExternal ? "든든한 리뷰어" : formatMemberRole(role)}</Badge>
-            )}
+            {role && <Badge variant="outline">{formatMemberBadge(member, role)}</Badge>}
           </div>
         </div>
         {member.description && (
