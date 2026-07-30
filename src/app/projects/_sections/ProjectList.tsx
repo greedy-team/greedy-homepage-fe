@@ -19,15 +19,16 @@ type ProjectListProps = {
 
 /** 기수 칩으로 거른 프로젝트 카드 그리드. 고른 기수에 프로젝트가 없으면 준비 중 화면을 보여줘요 */
 export function ProjectList({ projects, cohorts }: ProjectListProps) {
-  const [cohort, setCohort] = useState<number | typeof ALL>(ALL);
+  // null은 "전체"예요. 표시 문구(ALL)와 상태를 분리해서, 상태 타입에 UI 문구가 섞이지 않게 해요.
+  const [cohort, setCohort] = useState<number | null>(null);
   const filtered =
-    cohort === ALL ? projects : projects.filter((project) => project.generationNumber === cohort);
-  const empty = cohort === ALL ? EMPTY.all : EMPTY.cohort(cohort);
+    cohort === null ? projects : projects.filter((project) => project.generationNumber === cohort);
+  const empty = cohort === null ? EMPTY.all : EMPTY.cohort(cohort);
 
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-wrap gap-2">
-        <FilterChip selected={cohort === ALL} onClick={() => setCohort(ALL)}>
+        <FilterChip selected={cohort === null} onClick={() => setCohort(null)}>
           {ALL}
         </FilterChip>
         {cohorts.map((item) => (
