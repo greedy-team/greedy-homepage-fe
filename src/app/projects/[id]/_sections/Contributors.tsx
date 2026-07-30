@@ -5,7 +5,7 @@ import { cn, focusRing } from "@/shared/lib/cn";
 import { formatStackPosition } from "@/entities/project/lib";
 import type { ProjectMember } from "@/entities/project/model";
 
-/** 프로젝트를 함께 만든 사람들. 이름과 담당(FE/BE/디자인)을 보여줘요. 이름을 누르면 멤버 프로필로 이동해요 */
+/** 프로젝트를 함께 만든 사람들. 이름과 담당(FE/BE/디자이너)을 보여줘요. 이름을 누르면 멤버 프로필로 이동해요 */
 export function Contributors({ members }: { members: ProjectMember[] }) {
   if (members.length === 0) return null;
 
