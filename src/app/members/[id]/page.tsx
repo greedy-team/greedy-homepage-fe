@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { TextLink } from "@/shared/ui/TextLink";
 import { getMember, getMembers } from "@/entities/member/api";
-import { getProject, getProjects } from "@/entities/project/api";
+import { formatAffiliation } from "@/entities/member/lib";
+import type { Member } from "@/entities/member/model";
+import { getProject } from "@/entities/project/api";
 import type { ProjectSummary } from "@/entities/project/model";
 import { PROFILE } from "../_sections/content";
 import { ProfileHeader } from "./_sections/ProfileHeader";
@@ -12,30 +14,23 @@ type Params = { id: string };
 
 export async function generateStaticParams() {
   const members = await getMembers();
-  return members.map((member) => ({ id: member.id }));
+  return members.map((member) => ({ id: String(member.id) }));
 }
 
 // TODO(기수 중앙화): app/_sections/content.ts의 RECRUITING_COHORT 옆 TODO 참고
 const CURRENT_GENERATION = 4;
 
-// TODO(members 마이그레이션): /members/{id} 스웨거에 이미 teamProjects: { projectId, name }[]가
-// 있어요. Member 타입에 이 필드를 추가하고 나면, 전체 프로젝트를 다 뒤져 이름으로 역매칭하는
-// 지금 방식 대신 member.teamProjects[].projectId로 바로 getProject를 호출하면 돼요
-// (동명이인 버그도 없어지고, 프로젝트 전체를 안 가져와도 돼요).
-/** 이 멤버가 함께 만든, 완료된 기수의 프로젝트만 골라요 */
-async function getMemberProjects(name: string): Promise<ProjectSummary[]> {
-  const summaries = await getProjects();
-  const projects = await Promise.all(summaries.map((summary) => getProject(String(summary.id))));
+/** teamProjects의 projectId로 실제 프로젝트를 가져와요. 완료된(진행 중 아닌) 기수만 보여줘요 */
+async function getMemberProjects(teamProjects: Member["teamProjects"]): Promise<ProjectSummary[]> {
+  const projects = await Promise.all(
+    teamProjects.map((teamProject) => getProject(String(teamProject.projectId))),
+  );
   return projects
     .filter((project) => project !== undefined)
-    .filter(
-      (project) =>
-        project.generationNumber !== CURRENT_GENERATION &&
-        project.team.some((member) => member.name === name),
-    )
-    .map(({ id, name: projectName, generationNumber, summary, thumbnailUrl }) => ({
+    .filter((project) => project.generationNumber !== CURRENT_GENERATION)
+    .map(({ id, name, generationNumber, summary, thumbnailUrl }) => ({
       id,
-      name: projectName,
+      name,
       generationNumber,
       summary,
       thumbnailUrl,
@@ -44,17 +39,17 @@ async function getMemberProjects(name: string): Promise<ProjectSummary[]> {
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { id } = await params;
-  const member = await getMember(decodeURIComponent(id));
+  const member = await getMember(id);
   if (!member) return {};
-  return { title: member.name, description: `${member.name} · ${member.affiliation}` };
+  return { title: member.name, description: formatAffiliation(member) ?? member.name };
 }
 
 export default async function MemberProfilePage({ params }: { params: Promise<Params> }) {
   const { id } = await params;
-  const member = await getMember(decodeURIComponent(id));
+  const member = await getMember(id);
   if (!member) notFound();
 
-  const projects = await getMemberProjects(member.name);
+  const projects = await getMemberProjects(member.teamProjects);
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-10 px-5 py-16 md:px-20 md:py-20">

@@ -4,16 +4,23 @@ import { Badge } from "@/shared/ui/Badge";
 import { Card } from "@/shared/ui/Card";
 import { ImagePlaceholder } from "@/shared/ui/ImagePlaceholder";
 import { cn, focusRing } from "@/shared/lib/cn";
-import type { Member } from "@/entities/member/model";
+import { formatMemberRole } from "@/entities/member/lib";
+import type { Member, MemberRole } from "@/entities/member/model";
 import type { ProjectSummary } from "@/entities/project/model";
 import { PROFILE } from "../../_sections/content";
 
-/** 기수 이력 한 장 */
-function HistoryCard({ cohort, title }: { cohort: string; title: string }) {
+/** 기수 이력 한 장. generationNumber가 없으면(창립 멤버) "창립"으로 보여요 */
+function HistoryCard({
+  generationNumber,
+  role,
+}: {
+  generationNumber: number | null;
+  role: MemberRole;
+}) {
   return (
     <Card className="flex items-center gap-3 p-4">
-      <Badge variant="brand">{cohort}</Badge>
-      <span className="text-body text-text">{title}</span>
+      <Badge variant="brand">{generationNumber !== null ? `${generationNumber}기` : "창립"}</Badge>
+      <span className="text-body text-text">{formatMemberRole(role)}</span>
     </Card>
   );
 }
@@ -35,9 +42,9 @@ export function ProfileRecord({
       <section className="flex flex-col gap-4">
         <h2 className="text-h3 text-text">{PROFILE.historyTitle}</h2>
         <ul className="flex flex-col gap-3">
-          {member.history.map((record) => (
-            <li key={`${record.cohort}-${record.title}`}>
-              <HistoryCard cohort={record.cohort} title={record.title} />
+          {member.memberActions.map((action, index) => (
+            <li key={`${action.generationNumber}-${action.memberRole}-${index}`}>
+              <HistoryCard generationNumber={action.generationNumber} role={action.memberRole} />
             </li>
           ))}
         </ul>

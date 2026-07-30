@@ -1,14 +1,15 @@
 import type { MetadataRoute } from "next";
 import { getActivities } from "@/entities/activity/api";
-import { getMembers } from "@/entities/member/api";
+import { getExternalReviewers, getMembers } from "@/entities/member/api";
 import { getProjects } from "@/entities/project/api";
 import { SITE_URL } from "@/shared/config/site";
 
 /** 검색엔진에 알리는 전체 주소 목록. 페이지와 상세를 모두 담아요 */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [activities, members, projects] = await Promise.all([
+  const [activities, members, externalReviewers, projects] = await Promise.all([
     getActivities(),
     getMembers(),
+    getExternalReviewers(),
     getProjects(),
   ]);
 
@@ -19,8 +20,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...pages,
     ...activities.map((activity) => ({ url: `${SITE_URL}/activities/${activity.id}` })),
-    // 멤버 id는 한글 이름이라 주소로 쓸 때 인코딩해요
-    ...members.map((member) => ({ url: `${SITE_URL}/members/${encodeURIComponent(member.id)}` })),
+    ...members.map((member) => ({ url: `${SITE_URL}/members/${member.id}` })),
+    ...externalReviewers.map((reviewer) => ({ url: `${SITE_URL}/members/external/${reviewer.id}` })),
     ...projects.map((project) => ({ url: `${SITE_URL}/projects/${project.id}` })),
   ];
 }

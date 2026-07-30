@@ -2,6 +2,7 @@ import { http, HttpResponse } from "msw";
 import { API_BASE_URL } from "@/shared/api/config";
 import type { Activity, ActivitySummary } from "@/entities/activity/model";
 import type { Project, ProjectSummary } from "@/entities/project/model";
+import type { Member, MemberSummary } from "@/entities/member/model";
 
 /** public/activities/<slug>/1.webp부터 순서대로. 기존 큐레이션 데이터의 실제 사진을 재사용해요 */
 function shots(slug: string, count: number) {
@@ -464,6 +465,885 @@ const PROJECT_DETAILS: Project[] = [
   },
 ];
 
+// TODO: 방재경/신혁수/김성림은 예전엔 "외부 기여자"였는데, project_member.member_id가 NOT NULL이라
+// 여기선 그냥 내부 멤버로 만들어 넣었어요. 실제로 이런 사람들이 Member 레코드를 갖는지 확인 필요.
+// TODO: 이 파일의 memberActions/generationNumber 값은 예전 자유 텍스트 이력을 보고 직접 해석한 거라,
+// 실제 API 응답(현재 응답 안 옴)을 확인하면 값이 달라질 수 있어요.
+/** 멤버 목록. project 목업의 team[].memberId와 같은 사람·같은 id를 써서 프로필 링크가 실제로 연결돼요 */
+const MEMBER_SUMMARIES: MemberSummary[] = [
+  {
+    id: 1,
+    name: "심혁",
+    githubUrl: "https://github.com/johncakes",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 },
+    ],
+  },
+  {
+    id: 2,
+    name: "윤재홍",
+    githubUrl: "https://github.com/yoonjaehong26",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 },
+    ],
+  },
+  {
+    id: 3,
+    name: "이고은",
+    githubUrl: "https://github.com/ke-62",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
+  },
+  {
+    id: 4,
+    name: "강동현",
+    githubUrl: "https://github.com/mintcoke123",
+    memberActions: [
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
+    ],
+  },
+  {
+    id: 5,
+    name: "김태우",
+    githubUrl: "https://github.com/tae-wooo",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
+  },
+  {
+    id: 6,
+    name: "강건",
+    githubUrl: "https://github.com/dkr-sjr",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 }],
+  },
+  {
+    id: 7,
+    name: "강예령",
+    githubUrl: "https://github.com/ehlung",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 }],
+  },
+  {
+    id: 8,
+    name: "하수한",
+    githubUrl: "https://github.com/chemistryx",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 },
+    ],
+  },
+  {
+    id: 9,
+    name: "서현진",
+    githubUrl: "https://github.com/nonactress",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
+  },
+  {
+    id: 10,
+    name: "김하늘",
+    githubUrl: "https://github.com/kimsky247-coder",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
+  },
+  {
+    id: 11,
+    name: "임규영",
+    githubUrl: "https://github.com/gxuoo",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "STUDY_LEAD", stackPosition: "FRONTEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
+    ],
+  },
+  {
+    id: 12,
+    name: "박찬빈",
+    githubUrl: "https://github.com/INSANE-P",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "STUDY_LEAD", stackPosition: "FRONTEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
+    ],
+  },
+  {
+    id: 13,
+    name: "이창희",
+    githubUrl: "https://github.com/chxghee",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 },
+    ],
+  },
+  {
+    id: 14,
+    name: "황혜림",
+    githubUrl: "https://github.com/HyerimH",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 },
+    ],
+  },
+  {
+    id: 15,
+    name: "전서희",
+    githubUrl: "https://github.com/jeonseohee9",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
+  },
+  {
+    id: 16,
+    name: "신지훈",
+    githubUrl: "https://github.com/developowl",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+  },
+  {
+    id: 17,
+    name: "정창우",
+    githubUrl: "https://github.com/ChangwooJ",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
+    ],
+  },
+  {
+    id: 18,
+    name: "신지우",
+    githubUrl: "https://github.com/zldn109",
+    memberActions: [
+      { memberRole: "STUDY_LEAD", stackPosition: "FRONTEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
+    ],
+  },
+  {
+    id: 19,
+    name: "허석준",
+    githubUrl: "https://github.com/gjtjrl303",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
+  },
+  {
+    id: 20,
+    name: "김지우",
+    githubUrl: "https://github.com/Ji-Woo-Kim",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
+  },
+  {
+    id: 21,
+    name: "염지환",
+    githubUrl: "https://github.com/JihwanYeom",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
+  },
+  {
+    id: 22,
+    name: "방재경",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 }],
+  },
+  {
+    id: 23,
+    name: "신혁수",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 }],
+  },
+  {
+    id: 24,
+    name: "김의진",
+    githubUrl: "https://github.com/sansan20535",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 }],
+  },
+  {
+    id: 25,
+    name: "황승준",
+    githubUrl: "https://github.com/davidolleh",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 }],
+  },
+  {
+    id: 26,
+    name: "안금서",
+    githubUrl: "https://github.com/goldm0ng",
+    memberActions: [
+      { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+  },
+  {
+    id: 27,
+    name: "신혜빈",
+    githubUrl: "https://github.com/c0mpuTurtle",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+  },
+  {
+    id: 28,
+    name: "김성림",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "DESIGN", generationNumber: 1 }],
+  },
+  {
+    id: 29,
+    name: "송혜정",
+    githubUrl: "https://github.com/Songhyejeong",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 3 },
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 2 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 },
+    ],
+  },
+  {
+    id: 30,
+    name: "김준수",
+    githubUrl: "https://github.com/gogo1414",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 },
+    ],
+  },
+  {
+    id: 31,
+    name: "정상희",
+    githubUrl: "https://github.com/SANGHEEJEONG",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+  },
+  {
+    id: 32,
+    name: "남해윤",
+    githubUrl: "https://github.com/haeyoon1",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+  },
+  {
+    id: 33,
+    name: "김범수",
+    githubUrl: "https://github.com/Indigochi1d",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 3 },
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 2 },
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 1 },
+      { memberRole: "CO_FOUNDER", stackPosition: "FRONTEND", generationNumber: null },
+    ],
+  },
+  {
+    id: 34,
+    name: "김민기",
+    githubUrl: "https://github.com/supernovaMK",
+    memberActions: [{ memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 }],
+  },
+  {
+    id: 35,
+    name: "이진",
+    githubUrl: "https://github.com/2Jin1031",
+    memberActions: [{ memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 }],
+  },
+  {
+    id: 36,
+    name: "김수민",
+    githubUrl: "https://github.com/boyekim",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 1 },
+      { memberRole: "CO_FOUNDER", stackPosition: "BACKEND", generationNumber: null },
+    ],
+  },
+  {
+    id: 37,
+    name: "이승용",
+    githubUrl: "https://github.com/kokodak",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 1 },
+      { memberRole: "CO_FOUNDER", stackPosition: "BACKEND", generationNumber: null },
+    ],
+  },
+  {
+    id: 38,
+    name: "원태연",
+    githubUrl: "https://github.com/TaeyeonRoyce",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 1 },
+      { memberRole: "CO_FOUNDER", stackPosition: "BACKEND", generationNumber: null },
+    ],
+  },
+  {
+    id: 39,
+    name: "김주환",
+    githubUrl: "https://github.com/3Juhwan",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 1 },
+      { memberRole: "CO_FOUNDER", stackPosition: "BACKEND", generationNumber: null },
+    ],
+  },
+  {
+    id: 40,
+    name: "홍의민",
+    githubUrl: "https://github.com/EM-H20",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
+  },
+  {
+    id: 41,
+    name: "김동건",
+    githubUrl: "https://github.com/rahwan10",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
+  },
+  {
+    id: 42,
+    name: "고규민",
+    githubUrl: "https://github.com/kokunut",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
+  },
+  {
+    id: 43,
+    name: "천동현",
+    githubUrl: "https://github.com/realcdh",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
+  },
+  {
+    id: 44,
+    name: "김민욱",
+    githubUrl: "https://github.com/hapdaypy",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+  },
+  {
+    id: 45,
+    name: "강대현",
+    githubUrl: "https://github.com/Kdahyn",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+  },
+  {
+    id: 46,
+    name: "정명준",
+    githubUrl: "https://github.com/htdufhc-bit",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+  },
+  {
+    id: 47,
+    name: "이채현",
+    githubUrl: "https://github.com/chaehyunL",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+  },
+  {
+    id: 48,
+    name: "김하은",
+    githubUrl: "https://github.com/haeun92e0",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+  },
+  {
+    id: 49,
+    name: "이태규",
+    githubUrl: "https://github.com/Cappucciyes",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+  },
+];
+
+/** 멤버 상세. id는 위 목록과 같은 사람을 가리켜요 */
+const MEMBER_DETAILS: Member[] = [
+  {
+    id: 1,
+    name: "심혁",
+    githubUrl: "https://github.com/johncakes",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 },
+    ],
+    description: "3기 프론트엔드로 시작해 지금은 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 6, name: "두구두구", stackPosition: "FRONTEND" }],
+  },
+  {
+    id: 2,
+    name: "윤재홍",
+    githubUrl: "https://github.com/yoonjaehong26",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 },
+    ],
+    description: "3기 프론트엔드로 시작해 지금은 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 6, name: "두구두구", stackPosition: "FRONTEND" }],
+  },
+  {
+    id: 3,
+    name: "이고은",
+    githubUrl: "https://github.com/ke-62",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
+    description: "3기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 6, name: "두구두구", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 4,
+    name: "강동현",
+    githubUrl: "https://github.com/mintcoke123",
+    memberActions: [
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
+    ],
+    description: "화면을 만들다가 서버가 궁금해져서 백엔드로 트랙을 옮겼어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [
+      { projectId: 6, name: "두구두구", stackPosition: "BACKEND" },
+      { projectId: 4, name: "세종 줍줍", stackPosition: "FRONTEND" },
+    ],
+  },
+  {
+    id: 5,
+    name: "김태우",
+    githubUrl: "https://github.com/tae-wooo",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
+    description: "3기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 6, name: "두구두구", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 6,
+    name: "강건",
+    githubUrl: "https://github.com/dkr-sjr",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 }],
+    description: "3기 프론트엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 5, name: "MeetLink", stackPosition: "FRONTEND" }],
+  },
+  {
+    id: 7,
+    name: "강예령",
+    githubUrl: "https://github.com/ehlung",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 }],
+    description: "3기 프론트엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 5, name: "MeetLink", stackPosition: "FRONTEND" }],
+  },
+  {
+    id: 8,
+    name: "하수한",
+    githubUrl: "https://github.com/chemistryx",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 },
+    ],
+    description: "3기 백엔드 출신이고, 지금은 리뷰어로 후배들의 코드를 함께 다듬어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 5, name: "MeetLink", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 9,
+    name: "서현진",
+    githubUrl: "https://github.com/nonactress",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
+    description: "3기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 5, name: "MeetLink", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 10,
+    name: "김하늘",
+    githubUrl: "https://github.com/kimsky247-coder",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
+    description: "3기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 5, name: "MeetLink", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 11,
+    name: "임규영",
+    githubUrl: "https://github.com/gxuoo",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "STUDY_LEAD", stackPosition: "FRONTEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
+    ],
+    description: "2기 프론트엔드 출신이고, 지금은 리뷰어로 후배들의 코드를 함께 다듬어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 4, name: "세종 줍줍", stackPosition: "FRONTEND" }],
+  },
+  {
+    id: 12,
+    name: "박찬빈",
+    githubUrl: "https://github.com/INSANE-P",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "STUDY_LEAD", stackPosition: "FRONTEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
+    ],
+    description: "2기 프론트엔드로 시작해 지금은 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 4, name: "세종 줍줍", stackPosition: "FRONTEND" }],
+  },
+  {
+    id: 13,
+    name: "이창희",
+    githubUrl: "https://github.com/chxghee",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 },
+    ],
+    description: "2기 백엔드 출신이고, 지금은 리뷰어로 후배들의 코드를 함께 다듬어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 4, name: "세종 줍줍", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 14,
+    name: "황혜림",
+    githubUrl: "https://github.com/HyerimH",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 },
+    ],
+    description: "2기 백엔드로 시작해 지금은 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 4, name: "세종 줍줍", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 15,
+    name: "전서희",
+    githubUrl: "https://github.com/jeonseohee9",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
+    description: "2기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 4, name: "세종 줍줍", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 16,
+    name: "신지훈",
+    githubUrl: "https://github.com/developowl",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    description: "서버를 만들다가 화면이 궁금해져서 프론트엔드로 트랙을 옮겼어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [
+      { projectId: 3, name: "슬기로운 세종생활", stackPosition: "FRONTEND" },
+      { projectId: 1, name: "따라행", stackPosition: "BACKEND" },
+    ],
+  },
+  {
+    id: 17,
+    name: "정창우",
+    githubUrl: "https://github.com/ChangwooJ",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
+    ],
+    description: "2기 프론트엔드로 시작해 지금은 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [
+      { projectId: 3, name: "슬기로운 세종생활", stackPosition: "FRONTEND" },
+      { projectId: 2, name: "모꼬지", stackPosition: "FRONTEND" },
+    ],
+  },
+  {
+    id: 18,
+    name: "신지우",
+    githubUrl: "https://github.com/zldn109",
+    memberActions: [
+      { memberRole: "STUDY_LEAD", stackPosition: "FRONTEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
+    ],
+    description: "2기 프론트엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [
+      { projectId: 3, name: "슬기로운 세종생활", stackPosition: "FRONTEND" },
+      { projectId: 2, name: "모꼬지", stackPosition: "FRONTEND" },
+    ],
+  },
+  {
+    id: 19,
+    name: "허석준",
+    githubUrl: "https://github.com/gjtjrl303",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
+    description: "2기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [
+      { projectId: 3, name: "슬기로운 세종생활", stackPosition: "BACKEND" },
+      { projectId: 2, name: "모꼬지", stackPosition: "BACKEND" },
+    ],
+  },
+  {
+    id: 20,
+    name: "김지우",
+    githubUrl: "https://github.com/Ji-Woo-Kim",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
+    description: "2기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 3, name: "슬기로운 세종생활", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 21,
+    name: "염지환",
+    githubUrl: "https://github.com/JihwanYeom",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
+    description: "2기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 3, name: "슬기로운 세종생활", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 22,
+    name: "방재경",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 }],
+    description: "모꼬지 프로젝트에 함께해 준 프론트엔드 기여자예요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "FRONTEND" }],
+  },
+  {
+    id: 23,
+    name: "신혁수",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 }],
+    description: "모꼬지 프로젝트에 함께해 준 프론트엔드 기여자예요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "FRONTEND" }],
+  },
+  {
+    id: 24,
+    name: "김의진",
+    githubUrl: "https://github.com/sansan20535",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 }],
+    description: "1기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 25,
+    name: "황승준",
+    githubUrl: "https://github.com/davidolleh",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 }],
+    description: "1기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 26,
+    name: "안금서",
+    githubUrl: "https://github.com/goldm0ng",
+    memberActions: [
+      { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    description: "1기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 27,
+    name: "신혜빈",
+    githubUrl: "https://github.com/c0mpuTurtle",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    description: "1기 백엔드로 시작해 지금은 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 28,
+    name: "김성림",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "DESIGN", generationNumber: 1 }],
+    description: "모꼬지 프로젝트에 함께해 준 디자인 기여자예요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "DESIGN" }],
+  },
+  {
+    id: 29,
+    name: "송혜정",
+    githubUrl: "https://github.com/Songhyejeong",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 3 },
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 2 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 },
+    ],
+    description: "1기 프론트엔드 출신이고, 지금은 리뷰어로 후배들의 코드를 함께 다듬어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 1, name: "따라행", stackPosition: "FRONTEND" }],
+  },
+  {
+    id: 30,
+    name: "김준수",
+    githubUrl: "https://github.com/gogo1414",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 },
+    ],
+    description: "1기 프론트엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 1, name: "따라행", stackPosition: "FRONTEND" }],
+  },
+  {
+    id: 31,
+    name: "정상희",
+    githubUrl: "https://github.com/SANGHEEJEONG",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    description: "1기 백엔드로 시작해 지금은 그리디를 이끌고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 1, name: "따라행", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 32,
+    name: "남해윤",
+    githubUrl: "https://github.com/haeyoon1",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    description: "1기 백엔드 출신이고, 지금은 리뷰어로 후배들의 코드를 함께 다듬어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [{ projectId: 1, name: "따라행", stackPosition: "BACKEND" }],
+  },
+  {
+    id: 33,
+    name: "김범수",
+    githubUrl: "https://github.com/Indigochi1d",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 3 },
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 2 },
+      { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 1 },
+      { memberRole: "CO_FOUNDER", stackPosition: "FRONTEND", generationNumber: null },
+    ],
+    description: "그리디를 처음 만들었고, 지금도 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 34,
+    name: "김민기",
+    githubUrl: "https://github.com/supernovaMK",
+    memberActions: [{ memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 }],
+    description: "4기에 합류해 그리디 운영을 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 35,
+    name: "이진",
+    githubUrl: "https://github.com/2Jin1031",
+    memberActions: [{ memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 }],
+    description: "4기에 합류해 그리디 운영을 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 36,
+    name: "김수민",
+    githubUrl: "https://github.com/boyekim",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 1 },
+      { memberRole: "CO_FOUNDER", stackPosition: "BACKEND", generationNumber: null },
+    ],
+    description: "그리디를 처음 만들었고, 지금은 리뷰어로 후배들의 코드를 함께 다듬어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 37,
+    name: "이승용",
+    githubUrl: "https://github.com/kokodak",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 1 },
+      { memberRole: "CO_FOUNDER", stackPosition: "BACKEND", generationNumber: null },
+    ],
+    description: "그리디를 처음 만든 창립 멤버예요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 38,
+    name: "원태연",
+    githubUrl: "https://github.com/TaeyeonRoyce",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 1 },
+      { memberRole: "CO_FOUNDER", stackPosition: "BACKEND", generationNumber: null },
+    ],
+    description: "그리디를 처음 만든 창립 멤버예요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 39,
+    name: "김주환",
+    githubUrl: "https://github.com/3Juhwan",
+    memberActions: [
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 1 },
+      { memberRole: "CO_FOUNDER", stackPosition: "BACKEND", generationNumber: null },
+    ],
+    description: "그리디를 처음 만든 창립 멤버예요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 40,
+    name: "홍의민",
+    githubUrl: "https://github.com/EM-H20",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
+    description: "4기 프론트엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 41,
+    name: "김동건",
+    githubUrl: "https://github.com/rahwan10",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
+    description: "4기 프론트엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 42,
+    name: "고규민",
+    githubUrl: "https://github.com/kokunut",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
+    description: "4기 프론트엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 43,
+    name: "천동현",
+    githubUrl: "https://github.com/realcdh",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
+    description: "4기 프론트엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 44,
+    name: "김민욱",
+    githubUrl: "https://github.com/hapdaypy",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+    description: "4기 백엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 45,
+    name: "강대현",
+    githubUrl: "https://github.com/Kdahyn",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+    description: "4기 백엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 46,
+    name: "정명준",
+    githubUrl: "https://github.com/htdufhc-bit",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+    description: "4기 백엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 47,
+    name: "이채현",
+    githubUrl: "https://github.com/chaehyunL",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+    description: "4기 백엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 48,
+    name: "김하은",
+    githubUrl: "https://github.com/haeun92e0",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+    description: "4기 백엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+  {
+    id: 49,
+    name: "이태규",
+    githubUrl: "https://github.com/Cappucciyes",
+    memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+    description: "4기 백엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
+    teamProjects: [],
+  },
+];
+
 export const handlers = [
   http.get(`${API_BASE_URL}/activities`, () => {
     return HttpResponse.json({ items: ACTIVITY_SUMMARIES });
@@ -487,5 +1367,17 @@ export const handlers = [
       return HttpResponse.json({ code: 40404, message: "프로젝트를 찾을 수 없습니다." }, { status: 404 });
     }
     return HttpResponse.json(project);
+  }),
+
+  http.get(`${API_BASE_URL}/members`, () => {
+    return HttpResponse.json({ items: MEMBER_SUMMARIES });
+  }),
+
+  http.get(`${API_BASE_URL}/members/:id`, ({ params }) => {
+    const member = MEMBER_DETAILS.find((item) => item.id === Number(params.id));
+    if (!member) {
+      return HttpResponse.json({ code: 40402, message: "멤버를 찾을 수 없습니다." }, { status: 404 });
+    }
+    return HttpResponse.json(member);
   }),
 ];
