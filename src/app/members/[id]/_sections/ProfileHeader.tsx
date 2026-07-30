@@ -21,7 +21,9 @@ export function ProfileHeader({ member }: { member: Member }) {
           <h1 className="text-h1 text-text">{member.name}</h1>
           <div className="flex flex-wrap gap-2">
             {affiliation && <Badge variant="brand">{affiliation}</Badge>}
-            {role && <Badge variant="outline">{formatMemberRole(role)}</Badge>}
+            {role && (
+              <Badge variant="outline">{member.isExternal ? "든든한 리뷰어" : formatMemberRole(role)}</Badge>
+            )}
           </div>
         </div>
         {member.description && (

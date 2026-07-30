@@ -479,6 +479,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
       { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 },
     ],
+    isExternal: false,
   },
   {
     id: 2,
@@ -488,12 +489,14 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
       { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 },
     ],
+    isExternal: false,
   },
   {
     id: 3,
     name: "이고은",
     githubUrl: "https://github.com/ke-62",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
+    isExternal: false,
   },
   {
     id: 4,
@@ -503,24 +506,28 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 },
       { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
     ],
+    isExternal: false,
   },
   {
     id: 5,
     name: "김태우",
     githubUrl: "https://github.com/tae-wooo",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
+    isExternal: false,
   },
   {
     id: 6,
     name: "강건",
     githubUrl: "https://github.com/dkr-sjr",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 }],
+    isExternal: false,
   },
   {
     id: 7,
     name: "강예령",
     githubUrl: "https://github.com/ehlung",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 }],
+    isExternal: false,
   },
   {
     id: 8,
@@ -530,18 +537,21 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 },
       { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 },
     ],
+    isExternal: false,
   },
   {
     id: 9,
     name: "서현진",
     githubUrl: "https://github.com/nonactress",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
+    isExternal: false,
   },
   {
     id: 10,
     name: "김하늘",
     githubUrl: "https://github.com/kimsky247-coder",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
+    isExternal: false,
   },
   {
     id: 11,
@@ -552,6 +562,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "STUDY_LEAD", stackPosition: "FRONTEND", generationNumber: 3 },
       { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
     ],
+    isExternal: false,
   },
   {
     id: 12,
@@ -562,6 +573,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "STUDY_LEAD", stackPosition: "FRONTEND", generationNumber: 3 },
       { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
     ],
+    isExternal: false,
   },
   {
     id: 13,
@@ -571,6 +583,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 },
       { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 },
     ],
+    isExternal: false,
   },
   {
     id: 14,
@@ -580,12 +593,14 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 },
       { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 },
     ],
+    isExternal: false,
   },
   {
     id: 15,
     name: "전서희",
     githubUrl: "https://github.com/jeonseohee9",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
+    isExternal: false,
   },
   {
     id: 16,
@@ -596,6 +611,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
       { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
     ],
+    isExternal: false,
   },
   {
     id: 17,
@@ -605,6 +621,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 4 },
       { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
     ],
+    isExternal: false,
   },
   {
     id: 18,
@@ -614,46 +631,54 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "STUDY_LEAD", stackPosition: "FRONTEND", generationNumber: 3 },
       { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 2 },
     ],
+    isExternal: false,
   },
   {
     id: 19,
     name: "허석준",
     githubUrl: "https://github.com/gjtjrl303",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
+    isExternal: false,
   },
   {
     id: 20,
     name: "김지우",
     githubUrl: "https://github.com/Ji-Woo-Kim",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
+    isExternal: false,
   },
   {
     id: 21,
     name: "염지환",
     githubUrl: "https://github.com/JihwanYeom",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
+    isExternal: false,
   },
   {
     id: 22,
     name: "방재경",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 }],
+    isExternal: false,
   },
   {
     id: 23,
     name: "신혁수",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 }],
+    isExternal: false,
   },
   {
     id: 24,
     name: "김의진",
     githubUrl: "https://github.com/sansan20535",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 }],
+    isExternal: false,
   },
   {
     id: 25,
     name: "황승준",
     githubUrl: "https://github.com/davidolleh",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 }],
+    isExternal: false,
   },
   {
     id: 26,
@@ -664,6 +689,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 2 },
       { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
     ],
+    isExternal: false,
   },
   {
     id: 27,
@@ -674,11 +700,13 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 3 },
       { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
     ],
+    isExternal: false,
   },
   {
     id: 28,
     name: "김성림",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "DESIGN", generationNumber: 1 }],
+    isExternal: false,
   },
   {
     id: 29,
@@ -690,6 +718,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 2 },
       { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 },
     ],
+    isExternal: false,
   },
   {
     id: 30,
@@ -699,6 +728,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 3 },
       { memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 },
     ],
+    isExternal: false,
   },
   {
     id: 31,
@@ -710,6 +740,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "STUDY_LEAD", stackPosition: "BACKEND", generationNumber: 2 },
       { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
     ],
+    isExternal: false,
   },
   {
     id: 32,
@@ -720,6 +751,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 3 },
       { memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 },
     ],
+    isExternal: false,
   },
   {
     id: 33,
@@ -732,18 +764,21 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "MAINTAINER", stackPosition: "FRONTEND", generationNumber: 1 },
       { memberRole: "CO_FOUNDER", stackPosition: "FRONTEND", generationNumber: null },
     ],
+    isExternal: false,
   },
   {
     id: 34,
     name: "김민기",
     githubUrl: "https://github.com/supernovaMK",
     memberActions: [{ memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 }],
+    isExternal: false,
   },
   {
     id: 35,
     name: "이진",
     githubUrl: "https://github.com/2Jin1031",
     memberActions: [{ memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 }],
+    isExternal: false,
   },
   {
     id: 36,
@@ -756,6 +791,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 1 },
       { memberRole: "CO_FOUNDER", stackPosition: "BACKEND", generationNumber: null },
     ],
+    isExternal: false,
   },
   {
     id: 37,
@@ -767,6 +803,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 1 },
       { memberRole: "CO_FOUNDER", stackPosition: "BACKEND", generationNumber: null },
     ],
+    isExternal: false,
   },
   {
     id: 38,
@@ -777,6 +814,7 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 1 },
       { memberRole: "CO_FOUNDER", stackPosition: "BACKEND", generationNumber: null },
     ],
+    isExternal: false,
   },
   {
     id: 39,
@@ -787,66 +825,168 @@ const MEMBER_SUMMARIES: MemberSummary[] = [
       { memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 1 },
       { memberRole: "CO_FOUNDER", stackPosition: "BACKEND", generationNumber: null },
     ],
+    isExternal: false,
   },
   {
     id: 40,
     name: "홍의민",
     githubUrl: "https://github.com/EM-H20",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
+    isExternal: false,
   },
   {
     id: 41,
     name: "김동건",
     githubUrl: "https://github.com/rahwan10",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
+    isExternal: false,
   },
   {
     id: 42,
     name: "고규민",
     githubUrl: "https://github.com/kokunut",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
+    isExternal: false,
   },
   {
     id: 43,
     name: "천동현",
     githubUrl: "https://github.com/realcdh",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
+    isExternal: false,
   },
   {
     id: 44,
     name: "김민욱",
     githubUrl: "https://github.com/hapdaypy",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+    isExternal: false,
   },
   {
     id: 45,
     name: "강대현",
     githubUrl: "https://github.com/Kdahyn",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+    isExternal: false,
   },
   {
     id: 46,
     name: "정명준",
     githubUrl: "https://github.com/htdufhc-bit",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+    isExternal: false,
   },
   {
     id: 47,
     name: "이채현",
     githubUrl: "https://github.com/chaehyunL",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+    isExternal: false,
   },
   {
     id: 48,
     name: "김하은",
     githubUrl: "https://github.com/haeun92e0",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+    isExternal: false,
   },
   {
     id: 49,
     name: "이태규",
     githubUrl: "https://github.com/Cappucciyes",
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
+    isExternal: false,
+  },
+  // 든든한 리뷰어(외부). id는 내부 멤버(1~49)와 안 겹치게 50부터 이어서 매겼어요.
+  {
+    id: 50,
+    name: "김의천",
+    githubUrl: "https://github.com/wzrabbit",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 3 },
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 2 },
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 1 },
+    ],
+    isExternal: true,
+  },
+  {
+    id: 51,
+    name: "송은우",
+    githubUrl: "https://github.com/be-student",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    isExternal: true,
+  },
+  {
+    id: 52,
+    name: "백경환",
+    githubUrl: "https://github.com/dooboocookie",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    isExternal: true,
+  },
+  {
+    id: 53,
+    name: "조승현",
+    githubUrl: "https://github.com/BackFoxx",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    isExternal: true,
+  },
+  {
+    id: 54,
+    name: "정다빈",
+    githubUrl: "https://github.com/70825",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    isExternal: true,
+  },
+  {
+    id: 55,
+    name: "김민석",
+    githubUrl: "https://github.com/shackstack",
+    memberActions: [{ memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 3 }],
+    isExternal: true,
+  },
+  {
+    id: 56,
+    name: "신동훈",
+    githubUrl: "https://github.com/shin-mallang",
+    memberActions: [{ memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 2 }],
+    isExternal: true,
+  },
+  {
+    id: 57,
+    name: "정수영",
+    githubUrl: "https://github.com/suyoungj",
+    memberActions: [{ memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 3 }],
+    isExternal: true,
+  },
+  {
+    id: 58,
+    name: "최혜령",
+    githubUrl: "https://github.com/HyeryongChoi",
+    memberActions: [{ memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 3 }],
+    isExternal: true,
+  },
+  {
+    id: 59,
+    name: "조상준",
+    githubUrl: "https://github.com/sangjun121",
+    memberActions: [{ memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 }],
+    isExternal: true,
   },
 ];
 
@@ -862,6 +1002,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "3기 프론트엔드로 시작해 지금은 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 6, name: "두구두구", stackPosition: "FRONTEND" }],
+    isExternal: false,
   },
   {
     id: 2,
@@ -873,6 +1014,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "3기 프론트엔드로 시작해 지금은 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 6, name: "두구두구", stackPosition: "FRONTEND" }],
+    isExternal: false,
   },
   {
     id: 3,
@@ -881,6 +1023,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
     description: "3기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 6, name: "두구두구", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 4,
@@ -895,6 +1038,7 @@ const MEMBER_DETAILS: Member[] = [
       { projectId: 6, name: "두구두구", stackPosition: "BACKEND" },
       { projectId: 4, name: "세종 줍줍", stackPosition: "FRONTEND" },
     ],
+    isExternal: false,
   },
   {
     id: 5,
@@ -903,6 +1047,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
     description: "3기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 6, name: "두구두구", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 6,
@@ -911,6 +1056,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 }],
     description: "3기 프론트엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 5, name: "MeetLink", stackPosition: "FRONTEND" }],
+    isExternal: false,
   },
   {
     id: 7,
@@ -919,6 +1065,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 3 }],
     description: "3기 프론트엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 5, name: "MeetLink", stackPosition: "FRONTEND" }],
+    isExternal: false,
   },
   {
     id: 8,
@@ -930,6 +1077,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "3기 백엔드 출신이고, 지금은 리뷰어로 후배들의 코드를 함께 다듬어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 5, name: "MeetLink", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 9,
@@ -938,6 +1086,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
     description: "3기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 5, name: "MeetLink", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 10,
@@ -946,6 +1095,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 3 }],
     description: "3기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 5, name: "MeetLink", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 11,
@@ -958,6 +1108,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "2기 프론트엔드 출신이고, 지금은 리뷰어로 후배들의 코드를 함께 다듬어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 4, name: "세종 줍줍", stackPosition: "FRONTEND" }],
+    isExternal: false,
   },
   {
     id: 12,
@@ -970,6 +1121,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "2기 프론트엔드로 시작해 지금은 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 4, name: "세종 줍줍", stackPosition: "FRONTEND" }],
+    isExternal: false,
   },
   {
     id: 13,
@@ -981,6 +1133,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "2기 백엔드 출신이고, 지금은 리뷰어로 후배들의 코드를 함께 다듬어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 4, name: "세종 줍줍", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 14,
@@ -992,6 +1145,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "2기 백엔드로 시작해 지금은 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 4, name: "세종 줍줍", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 15,
@@ -1000,6 +1154,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
     description: "2기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 4, name: "세종 줍줍", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 16,
@@ -1015,6 +1170,7 @@ const MEMBER_DETAILS: Member[] = [
       { projectId: 3, name: "슬기로운 세종생활", stackPosition: "FRONTEND" },
       { projectId: 1, name: "따라행", stackPosition: "BACKEND" },
     ],
+    isExternal: false,
   },
   {
     id: 17,
@@ -1029,6 +1185,7 @@ const MEMBER_DETAILS: Member[] = [
       { projectId: 3, name: "슬기로운 세종생활", stackPosition: "FRONTEND" },
       { projectId: 2, name: "모꼬지", stackPosition: "FRONTEND" },
     ],
+    isExternal: false,
   },
   {
     id: 18,
@@ -1043,6 +1200,7 @@ const MEMBER_DETAILS: Member[] = [
       { projectId: 3, name: "슬기로운 세종생활", stackPosition: "FRONTEND" },
       { projectId: 2, name: "모꼬지", stackPosition: "FRONTEND" },
     ],
+    isExternal: false,
   },
   {
     id: 19,
@@ -1054,6 +1212,7 @@ const MEMBER_DETAILS: Member[] = [
       { projectId: 3, name: "슬기로운 세종생활", stackPosition: "BACKEND" },
       { projectId: 2, name: "모꼬지", stackPosition: "BACKEND" },
     ],
+    isExternal: false,
   },
   {
     id: 20,
@@ -1062,6 +1221,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
     description: "2기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 3, name: "슬기로운 세종생활", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 21,
@@ -1070,6 +1230,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 2 }],
     description: "2기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 3, name: "슬기로운 세종생활", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 22,
@@ -1077,6 +1238,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 }],
     description: "모꼬지 프로젝트에 함께해 준 프론트엔드 기여자예요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "FRONTEND" }],
+    isExternal: false,
   },
   {
     id: 23,
@@ -1084,6 +1246,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 1 }],
     description: "모꼬지 프로젝트에 함께해 준 프론트엔드 기여자예요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "FRONTEND" }],
+    isExternal: false,
   },
   {
     id: 24,
@@ -1092,6 +1255,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 }],
     description: "1기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 25,
@@ -1100,6 +1264,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 1 }],
     description: "1기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 26,
@@ -1112,6 +1277,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "1기 백엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 27,
@@ -1124,6 +1290,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "1기 백엔드로 시작해 지금은 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 28,
@@ -1131,6 +1298,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "DESIGN", generationNumber: 1 }],
     description: "모꼬지 프로젝트에 함께해 준 디자인 기여자예요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 2, name: "모꼬지", stackPosition: "DESIGN" }],
+    isExternal: false,
   },
   {
     id: 29,
@@ -1144,6 +1312,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "1기 프론트엔드 출신이고, 지금은 리뷰어로 후배들의 코드를 함께 다듬어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 1, name: "따라행", stackPosition: "FRONTEND" }],
+    isExternal: false,
   },
   {
     id: 30,
@@ -1155,6 +1324,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "1기 프론트엔드 멤버로 함께 성장하며 배웠어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 1, name: "따라행", stackPosition: "FRONTEND" }],
+    isExternal: false,
   },
   {
     id: 31,
@@ -1168,6 +1338,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "1기 백엔드로 시작해 지금은 그리디를 이끌고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 1, name: "따라행", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 32,
@@ -1180,6 +1351,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "1기 백엔드 출신이고, 지금은 리뷰어로 후배들의 코드를 함께 다듬어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [{ projectId: 1, name: "따라행", stackPosition: "BACKEND" }],
+    isExternal: false,
   },
   {
     id: 33,
@@ -1194,6 +1366,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "그리디를 처음 만들었고, 지금도 운영진으로 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 34,
@@ -1202,6 +1375,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 }],
     description: "4기에 합류해 그리디 운영을 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 35,
@@ -1210,6 +1384,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "MAINTAINER", stackPosition: "BACKEND", generationNumber: 4 }],
     description: "4기에 합류해 그리디 운영을 함께하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 36,
@@ -1224,6 +1399,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "그리디를 처음 만들었고, 지금은 리뷰어로 후배들의 코드를 함께 다듬어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 37,
@@ -1237,6 +1413,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "그리디를 처음 만든 창립 멤버예요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 38,
@@ -1249,6 +1426,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "그리디를 처음 만든 창립 멤버예요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 39,
@@ -1261,6 +1439,7 @@ const MEMBER_DETAILS: Member[] = [
     ],
     description: "그리디를 처음 만든 창립 멤버예요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 40,
@@ -1269,6 +1448,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
     description: "4기 프론트엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 41,
@@ -1277,6 +1457,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
     description: "4기 프론트엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 42,
@@ -1285,6 +1466,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
     description: "4기 프론트엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 43,
@@ -1293,6 +1475,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "FRONTEND", generationNumber: 4 }],
     description: "4기 프론트엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 44,
@@ -1301,6 +1484,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
     description: "4기 백엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 45,
@@ -1309,6 +1493,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
     description: "4기 백엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 46,
@@ -1317,6 +1502,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
     description: "4기 백엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 47,
@@ -1325,6 +1511,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
     description: "4기 백엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 48,
@@ -1333,6 +1520,7 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
     description: "4기 백엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
   },
   {
     id: 49,
@@ -1341,6 +1529,108 @@ const MEMBER_DETAILS: Member[] = [
     memberActions: [{ memberRole: "STUDY_MEMBER", stackPosition: "BACKEND", generationNumber: 4 }],
     description: "4기 백엔드 멤버로 함께 성장하고 있어요. (임시 소개예요. 본인이 보내주면 바꿔요.)",
     teamProjects: [],
+    isExternal: false,
+  },
+  // 든든한 리뷰어(외부). 자기소개·팀 프로젝트를 저장할 곳이 없어서 teamProjects는 항상 비어있어요.
+  {
+    id: 50,
+    name: "김의천",
+    githubUrl: "https://github.com/wzrabbit",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 4 },
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 3 },
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 2 },
+      { memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 1 },
+    ],
+    teamProjects: [],
+    isExternal: true,
+  },
+  {
+    id: 51,
+    name: "송은우",
+    githubUrl: "https://github.com/be-student",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    teamProjects: [],
+    isExternal: true,
+  },
+  {
+    id: 52,
+    name: "백경환",
+    githubUrl: "https://github.com/dooboocookie",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    teamProjects: [],
+    isExternal: true,
+  },
+  {
+    id: 53,
+    name: "조승현",
+    githubUrl: "https://github.com/BackFoxx",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    teamProjects: [],
+    isExternal: true,
+  },
+  {
+    id: 54,
+    name: "정다빈",
+    githubUrl: "https://github.com/70825",
+    memberActions: [
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 3 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 2 },
+      { memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 1 },
+    ],
+    teamProjects: [],
+    isExternal: true,
+  },
+  {
+    id: 55,
+    name: "김민석",
+    githubUrl: "https://github.com/shackstack",
+    memberActions: [{ memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 3 }],
+    teamProjects: [],
+    isExternal: true,
+  },
+  {
+    id: 56,
+    name: "신동훈",
+    githubUrl: "https://github.com/shin-mallang",
+    memberActions: [{ memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 2 }],
+    teamProjects: [],
+    isExternal: true,
+  },
+  {
+    id: 57,
+    name: "정수영",
+    githubUrl: "https://github.com/suyoungj",
+    memberActions: [{ memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 3 }],
+    teamProjects: [],
+    isExternal: true,
+  },
+  {
+    id: 58,
+    name: "최혜령",
+    githubUrl: "https://github.com/HyeryongChoi",
+    memberActions: [{ memberRole: "REVIEWER", stackPosition: "FRONTEND", generationNumber: 3 }],
+    teamProjects: [],
+    isExternal: true,
+  },
+  {
+    id: 59,
+    name: "조상준",
+    githubUrl: "https://github.com/sangjun121",
+    memberActions: [{ memberRole: "REVIEWER", stackPosition: "BACKEND", generationNumber: 4 }],
+    teamProjects: [],
+    isExternal: true,
   },
 ];
 

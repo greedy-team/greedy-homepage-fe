@@ -71,7 +71,7 @@ export function roleAt(member: HasMemberActions, generationNumber: number | null
 
 /**
  * 프로필 사진 주소. 서버가 준 imageUrl이 없으면 깃허브 아바타를 유도해요.
- * ExternalReviewer(imageUrl이 없는 타입)에도 같이 쓸 수 있게 구조적 타입으로 받아요.
+ * MemberSummary(imageUrl이 없는 타입)에도 같이 쓸 수 있게 구조적 타입으로 받아요.
  */
 export function getAvatarUrl(person: { imageUrl?: string; githubUrl?: string }): string | undefined {
   if (person.imageUrl) return person.imageUrl;

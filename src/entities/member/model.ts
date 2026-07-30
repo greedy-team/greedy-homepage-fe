@@ -25,12 +25,19 @@ export type TeamProject = {
   stackPosition: StackPosition;
 };
 
-/** 목록 카드에 필요한 최소 정보. 상세는 Member로 더 담아요 */
+/**
+ * 목록 카드에 필요한 최소 정보. 상세는 Member로 더 담아요.
+ * 든든한 리뷰어(외부, 그리디 소속 아님)도 같은 API/id 체계로 이 모양 그대로 내려와요 —
+ * isExternal로만 구분해요(역할/활동 이력만으로는 내부·외부를 구분할 수 없어서요).
+ * TODO: 지금 실제 백엔드는 이 통합이 안 돼 있어요(외부 리뷰어는 별도 테이블·id 체계, isExternal 없음).
+ * MSW는 이상적인 모양으로 이미 이렇게 동작해요 — 실제 백엔드가 맞춰주면 그대로 써요.
+ */
 export type MemberSummary = {
   id: number;
   name: string;
   githubUrl?: string;
   memberActions: MemberAction[];
+  isExternal?: boolean;
 };
 
 export type Member = {
@@ -43,18 +50,5 @@ export type Member = {
   description?: string;
   memberActions: MemberAction[];
   teamProjects: TeamProject[];
-};
-
-/**
- * 든든한 리뷰어(외부, 그리디 소속 아님). 백엔드 테이블은 Member와 분리돼 있지만(id 체계도 별개),
- * 화면에서 다루는 모양은 memberActions를 그대로 재사용해요(역할은 항상 REVIEWER 고정) —
- * 그래야 roleAt/formatAffiliation 같은 함수와 기수 필터 로직을 내부 멤버와 그대로 같이 써요.
- * TODO: 백엔드에 ExternalMember 조회 API + 기수 연결 테이블(지금 없음) + 내부 멤버와
- * 같은 API/id 체계로 노출 요청 — 셋 다 되면 이 타입도 fetch 기반으로 바꿔요.
- */
-export type ExternalReviewer = {
-  id: number;
-  name: string;
-  githubUrl?: string;
-  memberActions: MemberAction[];
+  isExternal?: boolean;
 };

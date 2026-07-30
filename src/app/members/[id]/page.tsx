@@ -37,6 +37,7 @@ async function getMemberProjects(teamProjects: Member["teamProjects"]): Promise<
     }));
 }
 
+/** 소속 문구를 못 만들면(memberActions가 비어있으면) 이름으로 대체해요 */
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { id } = await params;
   const member = await getMember(id);
@@ -44,6 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return { title: member.name, description: formatAffiliation(member) ?? member.name };
 }
 
+/** 위는 명함(변하지 않는 정보), 아래는 쌓이는 기록이에요 */
 export default async function MemberProfilePage({ params }: { params: Promise<Params> }) {
   const { id } = await params;
   const member = await getMember(id);
@@ -56,7 +58,6 @@ export default async function MemberProfilePage({ params }: { params: Promise<Pa
       <TextLink variant="back" href="/members">
         {PROFILE.back}
       </TextLink>
-      {/* 위는 명함(변하지 않는 정보), 아래는 쌓이는 기록 */}
       <ProfileHeader member={member} />
       <ProfileRecord member={member} projects={projects} />
     </div>

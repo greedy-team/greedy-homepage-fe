@@ -9,12 +9,11 @@ import { EmptyState } from "@/shared/ui/EmptyState";
 import { FilterChip } from "@/shared/ui/FilterChip";
 import { cn, focusRing } from "@/shared/lib/cn";
 import { formatAffiliation, formatMemberRole, getAvatarUrl, roleAt } from "@/entities/member/lib";
-import type { ExternalReviewer, MemberRole, MemberSummary } from "@/entities/member/model";
+import type { MemberRole, MemberSummary } from "@/entities/member/model";
 import { ALL, EMPTY, ROLE_FILTERS } from "./content";
 
 type MemberListProps = {
   members: MemberSummary[];
-  externalReviewers: ExternalReviewer[];
   cohorts: number[];
 };
 
@@ -37,7 +36,7 @@ const ROLE_ORDER: Record<MemberRole, number> = {
   STUDY_MEMBER: 3,
 };
 
-/** 화면에 그릴 카드 하나. 내부 멤버와 든든한 리뷰어를 같은 모양으로 맞춰요 */
+/** 화면에 그릴 카드 하나 */
 type MemberCard = {
   key: string;
   href: string;
@@ -49,18 +48,8 @@ type MemberCard = {
   order: number;
 };
 
-/**
- * memberActions 기반으로 카드 하나를 만들어요. 내부 멤버든 든든한 리뷰어든 모양(memberActions)이
- * 같아서 같은 함수로 처리해요 — 기수/역할 필터도 자연히 같은 규칙으로 적용돼요.
- * badgeOverride는 든든한 리뷰어 배지("든든한 리뷰어")처럼 라벨만 다르게 보여줄 때 써요.
- */
-function buildCard(
-  person: { id: number; name: string; githubUrl?: string; memberActions: MemberSummary["memberActions"] },
-  hrefBase: string,
-  cohort: number | null,
-  roleFilter: RoleFilter | null,
-  badgeOverride?: string,
-): MemberCard | null {
+/** memberActions 기반으로 카드 하나를 만들어요. isExternal이면 배지를 "든든한 리뷰어"로 고정해요 */
+function buildCard(person: MemberSummary, cohort: number | null, roleFilter: RoleFilter | null): MemberCard | null {
   if (cohort !== null && !person.memberActions.some((action) => action.generationNumber === cohort)) {
     return null;
   }
@@ -68,11 +57,11 @@ function buildCard(
   if (!role || !matchesRoleFilter(role, roleFilter)) return null;
 
   return {
-    key: `${hrefBase}-${person.id}`,
-    href: `${hrefBase}/${person.id}`,
+    key: String(person.id),
+    href: `/members/${person.id}`,
     name: person.name,
     affiliation: formatAffiliation(person),
-    badge: badgeOverride ?? formatMemberRole(role),
+    badge: person.isExternal ? "든든한 리뷰어" : formatMemberRole(role),
     avatarSrc: getAvatarUrl(person),
     githubUrl: person.githubUrl,
     order: ROLE_ORDER[role],
@@ -80,19 +69,14 @@ function buildCard(
 }
 
 /** 기수·역할 필터로 거른 멤버 카드 그리드. 두 필터는 같은 시점 기준으로 함께 적용돼요. */
-export function MemberList({ members, externalReviewers, cohorts }: MemberListProps) {
+export function MemberList({ members, cohorts }: MemberListProps) {
   const [cohort, setCohort] = useState<number | null>(null);
   const [role, setRole] = useState<RoleFilter | null>(null);
 
-  const memberCards = members
-    .map((member) => buildCard(member, "/members", cohort, role))
-    .filter((card): card is MemberCard => card !== null);
-
-  const externalCards = externalReviewers
-    .map((reviewer) => buildCard(reviewer, "/members/external", cohort, role, "든든한 리뷰어"))
-    .filter((card): card is MemberCard => card !== null);
-
-  const cards = [...memberCards, ...externalCards].sort((a, b) => a.order - b.order);
+  const cards = members
+    .map((member) => buildCard(member, cohort, role))
+    .filter((card): card is MemberCard => card !== null)
+    .sort((a, b) => a.order - b.order);
 
   return (
     <div className="flex flex-col gap-8">
