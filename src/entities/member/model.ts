@@ -46,16 +46,15 @@ export type Member = {
 };
 
 /**
- * 든든한 리뷰어(외부, 그리디 소속 아님). 백엔드에 ExternalMember 엔티티는 있지만
- * 조회 API가 아직 없어서, 이 타입은 지금 정적 데이터 전용이에요.
- * TODO: reviewedGenerations(리뷰로 참여한 기수들)도 백엔드에 아직 저장할 테이블이 없어요
- * (member_action처럼 external_member에 기수를 연결하는 테이블이 없음). 백엔드가
- * 이 데이터를 주기 시작하면(이상적인 모양으로 미리 설계해둔 거예요) 그대로 fetch로 바꿔요.
+ * 든든한 리뷰어(외부, 그리디 소속 아님). 백엔드 테이블은 Member와 분리돼 있지만(id 체계도 별개),
+ * 화면에서 다루는 모양은 memberActions를 그대로 재사용해요(역할은 항상 REVIEWER 고정) —
+ * 그래야 roleAt/formatAffiliation 같은 함수와 기수 필터 로직을 내부 멤버와 그대로 같이 써요.
+ * TODO: 백엔드에 ExternalMember 조회 API + 기수 연결 테이블(지금 없음) + 내부 멤버와
+ * 같은 API/id 체계로 노출 요청 — 셋 다 되면 이 타입도 fetch 기반으로 바꿔요.
  */
 export type ExternalReviewer = {
   id: number;
   name: string;
   githubUrl?: string;
-  stackPosition: StackPosition;
-  reviewedGenerations: number[];
+  memberActions: MemberAction[];
 };
