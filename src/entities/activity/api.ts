@@ -8,7 +8,7 @@ import type { Activity, ActivitySummary } from "./model";
  */
 const REVALIDATE_SECONDS = 60 * 60;
 
-/** 활동 페이지 타임라인. 순서는 백앤드에서  startDate 내림차순으로 주기로 했어요 */
+/** 활동 페이지 타임라인. 순서는 백엔드에서 startDate 내림차순으로 주기로 했어요 */
 export async function getActivities(): Promise<ActivitySummary[]> {
   return fetchList<ActivitySummary>("/activities", REVALIDATE_SECONDS);
 }
