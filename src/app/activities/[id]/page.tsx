@@ -56,11 +56,14 @@ export default async function ActivityDetailPage({ params }: { params: Promise<P
 
       {/* description은 문자열 하나이고, \n으로 문단을 구분해요 */}
       <section className="flex flex-col gap-4">
-        {activity.description.split("\n").map((paragraph) => (
-          <p key={paragraph} className="whitespace-pre-line text-body text-gray-700">
-            {paragraph}
-          </p>
-        ))}
+        {activity.description
+          .split("\n")
+          .filter((paragraph) => paragraph !== "")
+          .map((paragraph, index) => (
+            <p key={index} className="whitespace-pre-line text-body text-gray-700">
+              {paragraph}
+            </p>
+          ))}
       </section>
 
       <ActivityGallery activityTitle={activity.name} images={activity.images.map((image) => image.url)} />
