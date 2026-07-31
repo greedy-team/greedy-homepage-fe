@@ -14,7 +14,7 @@ export function formatActivityDateShort(startDate: string): string {
 }
 
 /** 상세 헤더의 날짜 문구. 시작·종료가 같은 날이면 하루로, 다르면 범위로 보여줘요. 
- * 백앤드에서 두 날짜를 주고, 날짜가 같으면 프론트에서 하루로 보여주기로 했어요.
+ * 백엔드에서 두 날짜를 주고, 날짜가 같으면 프론트에서 하루로 보여주기로 했어요.
  * 예: startDate="2026-07-18", endDate="2026-07-18" -> "2026년 7월 18일"
  */
 export function formatActivityDateLabel(startDate: string, endDate: string): string {
@@ -27,5 +27,5 @@ export function formatActivityDateLabel(startDate: string, endDate: string): str
   if (start.year === end.year && start.month === end.month) {
     return `${start.year}년 ${start.month}월 ${start.day}일~${end.day}일`;
   }
-  return `${start.year}년 ${start.month}월 ${start.day}일 ~ ${end.year}년 ${end.month}월 ${end.day}일`;
+  return `${start.year}년 ${start.month}월 ${start.day}일~${end.year}년 ${end.month}월 ${end.day}일`;
 }
