@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 import { Gnb } from "@/widgets/Gnb";
 import { Footer } from "@/widgets/Footer";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/shared/config/site";
+import { GA_ID, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/shared/config/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -37,6 +38,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
       </body>
+      {process.env.NODE_ENV === "production" && <GoogleAnalytics gaId={GA_ID} />}
     </html>
   );
 }
