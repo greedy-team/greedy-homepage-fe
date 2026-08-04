@@ -20,7 +20,7 @@ export function Contributors({ members }: { members: ProjectMember[] }) {
         {members.map((member, index) => {
           const body = (
             <>
-              <Avatar name={member.name} size="sm" />
+              <Avatar name={member.name} src={member.photoUrl} size="sm" />
               <span className="text-body-sm text-text">{member.name}</span>
               <Badge variant="outline">{member.position}</Badge>
             </>

@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ImagePlaceholder } from "@/shared/ui/ImagePlaceholder";
+import { getMembers } from "@/entities/member/api";
 import { getProject, getProjects } from "@/entities/project/api";
+import type { ProjectMember } from "@/entities/project/model";
 import { AdjacentNav } from "./_sections/AdjacentNav";
 import { Contributors } from "./_sections/Contributors";
 import { DetailHeader } from "./_sections/DetailHeader";
@@ -24,11 +26,22 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return { title: project.name, description: project.summary };
 }
 
+/** 팀원을 멤버 명단과 이름으로 이어 붙여 사진과 프로필 주소를 채워요. entity끼리는 참조하지 않아서 여기(app)에서 이어요 */
+async function withMemberInfo(members: ProjectMember[]): Promise<ProjectMember[]> {
+  const all = await getMembers();
+  return members.map((member) => {
+    const found = all.find((item) => item.name === member.name);
+    if (!found) return member;
+    return { ...member, photoUrl: found.photoUrl, profileHref: `/members/${found.id}` };
+  });
+}
+
 export default async function ProjectDetailPage({ params }: { params: Promise<Params> }) {
   const { id } = await params;
   const [project, projects] = await Promise.all([getProject(id), getProjects()]);
   if (!project) notFound();
 
+  const contributors = await withMemberInfo(project.members);
   const index = projects.findIndex((item) => item.id === id);
   const prev = index > 0 ? projects[index - 1] : undefined;
   const next = index >= 0 && index < projects.length - 1 ? projects[index + 1] : undefined;
@@ -52,7 +65,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<Pa
       </div>
       <ProjectIntro project={project} />
       <ScreenGallery projectName={project.name} images={project.imageUrls} />
-      <Contributors members={project.members} />
+      <Contributors members={contributors} />
       <AdjacentNav prev={prev} next={next} />
     </div>
   );

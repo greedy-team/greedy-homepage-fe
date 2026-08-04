@@ -11,6 +11,8 @@ export type ProjectMember = {
   external?: boolean;
   /** 이름을 누르면 가는 멤버 프로필. 외부 기여자는 없을 수 있어요 */
   profileHref?: string;
+  /** 프로필 사진 주소. 멤버 명단과 이어 붙일 때 채워지고, 없으면 이니셜을 보여줘요 */
+  photoUrl?: string;
 };
 
 /** 목록 카드에 필요한 최소 정보. 상세는 Project로 더 담아요 */

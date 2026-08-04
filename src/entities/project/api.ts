@@ -153,8 +153,10 @@ const PROJECTS: Project[] = [
     frontendStack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
     backendStack: ["Java", "Spring Boot", "JPA", "QueryDSL", "MySQL", "Redis"],
     members: [
-      { name: "방재경", position: "FE", external: true },
-      { name: "신혁수", position: "FE", external: true },
+      // 외부 기여자 사진은 팀 레포 README의 깃허브 계정을 써요.
+      // 김성림은 README의 계정 링크가 다른 팀원 것이라 확인될 때까지 비워둬요
+      { name: "방재경", position: "FE", external: true, photoUrl: "https://github.com/Jae-kyoung.png" },
+      { name: "신혁수", position: "FE", external: true, photoUrl: "https://github.com/sins051301.png" },
       { name: "정창우", position: "FE" },
       { name: "신지우", position: "FE" },
       { name: "김의진", position: "BE" },
