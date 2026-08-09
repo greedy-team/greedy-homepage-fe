@@ -76,12 +76,8 @@ export function formatMemberBadge(member: HasMemberActions, role: MemberRole): s
   return member.isExternal ? "든든한 리뷰어" : formatMemberRole(role);
 }
 
-/**
- * 프로필 사진 주소. 서버가 준 imageUrl이 없으면 깃허브 아바타를 유도해요.
- * MemberSummary(imageUrl이 없는 타입)에도 같이 쓸 수 있게 구조적 타입으로 받아요.
- */
-export function getAvatarUrl(person: { imageUrl?: string; githubUrl?: string }): string | undefined {
-  if (person.imageUrl) return person.imageUrl;
+/** 프로필 사진 주소. 백엔드가 사진을 안 줘서 깃허브 아바타로 대신해요(ADR009) */
+export function getAvatarUrl(person: { githubUrl?: string }): string | undefined {
   if (!person.githubUrl) return undefined;
   const username = person.githubUrl.replace(/\/$/, "").split("/").pop();
   return username ? `https://github.com/${username}.png` : undefined;

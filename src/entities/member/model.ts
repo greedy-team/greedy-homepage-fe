@@ -46,8 +46,6 @@ export type Member = {
   id: number;
   name: string;
   githubUrl?: string;
-  /** 서버가 주는 프로필 사진. 없으면 githubUrl에서 깃허브 아바타를 유도해요 */
-  imageUrl?: string;
   /** 소속 학과. 화면엔 아직 안 그려요 */
   departments: string[];
   /** 본인이 직접 쓴 소개. 없으면 숨겨요 */
