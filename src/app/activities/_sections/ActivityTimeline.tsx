@@ -45,7 +45,7 @@ export function ActivityTimeline({ activities }: { activities: ActivitySummary[]
                 <Thumbnail activity={activity} className="order-first w-full md:order-none md:w-50" />
                 <div className="order-none flex flex-col gap-1 md:order-first">
                   <h2 className="text-h3 text-text">{activity.name}</h2>
-                  <p className="hidden text-body-sm text-text-subtle md:block">{activity.description}</p>
+                  <p className="hidden text-body-sm text-text-subtle md:block">{activity.summary}</p>
                 </div>
               </Card>
             </Link>

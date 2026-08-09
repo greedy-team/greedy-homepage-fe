@@ -1,5 +1,5 @@
 // 멤버 도메인 타입. 서버 응답(MemberListResponse/MemberDetailResponse) 모양을 그대로 따랐어요.
-// TODO: 백엔드가 Department enum을 아직 안 채웠어요(빈 enum). 실제 값이 정해지면 학과 표시를 붙여요.
+// TODO: departments는 타입만 반영해뒀고 화면엔 아직 안 그려요. 학과 표시 여부/위치는 따로 정해요.
 
 /** 팀원의 기술 스택. project 도메인과 같은 백엔드 enum이지만, entity끼리는 참조하지 않아서 여기 따로 둬요 */
 export type StackPosition = "BACKEND" | "FRONTEND" | "DESIGN";
@@ -36,6 +36,8 @@ export type MemberSummary = {
   id: number;
   name: string;
   githubUrl?: string;
+  /** 소속 학과. 화면엔 아직 안 그려요 */
+  departments: string[];
   memberActions: MemberAction[];
   isExternal?: boolean;
 };
@@ -46,6 +48,8 @@ export type Member = {
   githubUrl?: string;
   /** 서버가 주는 프로필 사진. 없으면 githubUrl에서 깃허브 아바타를 유도해요 */
   imageUrl?: string;
+  /** 소속 학과. 화면엔 아직 안 그려요 */
+  departments: string[];
   /** 본인이 직접 쓴 소개. 없으면 숨겨요 */
   description?: string;
   memberActions: MemberAction[];
