@@ -11,12 +11,12 @@ type ActivityPreviewProps = {
 
 /** 최근 활동 미리보기. 데스크톱은 3개, 좁은 화면은 대표 1개만 보여줘요. */
 export function ActivityPreview({ activities }: ActivityPreviewProps) {
-  const recent = activities.slice(0, 3);
+  const previewActivities = activities.slice(0, 3);
   return (
     <section className="mx-auto max-w-7xl px-5 py-16 md:px-20 md:py-20">
       <SectionHeader title="활동" moreHref="/activities" />
       <ul className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-        {recent.map((activity, index) => (
+        {previewActivities.map((activity, index) => (
           <li key={activity.id} className={cn(index > 0 && "hidden md:block")}>
             <Link href={`/activities/${activity.id}`} className={cn("block rounded-lg", focusRing)}>
               {activity.thumbnailUrls[0] ? (
