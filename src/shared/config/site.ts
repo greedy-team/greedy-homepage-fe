@@ -13,11 +13,23 @@ export const GA_ID = "G-VKLBWJPHG1";
 /** 모집 상태 스위치. GNB 버튼, 히어로, 하단 고정 CTA가 이 값 하나를 봐요. */
 export const IS_RECRUITING = false;
 
+/** 지금 진행 중인 기수. 기수가 바뀌면 이 값만 바꿔요. 모집 문구·통계·기수 필터가 전부 여기서 파생돼요. */
+export const CURRENT_GENERATION = 4;
+
 /** 모집 알림 구글폼. 폼이 만들어지면 주소를 채워요. */
 export const RECRUIT_FORM_URL = "";
 
 /** 지원 폼(모집 기간). 모집이 열리면 주소를 채워요. */
 export const APPLY_FORM_URL = "";
+
+/** 누적 멤버 수. 내부 멤버만 세요(외부 든든한 리뷰어 제외). 기수마다 갱신해요. */
+export const TOTAL_MEMBER_COUNT = 46;
+
+/** 진행 중인 트랙. 기수마다 갱신해요. */
+export const TRACKS = "FE, BE";
+
+/** 누적 팀 프로젝트 수. 기수마다 갱신해요. */
+export const TEAM_PROJECT_COUNT = 6;
 
 /** GNB 메뉴. 순서 그대로 그려져요. */
 export const NAV_ITEMS = [

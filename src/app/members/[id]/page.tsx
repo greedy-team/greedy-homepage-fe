@@ -6,6 +6,7 @@ import { formatAffiliation } from "@/entities/member/lib";
 import type { Member } from "@/entities/member/model";
 import { getProject } from "@/entities/project/api";
 import type { ProjectSummary } from "@/entities/project/model";
+import { CURRENT_GENERATION } from "@/shared/config/site";
 import { PROFILE } from "../_sections/content";
 import { ProfileHeader } from "./_sections/ProfileHeader";
 import { ProfileRecord } from "./_sections/ProfileRecord";
@@ -16,9 +17,6 @@ export async function generateStaticParams() {
   const members = await getMembers();
   return members.map((member) => ({ id: String(member.id) }));
 }
-
-// TODO(기수 중앙화): app/_sections/content.ts의 RECRUITING_COHORT 옆 TODO 참고
-const CURRENT_GENERATION = 4;
 
 /** teamProjects의 projectId로 실제 프로젝트를 가져와요. 완료된(진행 중 아닌) 기수만 보여줘요 */
 async function getMemberProjects(teamProjects: Member["teamProjects"]): Promise<ProjectSummary[]> {
