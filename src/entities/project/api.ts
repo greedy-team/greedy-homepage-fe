@@ -1,4 +1,5 @@
 import { fetchJson, fetchList } from "@/shared/api/fetch";
+import { CURRENT_GENERATION } from "@/shared/config/site";
 import type { Project, ProjectSummary } from "./model";
 
 /** 아카이브 데이터라 몇 분 신선도 차이는 의미 없어요. ISR로 1시간마다 갱신해요 (향후논의)*/
@@ -14,13 +15,12 @@ export async function getProject(id: string): Promise<Project | undefined> {
   return fetchJson<Project>(`/projects/${id}`, REVALIDATE_SECONDS);
 }
 
-// TODO(기수 중앙화): app/_sections/content.ts의 RECRUITING_COHORT 옆 TODO 참고
 /**
  * 필터에 쓰는 기수 목록. "전체 기수" API가 따로 없어서 직접 관리해요.
- * 프로젝트가 아직 없는 진행 중 기수도 넣어야 해서(빈 상태 노출), 기수가 바뀔 때마다
- * RECRUITING_COHORT(app/_sections/content.ts)와 함께 이 배열도 갱신해요.
+ * 프로젝트가 아직 없는 모집 예정 기수(CURRENT_GENERATION + 1)도 넣어야 해서(빈 상태 노출),
+ * CURRENT_GENERATION+1부터 1까지 내림차순으로 구성해요.
  */
-const COHORTS = [5, 4, 3, 2, 1];
+const COHORTS = Array.from({ length: CURRENT_GENERATION + 1 }, (_, index) => CURRENT_GENERATION + 1 - index);
 
 export async function getCohorts(): Promise<number[]> {
   return COHORTS;

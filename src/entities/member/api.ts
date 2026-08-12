@@ -1,4 +1,5 @@
 import { fetchJson, fetchList } from "@/shared/api/fetch";
+import { CURRENT_GENERATION } from "@/shared/config/site";
 import type { Member, MemberSummary } from "./model";
 
 const REVALIDATE_SECONDS = 60 * 60;
@@ -17,8 +18,7 @@ export async function getMember(id: string): Promise<Member | undefined> {
   return fetchJson<Member>(`/members/${id}`, REVALIDATE_SECONDS);
 }
 
-// TODO(기수 중앙화): app/_sections/content.ts의 RECRUITING_COHORT 옆 TODO 참고
-const COHORTS = [5, 4, 3, 2, 1];
+const COHORTS = Array.from({ length: CURRENT_GENERATION + 1 }, (_, index) => CURRENT_GENERATION + 1 - index);
 
 /** 필터에 쓰는 기수 목록 */
 export async function getMemberCohorts(): Promise<number[]> {
