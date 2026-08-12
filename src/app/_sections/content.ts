@@ -1,6 +1,6 @@
 // 랜딩 페이지의 정적 문구. 서버에서 오지 않는, 우리가 직접 쓰는 카피예요.
 // 프로젝트·활동처럼 백엔드에서 올 데이터는 entities에 있어요.
-import { CURRENT_GENERATION } from "@/shared/config/site";
+import { CURRENT_GENERATION, TEAM_PROJECT_COUNT, TOTAL_MEMBER_COUNT, TRACKS } from "@/shared/config/site";
 
 /** 모집이 열릴 다음 기수. 모집 상태 문구에서 써요. */
 export const RECRUITING_COHORT = `${CURRENT_GENERATION + 1}기`;
@@ -36,11 +36,10 @@ export const VALUES = [
   { title: "HUMAN COMMUNITY", description: "사람 사는 공동체답게" },
 ] as const;
 
-// 동아리 요약 숫자. 백엔드가 아니라 기수마다 직접 갱신해요.
-// 누적 멤버는 내부 멤버만 세요 (외부 든든한 리뷰어 제외)
+/** 동아리 요약 숫자. 값 자체는 site.ts에서 기수마다 갱신해요 */
 export const STATS = [
-  { value: "46", label: "누적 멤버" },
+  { value: String(TOTAL_MEMBER_COUNT), label: "누적 멤버" },
   { value: `${CURRENT_GENERATION}기`, label: "진행 기수" },
-  { value: "FE, BE", label: "트랙" },
-  { value: "6", label: "팀 프로젝트" },
+  { value: TRACKS, label: "트랙" },
+  { value: String(TEAM_PROJECT_COUNT), label: "팀 프로젝트" },
 ] as const;
