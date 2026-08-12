@@ -56,6 +56,12 @@ type MemberCard = {
   generation: number;
 };
 
+/** 역할 순위(order)가 먼저고, 같은 순위면 최신 기수(generation)가 앞이에요 */
+function compareCards(a: MemberCard, b: MemberCard): number {
+  if (a.order !== b.order) return a.order - b.order;
+  return b.generation - a.generation;
+}
+
 /** memberActions 기반으로 카드 하나를 만들어요 */
 function buildCard(person: MemberSummary, cohort: number | null, roleFilter: RoleFilter | null): MemberCard | null {
   if (cohort !== null && !person.memberActions.some((action) => action.generationNumber === cohort)) {
@@ -85,7 +91,7 @@ export function MemberList({ members, cohorts }: MemberListProps) {
   const cards = members
     .map((member) => buildCard(member, cohort, role))
     .filter((card): card is MemberCard => card !== null)
-    .sort((a, b) => a.order - b.order || b.generation - a.generation);
+    .sort(compareCards);
 
   return (
     <div className="flex flex-col gap-8">
