@@ -79,7 +79,7 @@ function buildCard(person: MemberSummary, cohort: number | null, roleFilter: Rol
     avatarSrc: getAvatarUrl(person),
     githubUrl: person.githubUrl,
     order: person.isExternal ? EXTERNAL_REVIEWER_ORDER : ROLE_ORDER[role],
-    generation: latestGeneration(person) ?? -Infinity,
+    generation: latestGeneration(person) ?? 0,
   };
 }
 

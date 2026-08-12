@@ -39,10 +39,14 @@ export function isFounder(member: HasMemberActions): boolean {
 function latestGenerationAction(
   member: HasMemberActions,
 ): (MemberAction & { generationNumber: number }) | undefined {
-  const withGeneration = member.memberActions.filter(
-    (action): action is MemberAction & { generationNumber: number } => action.generationNumber !== null,
-  );
-  return withGeneration.sort((a, b) => b.generationNumber - a.generationNumber)[0];
+  let latest: (MemberAction & { generationNumber: number }) | undefined;
+  for (const action of member.memberActions) {
+    if (action.generationNumber === null) continue;
+    if (!latest || action.generationNumber > latest.generationNumber) {
+      latest = action as MemberAction & { generationNumber: number };
+    }
+  }
+  return latest;
 }
 
 /** 최신 기수 번호. 창립만 있어 기수 기록이 없으면 undefined예요(목록 정렬 등에 써요) */
