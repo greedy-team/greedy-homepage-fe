@@ -1,5 +1,5 @@
 // 멤버 도메인 타입. 서버 응답(MemberListResponse/MemberDetailResponse) 모양을 그대로 따랐어요.
-// TODO: departments는 타입만 반영해뒀고 화면엔 아직 안 그려요. 학과 표시 여부/위치는 따로 정해요.
+// TODO: departmentKoreanNames는 타입만 반영해뒀고 화면엔 아직 안 그려요. 학과 표시 여부/위치는 따로 정해요.
 
 /** 팀원의 기술 스택. project 도메인과 같은 백엔드 enum이지만, entity끼리는 참조하지 않아서 여기 따로 둬요 */
 export type StackPosition = "BACKEND" | "FRONTEND" | "DESIGN";
@@ -36,8 +36,8 @@ export type MemberSummary = {
   id: number;
   name: string;
   githubUrl?: string;
-  /** 소속 학과. 화면엔 아직 안 그려요 */
-  departments: string[];
+  /** 소속 학과 한국어 이름 목록. 화면엔 아직 안 그려요 */
+  departmentKoreanNames: string[];
   memberActions: MemberAction[];
   isExternal?: boolean;
 };
@@ -46,8 +46,8 @@ export type Member = {
   id: number;
   name: string;
   githubUrl?: string;
-  /** 소속 학과. 화면엔 아직 안 그려요 */
-  departments: string[];
+  /** 소속 학과 한국어 이름 목록. 화면엔 아직 안 그려요 */
+  departmentKoreanNames: string[];
   /** 본인이 직접 쓴 소개. 없으면 숨겨요 */
   description?: string;
   memberActions: MemberAction[];
