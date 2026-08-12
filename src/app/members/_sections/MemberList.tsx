@@ -8,7 +8,13 @@ import { Card } from "@/shared/ui/Card";
 import { EmptyState } from "@/shared/ui/EmptyState";
 import { FilterChip } from "@/shared/ui/FilterChip";
 import { cn, focusRing } from "@/shared/lib/cn";
-import { formatAffiliation, formatMemberBadge, getAvatarUrl, roleAt } from "@/entities/member/lib";
+import {
+  formatAffiliation,
+  formatMemberBadge,
+  getAvatarUrl,
+  latestGeneration,
+  roleAt,
+} from "@/entities/member/lib";
 import type { MemberRole, MemberSummary } from "@/entities/member/model";
 import { ALL, EMPTY, ROLE_FILTERS } from "./content";
 
@@ -27,7 +33,7 @@ function matchesRoleFilter(role: MemberRole, filter: RoleFilter | null): boolean
   return role === "STUDY_MEMBER";
 }
 
-/** 카드 정렬 순서: 이끄는 사람 → 돕는 사람 → 배우는 사람. 든든한 리뷰어는 맨 뒤예요 */
+/** 카드 정렬 1순위: 이끄는 사람 → 돕는 사람 → 배우는 사람. 든든한 리뷰어는 맨 뒤예요. 같은 순위 안에서는 최신 기수가 먼저예요(latestGeneration) */
 const ROLE_ORDER: Record<MemberRole, number> = {
   CO_FOUNDER: 0,
   MAINTAINER: 0,
@@ -47,6 +53,7 @@ type MemberCard = {
   avatarSrc?: string;
   githubUrl?: string;
   order: number;
+  generation: number;
 };
 
 /** memberActions 기반으로 카드 하나를 만들어요 */
@@ -66,6 +73,7 @@ function buildCard(person: MemberSummary, cohort: number | null, roleFilter: Rol
     avatarSrc: getAvatarUrl(person),
     githubUrl: person.githubUrl,
     order: person.isExternal ? EXTERNAL_REVIEWER_ORDER : ROLE_ORDER[role],
+    generation: latestGeneration(person) ?? -Infinity,
   };
 }
 
@@ -77,7 +85,7 @@ export function MemberList({ members, cohorts }: MemberListProps) {
   const cards = members
     .map((member) => buildCard(member, cohort, role))
     .filter((card): card is MemberCard => card !== null)
-    .sort((a, b) => a.order - b.order);
+    .sort((a, b) => a.order - b.order || b.generation - a.generation);
 
   return (
     <div className="flex flex-col gap-8">

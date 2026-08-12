@@ -45,6 +45,11 @@ function latestGenerationAction(
   return withGeneration.sort((a, b) => b.generationNumber - a.generationNumber)[0];
 }
 
+/** 최신 기수 번호. 창립만 있어 기수 기록이 없으면 undefined예요(목록 정렬 등에 써요) */
+export function latestGeneration(member: HasMemberActions): number | undefined {
+  return latestGenerationAction(member)?.generationNumber;
+}
+
 /**
  * 카드 상단의 소속 문구 (예: "4기 BE"). 항상 최신 기수 기준이고, 기수 필터와 무관하게 고정이에요.
  * 창립 멤버 기록이 있으면 기수 대신 "창립 멤버"를 보여줘요.
