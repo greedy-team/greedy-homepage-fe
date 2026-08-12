@@ -6,17 +6,12 @@ import { ProjectShowcase } from "./_sections/ProjectShowcase";
 import { StatBand } from "./_sections/StatBand";
 import { StudyFlow } from "./_sections/StudyFlow";
 import { ValueBand } from "./_sections/ValueBand";
-import { getRecentActivities } from "@/entities/activity/api";
-import { getFeaturedProjects } from "@/entities/project/api";
+import { getActivities } from "@/entities/activity/api";
+import { getProjects } from "@/entities/project/api";
 import { APPLY_FORM_URL, IS_RECRUITING } from "@/shared/config/site";
 
-// 지금은 데이터가 정적이라 페이지도 완전 정적이에요. entities/*/api가 실제 fetch로 바뀌면
-// ISR(revalidate)이나 온디맨드 재검증(revalidateTag)을 여기에 붙여요. 배경은 docs/adr/002 참고.
 export default async function Home() {
-  const [activities, projects] = await Promise.all([
-    getRecentActivities(),
-    getFeaturedProjects(),
-  ]);
+  const [activities, projects] = await Promise.all([getActivities(), getProjects()]);
 
   return (
     <>

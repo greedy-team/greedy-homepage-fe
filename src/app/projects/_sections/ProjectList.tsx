@@ -14,24 +14,26 @@ import { ALL, EMPTY } from "./content";
 
 type ProjectListProps = {
   projects: ProjectSummary[];
-  cohorts: string[];
+  cohorts: number[];
 };
 
 /** 기수 칩으로 거른 프로젝트 카드 그리드. 고른 기수에 프로젝트가 없으면 준비 중 화면을 보여줘요 */
 export function ProjectList({ projects, cohorts }: ProjectListProps) {
-  const [cohort, setCohort] = useState<string>(ALL);
-  const filtered = cohort === ALL ? projects : projects.filter((project) => project.cohort === cohort);
-  const empty = cohort === ALL ? EMPTY.all : EMPTY.cohort(cohort);
+  // null은 "전체"예요. 표시 문구(ALL)와 상태를 분리해서, 상태 타입에 UI 문구가 섞이지 않게 해요.
+  const [cohort, setCohort] = useState<number | null>(null);
+  const filtered =
+    cohort === null ? projects : projects.filter((project) => project.generationNumber === cohort);
+  const empty = cohort === null ? EMPTY.all : EMPTY.cohort(cohort);
 
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-wrap gap-2">
-        <FilterChip selected={cohort === ALL} onClick={() => setCohort(ALL)}>
+        <FilterChip selected={cohort === null} onClick={() => setCohort(null)}>
           {ALL}
         </FilterChip>
         {cohorts.map((item) => (
           <FilterChip key={item} selected={cohort === item} onClick={() => setCohort(item)}>
-            {item}
+            {item}기
           </FilterChip>
         ))}
       </div>
@@ -56,7 +58,7 @@ export function ProjectList({ projects, cohorts }: ProjectListProps) {
                     <ImagePlaceholder ratio="16/9" />
                   )}
                   <div className="flex flex-col items-start gap-2">
-                    <Badge variant="brand">{project.cohort}</Badge>
+                    <Badge variant="brand">{project.generationNumber}기</Badge>
                     <h2 className="text-h3 text-text">{project.name}</h2>
                     <p className="text-body-sm text-text-subtle">{project.summary}</p>
                   </div>

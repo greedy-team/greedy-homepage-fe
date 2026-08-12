@@ -14,7 +14,7 @@ type Params = { id: string };
 
 export async function generateStaticParams() {
   const projects = await getProjects();
-  return projects.map((project) => ({ id: project.id }));
+  return projects.map((project) => ({ id: String(project.id) }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -29,7 +29,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<Pa
   const [project, projects] = await Promise.all([getProject(id), getProjects()]);
   if (!project) notFound();
 
-  const index = projects.findIndex((item) => item.id === id);
+  const index = projects.findIndex((item) => String(item.id) === id);
   const prev = index > 0 ? projects[index - 1] : undefined;
   const next = index >= 0 && index < projects.length - 1 ? projects[index + 1] : undefined;
 
@@ -51,8 +51,8 @@ export default async function ProjectDetailPage({ params }: { params: Promise<Pa
         </div>
       </div>
       <ProjectIntro project={project} />
-      <ScreenGallery projectName={project.name} images={project.imageUrls} />
-      <Contributors members={project.members} />
+      <ScreenGallery projectName={project.name} images={project.screenshotUrls} />
+      <Contributors members={project.team} />
       <AdjacentNav prev={prev} next={next} />
     </div>
   );

@@ -5,7 +5,7 @@ export const PAGE = {
   subtitle: "그리디를 함께 만들어 온 사람들이에요.",
 } as const;
 
-/** 필터에서 "전체"를 가리키는 값 */
+/** 필터 칩의 "전체" 표시 문구. 상태값 자체는 null이에요(entities/project의 ProjectList와 같은 방식) */
 export const ALL = "전체";
 
 /** 역할 필터. 리드는 운영진에, 든든한 리뷰어는 리뷰어에 포함돼요 */

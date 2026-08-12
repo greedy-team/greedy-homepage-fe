@@ -8,86 +8,92 @@ import { Card } from "@/shared/ui/Card";
 import { EmptyState } from "@/shared/ui/EmptyState";
 import { FilterChip } from "@/shared/ui/FilterChip";
 import { cn, focusRing } from "@/shared/lib/cn";
-import type { Member } from "@/entities/member/model";
+import { formatAffiliation, formatMemberBadge, getAvatarUrl, roleAt } from "@/entities/member/lib";
+import type { MemberRole, MemberSummary } from "@/entities/member/model";
 import { ALL, EMPTY, ROLE_FILTERS } from "./content";
 
 type MemberListProps = {
-  members: Member[];
-  cohorts: string[];
+  members: MemberSummary[];
+  cohorts: number[];
 };
 
-/**
- * 배지는 보고 있는 시점의 역할이에요. 전체는 지금 역할,
- * 기수를 고르면 그 기수 당시 역할(회장·운영진 > 리드 > 리뷰어 > 멤버)로 바뀌어요.
- */
-function roleAt(member: Member, cohort: string): string | undefined {
-  if (cohort === ALL) return member.role;
-  const record = member.history.find((item) => item.cohort === cohort);
-  if (!record) return undefined;
-  if (member.role === "든든한 리뷰어") return "든든한 리뷰어";
-  if (record.title.includes("회장") || record.title.includes("운영진")) return "운영진";
-  if (record.title.includes("리드")) return "리드";
-  if (record.title.includes("리뷰어")) return "리뷰어";
-  return "멤버";
+type RoleFilter = (typeof ROLE_FILTERS)[number];
+
+/** 역할 필터 버킷. 창립·리드는 운영진에, 든든한 리뷰어도 내부 리뷰어와 같은 REVIEWER라 리뷰어에 묶여요(ADR009) */
+function matchesRoleFilter(role: MemberRole, filter: RoleFilter | null): boolean {
+  if (filter === null) return true;
+  if (filter === "운영진") return role === "MAINTAINER" || role === "STUDY_LEAD" || role === "CO_FOUNDER";
+  if (filter === "리뷰어") return role === "REVIEWER";
+  return role === "STUDY_MEMBER";
 }
 
-/** 역할군 필터. 리드는 기수를 이끄는 쪽이라 운영진에, 든든한 리뷰어는 리뷰어에 묶여요 */
-function matchesRole(member: Member, cohort: string, filter: string) {
-  if (filter === ALL) return true;
-  const role = roleAt(member, cohort);
-  if (filter === "운영진") return role === "운영진" || role === "리드";
-  if (filter === "리뷰어") return role === "리뷰어" || role === "든든한 리뷰어";
-  return role === filter;
-}
+/** 카드 정렬 순서: 이끄는 사람 → 돕는 사람 → 배우는 사람. 든든한 리뷰어는 맨 뒤예요 */
+const ROLE_ORDER: Record<MemberRole, number> = {
+  CO_FOUNDER: 0,
+  MAINTAINER: 0,
+  STUDY_LEAD: 1,
+  REVIEWER: 2,
+  STUDY_MEMBER: 3,
+};
+const EXTERNAL_REVIEWER_ORDER = 4;
 
-function badgeVariant(role: string) {
-  return role === "운영진" ? ("brand" as const) : ("outline" as const);
-}
-
-/** 어느 탭에서든 같은 순서: 이끄는 사람 → 돕는 사람 → 배우는 사람 */
-const ROLE_ORDER: Record<string, number> = {
-  운영진: 0,
-  리드: 1,
-  리뷰어: 2,
-  멤버: 3,
-  "든든한 리뷰어": 4,
+/** 화면에 그릴 카드 하나 */
+type MemberCard = {
+  key: string;
+  href: string;
+  name: string;
+  affiliation?: string;
+  badge: string;
+  avatarSrc?: string;
+  githubUrl?: string;
+  order: number;
 };
 
-/**
- * 기수·역할 필터로 거른 멤버 카드 그리드. 두 필터는 같은 시점 기준으로 함께 적용돼요.
- * 창립 멤버는 기수 이력이 없으면 전체에서만 보여요.
- */
+/** memberActions 기반으로 카드 하나를 만들어요 */
+function buildCard(person: MemberSummary, cohort: number | null, roleFilter: RoleFilter | null): MemberCard | null {
+  if (cohort !== null && !person.memberActions.some((action) => action.generationNumber === cohort)) {
+    return null;
+  }
+  const role = roleAt(person, cohort);
+  if (!role || !matchesRoleFilter(role, roleFilter)) return null;
+
+  return {
+    key: String(person.id),
+    href: `/members/${person.id}`,
+    name: person.name,
+    affiliation: formatAffiliation(person),
+    badge: formatMemberBadge(person, role),
+    avatarSrc: getAvatarUrl(person),
+    githubUrl: person.githubUrl,
+    order: person.isExternal ? EXTERNAL_REVIEWER_ORDER : ROLE_ORDER[role],
+  };
+}
+
+/** 기수·역할 필터로 거른 멤버 카드 그리드. 두 필터는 같은 시점 기준으로 함께 적용돼요. */
 export function MemberList({ members, cohorts }: MemberListProps) {
-  const [cohort, setCohort] = useState<string>(ALL);
-  const [role, setRole] = useState<string>(ALL);
+  const [cohort, setCohort] = useState<number | null>(null);
+  const [role, setRole] = useState<RoleFilter | null>(null);
 
-  const filtered = members
-    .filter(
-      (member) =>
-        (cohort === ALL || member.cohorts.includes(cohort)) && matchesRole(member, cohort, role),
-    )
-    // 보고 있는 시점의 역할 순서로 정렬해요. 같은 역할끼리는 명단 순서를 유지해요
-    .sort(
-      (a, b) =>
-        (ROLE_ORDER[roleAt(a, cohort) ?? "멤버"] ?? 9) -
-        (ROLE_ORDER[roleAt(b, cohort) ?? "멤버"] ?? 9),
-    );
+  const cards = members
+    .map((member) => buildCard(member, cohort, role))
+    .filter((card): card is MemberCard => card !== null)
+    .sort((a, b) => a.order - b.order);
 
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap gap-2">
-          <FilterChip selected={cohort === ALL} onClick={() => setCohort(ALL)}>
+          <FilterChip selected={cohort === null} onClick={() => setCohort(null)}>
             {ALL}
           </FilterChip>
           {cohorts.map((item) => (
             <FilterChip key={item} selected={cohort === item} onClick={() => setCohort(item)}>
-              {item}
+              {item}기
             </FilterChip>
           ))}
         </div>
         <div className="flex flex-wrap gap-2">
-          <FilterChip selected={role === ALL} onClick={() => setRole(ALL)}>
+          <FilterChip selected={role === null} onClick={() => setRole(null)}>
             {ALL}
           </FilterChip>
           {ROLE_FILTERS.map((item) => (
@@ -98,31 +104,25 @@ export function MemberList({ members, cohorts }: MemberListProps) {
         </div>
       </div>
 
-      {filtered.length > 0 ? (
+      {cards.length > 0 ? (
         <ul className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-          {filtered.map((member) => {
-            const displayRole = roleAt(member, cohort) ?? member.role;
-            return (
-              <li key={member.id}>
-                <Link
-                  href={`/members/${member.id}`}
-                  className={cn("block h-full rounded-lg", focusRing)}
-                >
-                  <Card className="flex h-full flex-col items-center gap-3 text-center transition-colors hover:border-gray-300">
-                    <Avatar name={member.name} src={member.photoUrl} size="lg" />
-                    <div className="flex flex-col items-center gap-1">
-                      <h2 className="text-h3 text-text">{member.name}</h2>
-                      <p className="text-body-sm text-text-subtle">{member.affiliation}</p>
-                    </div>
-                    <Badge variant={badgeVariant(displayRole)}>{displayRole}</Badge>
-                    {member.githubUrl && (
-                      <span className="text-caption text-text-subtle">GitHub</span>
+          {cards.map((card) => (
+            <li key={card.key}>
+              <Link href={card.href} className={cn("block h-full rounded-lg", focusRing)}>
+                <Card className="flex h-full flex-col items-center gap-3 text-center transition-colors hover:border-gray-300">
+                  <Avatar name={card.name} src={card.avatarSrc} size="lg" />
+                  <div className="flex flex-col items-center gap-1">
+                    <h2 className="text-h3 text-text">{card.name}</h2>
+                    {card.affiliation && (
+                      <p className="text-body-sm text-text-subtle">{card.affiliation}</p>
                     )}
-                  </Card>
-                </Link>
-              </li>
-            );
-          })}
+                  </div>
+                  <Badge variant={card.badge === "운영진" ? "brand" : "outline"}>{card.badge}</Badge>
+                  {card.githubUrl && <span className="text-caption text-text-subtle">GitHub</span>}
+                </Card>
+              </Link>
+            </li>
+          ))}
         </ul>
       ) : (
         <EmptyState title={EMPTY.title} description={EMPTY.description} />

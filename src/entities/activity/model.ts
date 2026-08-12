@@ -1,27 +1,32 @@
-// 활동 도메인 타입. 서버 명세가 확정되면 그 형태에 맞춰 조정해요.
-// 기수와 종류는 붙이지 않아요. 언제는 날짜가, 무엇인지는 제목이 말해줘요.
+// 활동 도메인 타입. 서버 응답(ActivityListResponse/ActivityDetailResponse) 모양을 그대로 따라요.
+// TODO: 백엔드가 스웨거에 nullable을 명시해주기로 함. 그때 실제로 어떤 필드가 없을 수 있는지
+// 다시 보고 옵셔널 처리해요. 특히 thumbnailUrls/images는 배열이라 null과 []가 다를 수 있어요.
 
-/** 목록 타임라인 카드에 필요한 정보. 상세는 Activity로 더 담아요 */
+/** 목록 타임라인 카드에 필요한 정보. 상세는 Activity로 더 담아요. 목록은 한 줄 요약(summary), 상세는 전체 설명(description)이에요 */
 export type ActivitySummary = {
-  id: string;
-  title: string;
-  /** 활동 시점 (예: "2026.07"). 타임라인 정렬·표시에 써요 */
-  date: string;
-  /** 한 줄 설명 */
+  id: number;
+  name: string;
   summary: string;
-  /** 대표 사진. 없으면 자리표시자를 보여줘요 */
-  thumbnailUrl?: string;
+  /** ISO 날짜 문자열 (예: "2026-07-18"). startDate === endDate면 하루짜리예요 */
+  startDate: string;
+  endDate: string;
+  /** 지금은 화면에서 안 써요. 나중에 목록 카드 데스크톱 다중 사진 배치에 쓸 예정 */
+  imageCount: number;
+  /** 목록 카드용 미리보기 사진들. 없으면 자리표시자를 보여줘요 */
+  thumbnailUrls: string[];
 };
 
-export type Activity = ActivitySummary & {
-  /** 상세 헤더의 날짜 문구 (예: "2026년 6월 21일") */
-  dateLabel: string;
-  /** 장소. 없으면 날짜만 보여요 */
-  location?: string;
-  /** 본문 문단들 */
-  body: string[];
-  /** 갤러리 사진들 */
-  imageUrls: string[];
-  /** 함께한 멤버 이름들. 멤버 프로필과는 화면(app)에서 이어요 */
-  participantNames: string[];
+export type ActivityImage = {
+  id: number;
+  url: string;
+};
+
+export type Activity = {
+  id: number;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  /** 갤러리 사진들. 대표 사진은 첫 번째(images[0])예요 */
+  images: ActivityImage[];
 };

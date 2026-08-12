@@ -43,7 +43,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                 <ImagePlaceholder ratio="16/9" />
               )}
               <div className="flex flex-col items-start gap-2">
-                <Badge variant="brand">{project.cohort}</Badge>
+                <Badge variant="brand">{project.generationNumber}기</Badge>
                 <h3 className="text-h3 text-text">{project.name}</h3>
                 <p className="text-body-sm text-text-subtle">{project.summary}</p>
               </div>

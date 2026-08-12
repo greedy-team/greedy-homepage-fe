@@ -16,7 +16,7 @@ function AdjacentCard({ activity, direction }: { activity: ActivitySummary; dire
       <span className="text-caption text-text-subtle">
         {isPrev ? "← 이전 활동" : "다음 활동 →"}
       </span>
-      <span className="text-body text-text">{activity.title}</span>
+      <span className="text-body text-text">{activity.name}</span>
     </Link>
   );
 }

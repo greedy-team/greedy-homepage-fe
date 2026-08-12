@@ -37,10 +37,14 @@ export function ProjectIntro({ project }: { project: Project }) {
 
       <div className="flex flex-col gap-2">
         <h2 className="text-h3 text-text">주요 기능</h2>
+        {/* mainFunction은 문자열 하나이고, \n으로 기능 항목을 구분해요(design-system.md 관례) */}
         <ul className="flex list-disc flex-col gap-1 pl-5 text-body text-gray-700 marker:text-text-subtle">
-          {project.mainFunction.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
+          {project.mainFunction
+            .split("\n")
+            .filter((item) => item !== "")
+            .map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
         </ul>
       </div>
 
