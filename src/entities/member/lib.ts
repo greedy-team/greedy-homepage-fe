@@ -6,6 +6,9 @@ import type { MemberAction, MemberRole, StackPosition } from "./model";
 /** memberActions만 있으면 되는 함수들이 MemberSummary/Member 둘 다 받을 수 있게 구조적 타입으로 받아요 */
 type HasMemberActions = { memberActions: MemberAction[]; isExternal?: boolean };
 
+/** 기수가 있는(null이 아닌) 활동 기록 하나 */
+type GenerationAction = MemberAction & { generationNumber: number };
+
 const STACK_POSITION_LABEL: Record<StackPosition, string> = {
   FRONTEND: "FE",
   BACKEND: "BE",
@@ -36,14 +39,13 @@ export function isFounder(member: HasMemberActions): boolean {
 }
 
 /** 기수가 있는 기록 중 가장 최신 것. 창립처럼 기수 없는 기록은 제외해요 (전체보기용)*/
-function latestGenerationAction(
-  member: HasMemberActions,
-): (MemberAction & { generationNumber: number }) | undefined {
-  let latest: (MemberAction & { generationNumber: number }) | undefined;
+function latestGenerationAction(member: HasMemberActions): GenerationAction | undefined {
+  let latest: GenerationAction | undefined;
   for (const action of member.memberActions) {
     if (action.generationNumber === null) continue;
+    // 바로 위에서 null을 걸렀으니, 여기서부터는 항상 기수가 있는 기록이에요
     if (!latest || action.generationNumber > latest.generationNumber) {
-      latest = action as MemberAction & { generationNumber: number };
+      latest = action as GenerationAction;
     }
   }
   return latest;
