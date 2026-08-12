@@ -1,6 +1,6 @@
 // memberActions(기수별 활동 기록) 배열 하나에서, 소속 문구/역할 배지/아바타를 파생시켜요.
 // 카드에 보이는 두 축(소속 문구는 고정, 역할 배지는 기수 필터에 따라 바뀜)이 이 파일의 핵심이에요.
-// 자세한 규칙은 docs/adr/009-멤버-페이지-구성.md 참고.
+// 화면 설계 의도는 docs/adr/009-멤버-페이지-구성.md, 파생 규칙 자체는 docs/adr/012-멤버-파생-로직.md 참고.
 import type { MemberAction, MemberRole, StackPosition } from "./model";
 
 /** memberActions만 있으면 되는 함수들이 MemberSummary/Member 둘 다 받을 수 있게 구조적 타입으로 받아요 */
