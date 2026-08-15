@@ -32,6 +32,8 @@ export default async function ActivityDetailPage({ params }: { params: Promise<P
   const prev = index > 0 ? activities[index - 1] : undefined;
   const next = index >= 0 && index < activities.length - 1 ? activities[index + 1] : undefined;
   const heroImageUrl = activity.images[0]?.url;
+  // description은 문자열 하나이고, \n으로 문단을 구분해요. 설명이 없는 활동은 null로 와요
+  const paragraphs = (activity.description ?? "").split("\n").filter((paragraph) => paragraph !== "");
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-12 px-5 py-16 md:px-20 md:py-20">
@@ -54,17 +56,15 @@ export default async function ActivityDetailPage({ params }: { params: Promise<P
         <ImagePlaceholder ratio="16/9" label="대표 사진" />
       )}
 
-      {/* description은 문자열 하나이고, \n으로 문단을 구분해요 */}
-      <section className="flex flex-col gap-4">
-        {activity.description
-          .split("\n")
-          .filter((paragraph) => paragraph !== "")
-          .map((paragraph, index) => (
+      {paragraphs.length > 0 && (
+        <section className="flex flex-col gap-4">
+          {paragraphs.map((paragraph, index) => (
             <p key={index} className="whitespace-pre-line text-body text-gray-700">
               {paragraph}
             </p>
           ))}
-      </section>
+        </section>
+      )}
 
       <ActivityGallery activityTitle={activity.name} images={activity.images.map((image) => image.url)} />
       <AdjacentNav prev={prev} next={next} />
