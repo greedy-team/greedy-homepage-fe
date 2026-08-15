@@ -15,17 +15,18 @@ export type ApiErrorPayload = {
 /**
  * HTTP 상태 코드와 백엔드 오류 코드를 함께 전달하는 오류예요.
  *
- * - status: HTTP 상태 코드예요(예: 404, 500).
- * - code: 백엔드가 정의한 업무용 오류 코드예요(예: 40402).
+ * - status: HTTP 상태 코드예요(예: 404, 500). 네트워크 오류에는 없을 수 있어요.
+ * - code: 백엔드가 정의한 업무용 오류 코드예요(예: 40402). 네트워크 오류에는 없어요.
  * - message: 사용자나 오류 화면에 보여줄 수 있는 메시지예요.
  */
 export class ApiError extends Error {
   constructor(
     message: string,
-    public readonly status: number,
+    public readonly status?: number,
     public readonly code?: number,
+    options?: ErrorOptions,
   ) {
-    super(message);
+    super(message, options);
     this.name = "ApiError";
   }
 }
@@ -46,7 +47,7 @@ const REQUEST_TIMEOUT_MS = 8_000;
  *
  * @param path API 경로예요. 예: `/members/1`
  * @param revalidateSeconds ISR 캐시를 다시 생성할 주기예요. 초 단위이며 0이면 캐시하지 않아요.
- * @param options `throwOnError`가 true면 HTTP 오류를 ApiError로 전달해요.
+ * @param options `throwOnError`가 true면 모든 요청 오류를 ApiError로 전달해요.
  * @returns 성공하면 JSON 데이터, 기본 오류 처리에서는 undefined를 반환해요.
  */
 export async function fetchJson<T>(
@@ -60,7 +61,22 @@ export async function fetchJson<T>(
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
 
-    const data = (await res.json().catch(() => undefined)) as T | ApiErrorPayload | undefined;
+    let data: T | ApiErrorPayload | undefined;
+    try {
+      data = (await res.json()) as T | ApiErrorPayload;
+    } catch (error) {
+      if (!res.ok) {
+        if (options?.throwOnError) {
+          throw new ApiError("API 오류 응답을 읽지 못했어요.", res.status, undefined, { cause: error });
+        }
+        return undefined;
+      }
+      if (options?.throwOnError) {
+        throw new ApiError("API 응답을 읽지 못했어요.", undefined, undefined, { cause: error });
+      }
+      return undefined;
+    }
+
     if (!res.ok) {
       const error = data as ApiErrorPayload | undefined;
       if (options?.throwOnError) {
@@ -70,8 +86,9 @@ export async function fetchJson<T>(
     }
     return data as T;
   } catch (error) {
-    if (options?.throwOnError && error instanceof ApiError) throw error;
-    return undefined;
+    if (!options?.throwOnError) return undefined;
+    if (error instanceof ApiError) throw error;
+    throw new ApiError("네트워크 요청에 실패했어요.", undefined, undefined, { cause: error });
   }
 }
 
@@ -81,7 +98,7 @@ export async function fetchJson<T>(
  *
  * @param path 목록 API 경로예요.
  * @param revalidateSeconds ISR 캐시를 다시 생성할 주기예요. 초 단위예요.
- * @param options HTTP 오류를 호출부에서 직접 처리할지 정해요.
+ * @param options 모든 요청 오류를 호출부에서 직접 처리할지 정해요.
  * @returns 응답의 items 배열. 응답이 없거나 실패하면 빈 배열이에요.
  */
 export async function fetchList<T>(
