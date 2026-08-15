@@ -17,9 +17,9 @@ export default async function Home() {
     <>
       <Hero />
       {/* 모집 중에만, 좁은 화면에서만 뜨는 하단 고정 CTA. 히어로를 지나면 나타나요 */}
-      {IS_RECRUITING && (
+      {IS_RECRUITING && APPLY_FORM_URL && (
         <BottomCtaReveal
-          href={APPLY_FORM_URL || "#"}
+          href={APPLY_FORM_URL}
           label={`${RECRUITING_COHORT} 지원하기`}
           caption="모집 마감 전에 지원해 주세요."
         />

@@ -44,8 +44,8 @@ export function MobileMenu({ recruiting, pathname, className }: MobileMenuProps)
         )}
         style={{ transitionDuration: "var(--duration-base)" }}
       >
-        {recruiting && (
-          <Button size="md" href={APPLY_FORM_URL || "#"}>
+        {recruiting && APPLY_FORM_URL && (
+          <Button size="md" href={APPLY_FORM_URL}>
             지원하기
           </Button>
         )}
@@ -109,9 +109,9 @@ export function MobileMenu({ recruiting, pathname, className }: MobileMenuProps)
               </Link>
             );
           })}
-          {recruiting && (
+          {recruiting && APPLY_FORM_URL && (
             <div className="pt-4">
-              <Button href={APPLY_FORM_URL || "#"} className="w-full">
+              <Button href={APPLY_FORM_URL} className="w-full">
                 지원하기
               </Button>
             </div>

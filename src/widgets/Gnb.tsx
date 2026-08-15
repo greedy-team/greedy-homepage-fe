@@ -44,8 +44,8 @@ export function Gnb({ recruiting = IS_RECRUITING }: GnbProps) {
               </Link>
             );
           })}
-          {recruiting && (
-            <Button size="sm" href={APPLY_FORM_URL || "#"}>
+          {recruiting && APPLY_FORM_URL && (
+            <Button size="sm" href={APPLY_FORM_URL}>
               지원하기
             </Button>
           )}
