@@ -5,7 +5,7 @@ import { Card } from "@/shared/ui/Card";
 import { ImagePlaceholder } from "@/shared/ui/ImagePlaceholder";
 import { cn, focusRing } from "@/shared/lib/cn";
 import { formatMemberRole } from "@/entities/member/lib";
-import type { Member, MemberRole } from "@/entities/member/model";
+import type { Member, ResolvedMemberRole } from "@/entities/member/model";
 import type { ProjectSummary } from "@/entities/project/model";
 import { PROFILE } from "../../_sections/content";
 
@@ -15,7 +15,7 @@ function HistoryCard({
   role,
 }: {
   generationNumber: number | null;
-  role: MemberRole;
+  role: ResolvedMemberRole;
 }) {
   return (
     <Card className="flex items-center gap-3 p-4">
@@ -42,11 +42,15 @@ export function ProfileRecord({
       <section className="flex flex-col gap-4">
         <h2 className="text-h3 text-text">{PROFILE.historyTitle}</h2>
         <ul className="flex flex-col gap-3">
-          {member.memberActions.map((action, index) => (
-            <li key={`${action.generationNumber}-${action.memberRole}-${index}`}>
-              <HistoryCard generationNumber={action.generationNumber} role={action.memberRole} />
-            </li>
-          ))}
+          {member.memberActions.map((action, index) => {
+            const role = action.memberRole ?? action.externalMemberRole;
+            if (!role) return null;
+            return (
+              <li key={`${action.generationNumber}-${role}-${index}`}>
+                <HistoryCard generationNumber={action.generationNumber} role={role} />
+              </li>
+            );
+          })}
         </ul>
       </section>
 

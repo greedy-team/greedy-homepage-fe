@@ -15,7 +15,7 @@ import {
   latestGeneration,
   roleAt,
 } from "@/entities/member/lib";
-import type { MemberRole, MemberSummary } from "@/entities/member/model";
+import type { MemberSummary, ResolvedMemberRole } from "@/entities/member/model";
 import { ALL, EMPTY, ROLE_FILTERS } from "./content";
 
 type MemberListProps = {
@@ -25,23 +25,23 @@ type MemberListProps = {
 
 type RoleFilter = (typeof ROLE_FILTERS)[number];
 
-/** 역할 필터 버킷. 창립·리드는 운영진에, 든든한 리뷰어도 내부 리뷰어와 같은 REVIEWER라 리뷰어에 묶여요(ADR009) */
-function matchesRoleFilter(role: MemberRole, filter: RoleFilter | null): boolean {
+/** 내부·외부 역할을 현재 역할 필터 버킷에 매핑해요. 외부 리뷰어는 리뷰어 필터에 포함돼요. */
+function matchesRoleFilter(role: ResolvedMemberRole, filter: RoleFilter | null): boolean {
   if (filter === null) return true;
   if (filter === "운영진") return role === "MAINTAINER" || role === "STUDY_LEAD" || role === "CO_FOUNDER";
   if (filter === "리뷰어") return role === "REVIEWER";
   return role === "STUDY_MEMBER";
 }
 
-/** 카드 정렬 1순위: 이끄는 사람 → 돕는 사람 → 배우는 사람. 든든한 리뷰어는 맨 뒤예요. 같은 순위 안에서는 최신 기수가 먼저예요(latestGeneration) */
-const ROLE_ORDER: Record<MemberRole, number> = {
+/** ADR 009의 역할 우선순위로 정렬해요. 외부 리뷰어도 내부 리뷰어와 같은 순위예요. */
+const ROLE_ORDER: Record<ResolvedMemberRole, number> = {
   CO_FOUNDER: 0,
   MAINTAINER: 0,
   STUDY_LEAD: 1,
   REVIEWER: 2,
   STUDY_MEMBER: 3,
+  PROJECT_MEMBER: 3,
 };
-const EXTERNAL_REVIEWER_ORDER = 4;
 
 /** 화면에 그릴 카드 하나 */
 type MemberCard = {
@@ -74,9 +74,9 @@ function buildCard(person: MemberSummary, cohort: number | null, roleFilter: Rol
     href: `/members/${person.id}`,
     name: person.name,
     affiliation: formatAffiliation(person),
-    badge: formatMemberBadge(person, role),
+    badge: formatMemberBadge(person, role, cohort),
     avatarSrc: getAvatarUrl(person),
-    order: person.isExternal ? EXTERNAL_REVIEWER_ORDER : ROLE_ORDER[role],
+    order: ROLE_ORDER[role],
     generation: latestGeneration(person) ?? 0,
   };
 }
