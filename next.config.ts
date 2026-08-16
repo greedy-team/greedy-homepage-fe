@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
       { protocol: "https", hostname: "github.com" },
+      { protocol: "https", hostname: "objectstorage.ap-chuncheon-1.oraclecloud.com" },
     ],
   },
 };
