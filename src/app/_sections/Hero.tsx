@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/shared/ui/Button";
 import { HERO } from "./content";
-import { APPLY_FORM_URL, IS_RECRUITING, RECRUIT_FORM_URL, SITE_NAME } from "@/shared/config/site";
+import { APPLY_FORM_URL, IS_RECRUITING, SITE_NAME } from "@/shared/config/site";
 
 type HeroProps = {
   /** 모집 상태. 기본값은 site.ts의 IS_RECRUITING이에요. 특정 상태를 미리 보고 싶을 때만 넘겨요 */
@@ -10,13 +10,10 @@ type HeroProps = {
 
 /**
  * 랜딩 첫 화면. 브랜드 그린 배경에 소개와 CTA를 얹어요.
- * 모집 중이면 지원하기 + 모집 배지, 평시면 다음 기수 알림 받기로 전환돼요.
+ * 모집 중이면 지원하기 + 모집 배지를 보여주고, 평시에는 지원 CTA를 숨겨요.
  */
 export function Hero({ recruiting = IS_RECRUITING }: HeroProps) {
-  const primary = recruiting
-    ? { label: HERO.recruiting.cta, href: APPLY_FORM_URL || "#" }
-    : { label: HERO.idle.cta, href: RECRUIT_FORM_URL || "#" };
-  const caption = recruiting ? HERO.recruiting.caption : HERO.idle.caption;
+  const showApplyCta = recruiting && Boolean(APPLY_FORM_URL);
 
   return (
     <section className="bg-brand text-white">
@@ -30,14 +27,16 @@ export function Hero({ recruiting = IS_RECRUITING }: HeroProps) {
           <h1 className="whitespace-pre-line text-h1 md:text-hero">{HERO.title}</h1>
           <p className="whitespace-pre-line text-body text-white/80">{HERO.subtitle}</p>
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <Button variant="white" size="lg" href={primary.href} className="w-full sm:w-auto">
-              {primary.label}
-            </Button>
+            {showApplyCta && (
+              <Button variant="white" size="lg" href={APPLY_FORM_URL} className="w-full sm:w-auto">
+                {HERO.recruiting.cta}
+              </Button>
+            )}
             <Button variant="outline-white" size="lg" href="/activities" className="w-full sm:w-auto">
               활동 보기
             </Button>
           </div>
-          <p className="text-caption text-white/70">{caption}</p>
+          {showApplyCta && <p className="text-caption text-white/70">{HERO.recruiting.caption}</p>}
         </div>
 
         {/* 그리디 엠블럼. 브랜드 그린 배경과 어우러지는 원형 로고예요 */}

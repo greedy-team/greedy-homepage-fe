@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/shared/ui/Button";
 import { MobileMenu } from "@/widgets/MobileMenu";
-import { APPLY_FORM_URL, IS_RECRUITING, NAV_ITEMS, RECRUIT_FORM_URL, SITE_NAME } from "@/shared/config/site";
+import { APPLY_FORM_URL, IS_RECRUITING, NAV_ITEMS, SITE_NAME } from "@/shared/config/site";
 import { cn, focusRing } from "@/shared/lib/cn";
 
 type GnbProps = {
@@ -44,13 +44,9 @@ export function Gnb({ recruiting = IS_RECRUITING }: GnbProps) {
               </Link>
             );
           })}
-          {recruiting ? (
-            <Button size="sm" href={APPLY_FORM_URL || "#"}>
+          {recruiting && APPLY_FORM_URL && (
+            <Button size="sm" href={APPLY_FORM_URL}>
               지원하기
-            </Button>
-          ) : (
-            <Button size="sm" variant="ghost" href={RECRUIT_FORM_URL || "#"}>
-              모집 알림 받기
             </Button>
           )}
         </div>

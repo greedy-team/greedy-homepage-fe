@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/shared/ui/Button";
-import { APPLY_FORM_URL, NAV_ITEMS, RECRUIT_FORM_URL } from "@/shared/config/site";
+import { APPLY_FORM_URL, NAV_ITEMS } from "@/shared/config/site";
 import { cn, focusRing } from "@/shared/lib/cn";
 
 type MobileMenuProps = {
@@ -44,13 +44,9 @@ export function MobileMenu({ recruiting, pathname, className }: MobileMenuProps)
         )}
         style={{ transitionDuration: "var(--duration-base)" }}
       >
-        {recruiting ? (
-          <Button size="md" href={APPLY_FORM_URL || "#"}>
+        {recruiting && APPLY_FORM_URL && (
+          <Button size="md" href={APPLY_FORM_URL}>
             지원하기
-          </Button>
-        ) : (
-          <Button size="md" variant="ghost" href={RECRUIT_FORM_URL || "#"}>
-            모집 알림 받기
           </Button>
         )}
       </span>
@@ -113,17 +109,13 @@ export function MobileMenu({ recruiting, pathname, className }: MobileMenuProps)
               </Link>
             );
           })}
-          <div className="pt-4">
-            {recruiting ? (
-              <Button href={APPLY_FORM_URL || "#"} className="w-full">
+          {recruiting && APPLY_FORM_URL && (
+            <div className="pt-4">
+              <Button href={APPLY_FORM_URL} className="w-full">
                 지원하기
               </Button>
-            ) : (
-              <Button variant="ghost" href={RECRUIT_FORM_URL || "#"} className="w-full">
-                모집 알림 받기
-              </Button>
-            )}
-          </div>
+            </div>
+          )}
         </nav>
       </div>
     </div>
