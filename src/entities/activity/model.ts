@@ -24,7 +24,8 @@ export type ActivityImage = {
 export type Activity = {
   id: number;
   name: string;
-  description: string;
+  /** 전체 설명. 설명이 없는 활동은 null로 와요 */
+  description: string | null;
   startDate: string;
   endDate: string;
   /** 갤러리 사진들. 대표 사진은 첫 번째(images[0])예요 */

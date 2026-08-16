@@ -1,4 +1,4 @@
-// 랜딩 페이지의 정적 문구. 서버에서 오지 않는, 우리가 직접 쓰는 카피예요.
+// 랜딩 페이지와 루트 특수 화면(404)의 정적 문구. 서버에서 오지 않는, 우리가 직접 쓰는 카피예요.
 // 프로젝트·활동처럼 백엔드에서 올 데이터는 entities에 있어요.
 import { CURRENT_GENERATION, TEAM_PROJECT_COUNT, TOTAL_MEMBER_COUNT, TRACKS } from "@/shared/config/site";
 
@@ -39,3 +39,10 @@ export const STATS = [
   { value: TRACKS, label: "트랙" },
   { value: String(TEAM_PROJECT_COUNT), label: "팀 프로젝트" },
 ] as const;
+
+/** 404 화면 문구. 자주 가는 페이지 링크는 GNB가 하고 있어서 문구와 홈 버튼만 둬요 */
+export const NOT_FOUND = {
+  title: "앗, 찾는 페이지가 없어요",
+  description: "주소가 바뀌었거나 사라진 페이지예요. 입력한 주소를 다시 확인해 보세요.",
+  cta: "홈으로 가기",
+} as const;
