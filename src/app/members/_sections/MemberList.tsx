@@ -51,7 +51,6 @@ type MemberCard = {
   affiliation?: string;
   badge: string;
   avatarSrc?: string;
-  githubUrl?: string;
   order: number;
   generation: number;
 };
@@ -77,7 +76,6 @@ function buildCard(person: MemberSummary, cohort: number | null, roleFilter: Rol
     affiliation: formatAffiliation(person),
     badge: formatMemberBadge(person, role),
     avatarSrc: getAvatarUrl(person),
-    githubUrl: person.githubUrl,
     order: person.isExternal ? EXTERNAL_REVIEWER_ORDER : ROLE_ORDER[role],
     generation: latestGeneration(person) ?? 0,
   };
@@ -132,7 +130,6 @@ export function MemberList({ members, cohorts }: MemberListProps) {
                     )}
                   </div>
                   <Badge variant={card.badge === "운영진" ? "brand" : "outline"}>{card.badge}</Badge>
-                  {card.githubUrl && <span className="text-caption text-text-subtle">GitHub</span>}
                 </Card>
               </Link>
             </li>
