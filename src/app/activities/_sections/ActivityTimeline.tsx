@@ -9,17 +9,26 @@ import { formatActivityDateShort } from "@/entities/activity/lib";
 import type { ActivitySummary } from "@/entities/activity/model";
 import { EMPTY } from "./content";
 
-// TODO: 데스크톱에서는 imageCount 기반으로 여러 장(최대 3장)을 가로로 배치할 예정이에요.
-// 지금은 API 연동 스코프라 UI는 그대로 두고, 별도 디자인 시스템 PR에서 다뤄요.
-/** 대표 사진 한 장. 주소가 없으면 자리표시자를 보여줘요 */
+/** 모바일에서는 첫 사진만, 데스크톱에서는 활동 사진을 최대 3장까지 가로로 보여줘요. */
 function Thumbnail({ activity, className }: { activity: ActivitySummary; className?: string }) {
-  const thumbnailUrl = activity.thumbnailUrls[0];
-  if (!thumbnailUrl) {
+  const thumbnailUrls = activity.thumbnailUrls.slice(0, Math.min(activity.imageCount, 3));
+  if (thumbnailUrls.length === 0) {
     return <ImagePlaceholder ratio="4/3" className={className} />;
   }
+
   return (
-    <div className={cn("relative aspect-4/3 overflow-hidden rounded-md bg-gray-100", className)}>
-      <Image src={thumbnailUrl} alt="" fill sizes="(max-width: 768px) 100vw, 200px" className="object-cover" />
+    <div className={cn("flex gap-2 overflow-hidden rounded-md bg-gray-100", className)}>
+      {thumbnailUrls.map((thumbnailUrl, index) => (
+        <div
+          key={`${activity.id}-${index}`}
+          className={cn(
+            "relative aspect-4/3 min-w-0 flex-1 md:w-50 md:flex-none",
+            index > 0 && "hidden md:block",
+          )}
+        >
+          <Image src={thumbnailUrl} alt="" fill sizes="(max-width: 768px) 100vw, 200px" className="object-cover" />
+        </div>
+      ))}
     </div>
   );
 }
@@ -41,8 +50,8 @@ export function ActivityTimeline({ activities }: { activities: ActivitySummary[]
           <TimelineItem date={formatActivityDateShort(activity.startDate)} last={index === activities.length - 1}>
             <Link href={`/activities/${activity.id}`} className={cn("block rounded-lg", focusRing)}>
               <Card className="flex flex-col items-stretch gap-3 transition-colors hover:border-gray-300 md:items-start">
-                {/* 카드에는 대표 사진 하나만. 사진을 펼쳐 보는 건 상세의 일이에요 */}
-                <Thumbnail activity={activity} className="order-first w-full md:order-none md:w-50" />
+                {/* 카드에서는 활동 사진을 미리 보고, 사진을 크게 보는 건 상세의 일이에요 */}
+                <Thumbnail activity={activity} className="order-first w-full md:order-none md:w-auto" />
                 <div className="order-none flex flex-col gap-1 md:order-first">
                   <h2 className="text-h3 text-text">{activity.name}</h2>
                   <p className="hidden text-body-sm text-text-subtle md:block">{activity.summary}</p>
