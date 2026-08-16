@@ -4,11 +4,7 @@ import type { Member, MemberSummary } from "./model";
 
 const REVALIDATE_SECONDS = 60 * 60;
 
-/**
- * 멤버 목록(내부 멤버 + 든든한 리뷰어). isExternal로 구분해요.
- * TODO: 실제 백엔드는 아직 이 통합이 안 돼 있어요(외부 리뷰어는 별도 테이블·id 체계, 기수 이력 테이블도 없음).
- * MSW는 이상적인 모양(같은 API/id 체계 + isExternal)으로 이미 이렇게 동작해요.
- */
+/** 멤버 목록(내부 멤버 + 외부 멤버). 활동 기록의 역할 필드로 둘을 구분해요. */
 export async function getMembers(): Promise<MemberSummary[]> {
   return fetchList<MemberSummary>("/members", REVALIDATE_SECONDS);
 }
