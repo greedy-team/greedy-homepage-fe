@@ -4,23 +4,23 @@ import { Badge } from "@/shared/ui/Badge";
 import { Card } from "@/shared/ui/Card";
 import { ImagePlaceholder } from "@/shared/ui/ImagePlaceholder";
 import { cn, focusRing } from "@/shared/lib/cn";
-import { formatMemberRole } from "@/entities/member/lib";
+import { formatMemberRole, groupHistoryByGeneration } from "@/entities/member/lib";
 import type { Member, ResolvedMemberRole } from "@/entities/member/model";
 import type { ProjectSummary } from "@/entities/project/model";
 import { PROFILE } from "../../_sections/content";
 
-/** 기수 이력 한 장. generationNumber가 없으면(창립 멤버) "창립"으로 보여요 */
+/** 기수 이력 한 장. 한 기수에 겸한 역할은 가운뎃점으로 이어 붙여요. 창립은 기수 대신 "창립" */
 function HistoryCard({
   generationNumber,
-  role,
+  roles,
 }: {
   generationNumber: number | null;
-  role: ResolvedMemberRole;
+  roles: ResolvedMemberRole[];
 }) {
   return (
     <Card className="flex items-center gap-3 p-4">
       <Badge variant="brand">{generationNumber !== null ? `${generationNumber}기` : "창립"}</Badge>
-      <span className="text-body text-text">{formatMemberRole(role)}</span>
+      <span className="text-body text-text">{roles.map(formatMemberRole).join(" · ")}</span>
     </Card>
   );
 }
@@ -42,15 +42,11 @@ export function ProfileRecord({
       <section className="flex flex-col gap-4">
         <h2 className="text-h3 text-text">{PROFILE.historyTitle}</h2>
         <ul className="flex flex-col gap-3">
-          {member.memberActions.map((action, index) => {
-            const role = action.memberRole ?? action.externalMemberRole;
-            if (!role) return null;
-            return (
-              <li key={`${action.generationNumber}-${role}-${index}`}>
-                <HistoryCard generationNumber={action.generationNumber} role={role} />
-              </li>
-            );
-          })}
+          {groupHistoryByGeneration(member).map((history) => (
+            <li key={history.generationNumber ?? "founding"}>
+              <HistoryCard generationNumber={history.generationNumber} roles={history.roles} />
+            </li>
+          ))}
         </ul>
       </section>
 

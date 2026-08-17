@@ -66,31 +66,42 @@ export function latestGeneration(member: HasMemberActions): number | undefined {
   return latestGenerationAction(member)?.generationNumber;
 }
 
-/** 최신 기수 활동 중 트랙 정보가 있는 기록의 스택이에요. 운영진 기록처럼 null인 값은 건너뛰어요. */
-function latestGenerationStackPosition(member: HasMemberActions): StackPosition | undefined {
-  const generation = latestGeneration(member);
-  if (generation === undefined) return undefined;
+/** 기수가 있는 기록 중 가장 이른 것. 그 사람이 그리디에 들어온 시점이에요 */
+function firstGeneration(member: HasMemberActions): number | undefined {
+  let first: number | undefined;
+  for (const action of member.memberActions) {
+    if (action.generationNumber === null) continue;
+    if (first === undefined || action.generationNumber < first) first = action.generationNumber;
+  }
+  return first;
+}
 
+/** 그 기수 활동 중 트랙 정보가 있는 기록의 스택이에요. 운영진 기록처럼 null인 값은 건너뛰어요. */
+function stackPositionAt(member: HasMemberActions, generation: number): StackPosition | undefined {
   return member.memberActions.find(
     (action) => action.generationNumber === generation && action.stackPosition !== null,
   )?.stackPosition ?? undefined;
 }
 
 /**
- * 카드 상단의 소속 문구 (예: "4기 BE"). 항상 최신 기수 기준이고, 기수 필터와 무관하게 고정이에요.
+ * 카드 상단의 소속 문구 (예: "2기 FE"). 들어온 기수 기준이고, 기수 필터와 무관하게 고정이에요.
+ * 소속은 "언제 들어왔나", 역할 배지는 "지금 무엇을 하나"로 축이 나뉘어요(ADR009).
  * 창립 멤버 기록이 있으면 기수 대신 "창립 멤버"를 보여줘요.
- * 든든한 리뷰어(외부)는 기수를 노출하지 않고 트랙 약어만 보여줘요(ADR009).
+ * 든든한 리뷰어(외부)는 들어온 기수라는 게 없어서 트랙 약어만 보여줘요(ADR009).
  */
 export function formatAffiliation(member: HasMemberActions): string | undefined {
   if (isFounder(member)) return "창립 멤버";
 
-  const generation = latestGeneration(member);
-  if (generation === undefined) return undefined;
-
-  const stackPosition = latestGenerationStackPosition(member);
   if (isExternalMember(member)) {
+    const generation = latestGeneration(member);
+    const stackPosition = generation === undefined ? undefined : stackPositionAt(member, generation);
     return stackPosition ? formatStackPosition(stackPosition) : undefined;
   }
+
+  const generation = firstGeneration(member);
+  if (generation === undefined) return undefined;
+
+  const stackPosition = stackPositionAt(member, generation);
   return stackPosition ? `${generation}기 ${formatStackPosition(stackPosition)}` : `${generation}기`;
 }
 
@@ -115,6 +126,47 @@ export function formatMemberBadge(
 ): string {
   if (isExternalMember(member, generationNumber) && role === "REVIEWER") return "든든한 리뷰어";
   return formatMemberRole(role);
+}
+
+/** 활동 이력 카드 한 장 분량. 한 기수에 역할을 겸했으면 roles에 함께 담겨요 */
+export type GenerationHistory = {
+  /** 창립처럼 기수 개념이 없는 기록은 null이에요 */
+  generationNumber: number | null;
+  roles: ResolvedMemberRole[];
+};
+
+/** 이력 카드 안에서 역할을 늘어놓는 순서. 이끄는 쪽이 앞이에요(ADR009의 역할 우선순위) */
+export const MEMBER_ROLE_ORDER: Record<ResolvedMemberRole, number> = {
+  CO_FOUNDER: 0,
+  MAINTAINER: 0,
+  STUDY_LEAD: 1,
+  REVIEWER: 2,
+  STUDY_MEMBER: 3,
+  PROJECT_MEMBER: 3,
+};
+
+/**
+ * 활동 이력을 기수별로 한 장씩 묶어요. 서버는 한 기수의 겸직을 여러 건으로 주는데,
+ * 화면에서는 "4기 · 운영진 · 스터디 리드"처럼 한 줄로 보여줘요.
+ * 최신 기수가 위로 오고, 기수가 없는 창립 기록은 맨 아래예요.
+ */
+export function groupHistoryByGeneration(member: HasMemberActions): GenerationHistory[] {
+  const byGeneration = new Map<number | null, ResolvedMemberRole[]>();
+  for (const action of member.memberActions) {
+    const role = action.memberRole ?? action.externalMemberRole;
+    if (!role) continue;
+    const roles = byGeneration.get(action.generationNumber) ?? [];
+    if (!roles.includes(role)) roles.push(role);
+    byGeneration.set(action.generationNumber, roles);
+  }
+
+  return [...byGeneration]
+    .map(([generationNumber, roles]) => ({
+      generationNumber,
+      roles: [...roles].sort((a, b) => MEMBER_ROLE_ORDER[a] - MEMBER_ROLE_ORDER[b]),
+    }))
+    // 창립(기수 없음)은 1기보다도 앞선 기록이라 맨 아래에 둬요
+    .sort((a, b) => (b.generationNumber ?? -1) - (a.generationNumber ?? -1));
 }
 
 /** 프로필 사진 주소. 깃허브 주소에서 아바타를 가져와요(ADR009) */
