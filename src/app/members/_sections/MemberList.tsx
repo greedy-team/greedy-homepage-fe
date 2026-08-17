@@ -9,6 +9,7 @@ import { EmptyState } from "@/shared/ui/EmptyState";
 import { FilterChip } from "@/shared/ui/FilterChip";
 import { cn, focusRing } from "@/shared/lib/cn";
 import {
+  MEMBER_ROLE_ORDER,
   formatAffiliation,
   formatMemberBadge,
   getAvatarUrl,
@@ -32,16 +33,6 @@ function matchesRoleFilter(role: ResolvedMemberRole, filter: RoleFilter | null):
   if (filter === "리뷰어") return role === "REVIEWER";
   return role === "STUDY_MEMBER";
 }
-
-/** ADR 009의 역할 우선순위로 정렬해요. 외부 리뷰어도 내부 리뷰어와 같은 순위예요. */
-const ROLE_ORDER: Record<ResolvedMemberRole, number> = {
-  CO_FOUNDER: 0,
-  MAINTAINER: 0,
-  STUDY_LEAD: 1,
-  REVIEWER: 2,
-  STUDY_MEMBER: 3,
-  PROJECT_MEMBER: 3,
-};
 
 /** 화면에 그릴 카드 하나 */
 type MemberCard = {
@@ -76,7 +67,7 @@ function buildCard(person: MemberSummary, cohort: number | null, roleFilter: Rol
     affiliation: formatAffiliation(person),
     badge: formatMemberBadge(person, role, cohort),
     avatarSrc: getAvatarUrl(person),
-    order: ROLE_ORDER[role],
+    order: MEMBER_ROLE_ORDER[role],
     generation: latestGeneration(person) ?? 0,
   };
 }
