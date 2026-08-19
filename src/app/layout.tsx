@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 import { Gnb } from "@/widgets/Gnb";
 import { Footer } from "@/widgets/Footer";
-import { GA_ID, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/shared/config/site";
+import { CLARITY_ID, GA_ID, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/shared/config/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -38,7 +39,18 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
       </body>
-      {process.env.NODE_ENV === "production" && <GoogleAnalytics gaId={GA_ID} />}
+      {process.env.NODE_ENV === "production" && (
+        <>
+          <GoogleAnalytics gaId={GA_ID} />
+          <Script id="clarity-init" strategy="afterInteractive">
+            {`(function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "${CLARITY_ID}");`}
+          </Script>
+        </>
+      )}
     </html>
   );
 }

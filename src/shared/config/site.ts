@@ -10,6 +10,9 @@ export const SITE_URL = "https://www.greedy-homepage.com";
 /** 구글 애널리틱스 4 측정 ID */
 export const GA_ID = "G-VKLBWJPHG1";
 
+/** 마이크로소프트 클래리티 프로젝트 ID. clarity.microsoft.com에서 발급받은 실제 ID로 교체해요 */
+export const CLARITY_ID = "REPLACE_WITH_CLARITY_ID";
+
 /** 모집 상태 스위치. GNB 버튼, 히어로, 하단 고정 CTA가 이 값 하나를 봐요. */
 export const IS_RECRUITING = true;
 
