@@ -50,8 +50,8 @@ export default async function ProjectDetailPage({ params }: { params: Promise<Pa
           <ProjectLinks project={project} fullWidth />
         </div>
       </div>
-      <ProjectIntro project={project} />
       <ScreenGallery projectName={project.name} images={project.screenshotUrls} />
+      <ProjectIntro project={project} />
       <Contributors members={project.team} />
       <AdjacentNav prev={prev} next={next} />
     </div>

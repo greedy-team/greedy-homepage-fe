@@ -17,7 +17,7 @@ export const EMPTY = {
 } as const;
 
 export const PROFILE = {
-  back: "멤버로",
+  back: "이전",
   github: "GitHub 보기",
   historyTitle: "활동 이력",
   projectsTitle: "프로젝트",
