@@ -109,7 +109,7 @@ export function formatAffiliation(member: HasMemberActions): string | undefined 
 /**
  * 역할 배지. generationNumber가 null이면 "전체" 탭, 아니면 그 기수 시점 역할이에요.
  * "전체"는 항상 지금(CURRENT_GENERATION) 시점 기준이에요 — 지나간 최고 역할이 아니라
- * 지금 뭘 하고 있는지를 보여줘요. 지금 기록이 없으면 창립 멤버는 "운영진", 나머지는 "멤버"로 내려요.
+ * 지금 뭘 하고 있는지를 보여줘요. 창립 여부와 무관하게, 지금 기록이 없으면 "멤버"로 내려요.
  * 배지 텍스트로 바꾸려면 formatMemberRole을 같이 써요.
  */
 export function roleAt(member: HasMemberActions, generationNumber: number | null): ResolvedMemberRole | undefined {
@@ -120,7 +120,7 @@ export function roleAt(member: HasMemberActions, generationNumber: number | null
 
   const current = member.memberActions.find((item) => item.generationNumber === CURRENT_GENERATION);
   if (current) return current.memberRole ?? current.externalMemberRole ?? undefined;
-  return isFounder(member) ? "CO_FOUNDER" : "STUDY_MEMBER";
+  return "STUDY_MEMBER";
 }
 
 /** 역할 배지 문구. 외부 리뷰어는 내부 리뷰어와 구분해 보여줘요. */
