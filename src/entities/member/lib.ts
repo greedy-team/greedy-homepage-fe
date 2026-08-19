@@ -1,6 +1,7 @@
 // memberActions(기수별 활동 기록) 배열 하나에서, 소속 문구/역할 배지/아바타를 파생시켜요.
 // 카드에 보이는 두 축(소속 문구는 고정, 역할 배지는 기수 필터에 따라 바뀜)이 이 파일의 핵심이에요.
 // 화면 설계 의도는 docs/adr/009-멤버-페이지-구성.md, 파생 규칙 자체는 docs/adr/012-멤버-파생-로직.md 참고.
+import { CURRENT_GENERATION } from "@/shared/config/site";
 import type { MemberAction, ResolvedMemberRole, StackPosition } from "./model";
 
 /** memberActions만 있으면 되는 함수들이 MemberSummary/Member 둘 다 받을 수 있게 구조적 타입으로 받아요 */
@@ -106,7 +107,9 @@ export function formatAffiliation(member: HasMemberActions): string | undefined 
 }
 
 /**
- * 역할 배지. generationNumber가 null이면 "전체" 탭(최신 역할), 아니면 그 기수 시점 역할이에요.
+ * 역할 배지. generationNumber가 null이면 "전체" 탭, 아니면 그 기수 시점 역할이에요.
+ * "전체"는 항상 지금(CURRENT_GENERATION) 시점 기준이에요 — 지나간 최고 역할이 아니라
+ * 지금 뭘 하고 있는지를 보여줘요. 지금 기록이 없으면 창립 멤버는 "운영진", 나머지는 "멤버"로 내려요.
  * 배지 텍스트로 바꾸려면 formatMemberRole을 같이 써요.
  */
 export function roleAt(member: HasMemberActions, generationNumber: number | null): ResolvedMemberRole | undefined {
@@ -114,8 +117,10 @@ export function roleAt(member: HasMemberActions, generationNumber: number | null
     const action = member.memberActions.find((item) => item.generationNumber === generationNumber);
     return action?.memberRole ?? action?.externalMemberRole ?? undefined;
   }
-  const action = latestGenerationAction(member) ?? member.memberActions[0];
-  return action?.memberRole ?? action?.externalMemberRole ?? undefined;
+
+  const current = member.memberActions.find((item) => item.generationNumber === CURRENT_GENERATION);
+  if (current) return current.memberRole ?? current.externalMemberRole ?? undefined;
+  return isFounder(member) ? "CO_FOUNDER" : "STUDY_MEMBER";
 }
 
 /** 역할 배지 문구. 외부 리뷰어는 내부 리뷰어와 구분해 보여줘요. */
