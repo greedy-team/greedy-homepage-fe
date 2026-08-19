@@ -11,7 +11,7 @@ export function DetailHeader({ project }: { project: Project }) {
   return (
     <header className="flex flex-col gap-4">
       <TextLink variant="back" href="/projects">
-        프로젝트로
+        이전
       </TextLink>
       <Badge variant="brand">{project.generationNumber}기</Badge>
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
