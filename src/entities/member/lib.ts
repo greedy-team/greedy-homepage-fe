@@ -1,6 +1,7 @@
 // memberActions(기수별 활동 기록) 배열 하나에서, 소속 문구/역할 배지/아바타를 파생시켜요.
 // 카드에 보이는 두 축(소속 문구는 고정, 역할 배지는 기수 필터에 따라 바뀜)이 이 파일의 핵심이에요.
 // 화면 설계 의도는 docs/adr/009-멤버-페이지-구성.md, 파생 규칙 자체는 docs/adr/012-멤버-파생-로직.md 참고.
+import { CURRENT_GENERATION } from "@/shared/config/site";
 import type { MemberAction, ResolvedMemberRole, StackPosition } from "./model";
 
 /** memberActions만 있으면 되는 함수들이 MemberSummary/Member 둘 다 받을 수 있게 구조적 타입으로 받아요 */
@@ -105,17 +106,46 @@ export function formatAffiliation(member: HasMemberActions): string | undefined 
   return stackPosition ? `${generation}기 ${formatStackPosition(stackPosition)}` : `${generation}기`;
 }
 
+/** 이력 카드·역할 필터에서 "이끄는 쪽이 앞"을 판단하는 우선순위예요. 값이 작을수록 우선이에요. */
+export const MEMBER_ROLE_ORDER: Record<ResolvedMemberRole, number> = {
+  CO_FOUNDER: 0,
+  MAINTAINER: 0,
+  STUDY_LEAD: 1,
+  REVIEWER: 2,
+  STUDY_MEMBER: 3,
+  PROJECT_MEMBER: 3,
+};
+
 /**
- * 역할 배지. generationNumber가 null이면 "전체" 탭(최신 역할), 아니면 그 기수 시점 역할이에요.
+ * 그 기수에 겸한 역할 전부. generationNumber가 null이면 "전체" 탭이라 항상 지금(CURRENT_GENERATION)
+ * 시점을 봐요. 한 기수에 여러 역할을 겸했으면(예: 운영진 + 리뷰어) 배열에 전부 담겨요.
+ * 지금 기록이 없으면(전체 탭 한정) "멤버"로 봐요.
+ */
+export function rolesAt(member: HasMemberActions, generationNumber: number | null): ResolvedMemberRole[] {
+  const target = generationNumber ?? CURRENT_GENERATION;
+  const roles = [
+    ...new Set(
+      member.memberActions
+        .filter((action) => action.generationNumber === target)
+        .map((action) => action.memberRole ?? action.externalMemberRole)
+        .filter((role): role is ResolvedMemberRole => role !== null),
+    ),
+  ];
+  if (roles.length > 0) return roles;
+  return generationNumber === null ? ["STUDY_MEMBER"] : [];
+}
+
+/**
+ * 역할 배지에 쓸 대표 역할 하나. 겸직 중이면 이끄는 역할이 우선이에요(MEMBER_ROLE_ORDER).
+ * generationNumber가 null이면 "전체" 탭 — 지나간 최고 역할이 아니라 지금(CURRENT_GENERATION)
+ * 뭘 하고 있는지를 보여줘요. 창립 여부와 무관하게, 지금 기록이 없으면 "멤버"로 내려요.
  * 배지 텍스트로 바꾸려면 formatMemberRole을 같이 써요.
  */
 export function roleAt(member: HasMemberActions, generationNumber: number | null): ResolvedMemberRole | undefined {
-  if (generationNumber !== null) {
-    const action = member.memberActions.find((item) => item.generationNumber === generationNumber);
-    return action?.memberRole ?? action?.externalMemberRole ?? undefined;
-  }
-  const action = latestGenerationAction(member) ?? member.memberActions[0];
-  return action?.memberRole ?? action?.externalMemberRole ?? undefined;
+  return rolesAt(member, generationNumber).reduce<ResolvedMemberRole | undefined>(
+    (leading, role) => (leading === undefined || MEMBER_ROLE_ORDER[role] < MEMBER_ROLE_ORDER[leading] ? role : leading),
+    undefined,
+  );
 }
 
 /** 역할 배지 문구. 외부 리뷰어는 내부 리뷰어와 구분해 보여줘요. */
@@ -133,16 +163,6 @@ export type GenerationHistory = {
   /** 창립처럼 기수 개념이 없는 기록은 null이에요 */
   generationNumber: number | null;
   roles: ResolvedMemberRole[];
-};
-
-/** 이력 카드 안에서 역할을 늘어놓는 순서. 이끄는 쪽이 앞이에요(ADR009의 역할 우선순위) */
-export const MEMBER_ROLE_ORDER: Record<ResolvedMemberRole, number> = {
-  CO_FOUNDER: 0,
-  MAINTAINER: 0,
-  STUDY_LEAD: 1,
-  REVIEWER: 2,
-  STUDY_MEMBER: 3,
-  PROJECT_MEMBER: 3,
 };
 
 /**

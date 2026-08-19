@@ -15,6 +15,7 @@ import {
   getAvatarUrl,
   latestGeneration,
   roleAt,
+  rolesAt,
 } from "@/entities/member/lib";
 import type { MemberSummary, ResolvedMemberRole } from "@/entities/member/model";
 import { ALL, EMPTY, ROLE_FILTERS } from "./content";
@@ -26,12 +27,18 @@ type MemberListProps = {
 
 type RoleFilter = (typeof ROLE_FILTERS)[number];
 
-/** 내부·외부 역할을 현재 역할 필터 버킷에 매핑해요. 외부 리뷰어는 리뷰어 필터에 포함돼요. */
-function matchesRoleFilter(role: ResolvedMemberRole, filter: RoleFilter | null): boolean {
+/**
+ * 내부·외부 역할을 현재 역할 필터 버킷에 매핑해요. 외부 리뷰어는 리뷰어 필터에 포함돼요.
+ * 한 기수에 역할을 겸했으면(예: 운영진 + 리뷰어) 그중 하나만 맞아도 걸려요 —
+ * 배지에는 이끄는 역할 하나만 보이지만, 필터는 겸한 역할 전부를 봐요.
+ */
+function matchesRoleFilter(roles: ResolvedMemberRole[], filter: RoleFilter | null): boolean {
   if (filter === null) return true;
-  if (filter === "운영진") return role === "MAINTAINER" || role === "STUDY_LEAD" || role === "CO_FOUNDER";
-  if (filter === "리뷰어") return role === "REVIEWER";
-  return role === "STUDY_MEMBER";
+  if (filter === "운영진") {
+    return roles.some((role) => role === "MAINTAINER" || role === "STUDY_LEAD" || role === "CO_FOUNDER");
+  }
+  if (filter === "리뷰어") return roles.some((role) => role === "REVIEWER");
+  return roles.some((role) => role === "STUDY_MEMBER");
 }
 
 /** 화면에 그릴 카드 하나 */
@@ -57,8 +64,9 @@ function buildCard(person: MemberSummary, cohort: number | null, roleFilter: Rol
   if (cohort !== null && !person.memberActions.some((action) => action.generationNumber === cohort)) {
     return null;
   }
+  const roles = rolesAt(person, cohort);
   const role = roleAt(person, cohort);
-  if (!role || !matchesRoleFilter(role, roleFilter)) return null;
+  if (!role || !matchesRoleFilter(roles, roleFilter)) return null;
 
   return {
     key: String(person.id),
