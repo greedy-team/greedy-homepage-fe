@@ -7,7 +7,9 @@ const nextConfig: NextConfig = {
   // notFound()를 부른 경우만 잡히고, 그 밖의 주소는 Next 기본 화면이 나와요.
   experimental: { globalNotFound: true },
   images: {
-    // 멤버 아바타는 깃허브 프로필 사진을 써요. github.com/{id}.png는 avatars 도메인으로 리다이렉트돼요
+    // Vercel 이미지 최적화 무료 한도를 넘으면 사진이 402로 막혀서, 최적화를 끄고 원본을 그대로 서빙해요.
+    unoptimized: true,
+    // 최적화를 다시 켤 때를 위해 남겨둬요 (unoptimized면 안 쓰여요)
     remotePatterns: [
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
       { protocol: "https", hostname: "github.com" },
