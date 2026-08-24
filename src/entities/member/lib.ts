@@ -169,9 +169,6 @@ export function groupHistoryByGeneration(member: HasMemberActions): GenerationHi
     .sort((a, b) => (b.generationNumber ?? -1) - (a.generationNumber ?? -1));
 }
 
-/** 프로필 사진 주소. 깃허브 주소에서 아바타를 가져와요(ADR009) */
-export function getAvatarUrl(person: { githubUrl?: string }): string | undefined {
-  if (!person.githubUrl) return undefined;
-  const username = person.githubUrl.replace(/\/$/, "").split("/").pop();
-  return username ? `https://github.com/${username}.png` : undefined;
-}
+// getAvatarUrl은 멤버·프로젝트가 함께 쓰는 규칙이라 shared/lib으로 옮겼어요.
+// 기존 사용처가 member/lib에서 계속 가져올 수 있게 다시 내보내요.
+export { getAvatarUrl } from "@/shared/lib/avatar";
