@@ -8,6 +8,8 @@ export type ProjectMember = {
   memberId: number;
   name: string;
   stackPosition: StackPosition;
+  /** 팀원 아바타. 멤버 프로필과 같은 방식으로 깃허브 사진을 만들어 써요 */
+  githubUrl?: string;
 };
 
 /** 목록 카드에 필요한 최소 정보. 상세는 Project로 더 담아요 */

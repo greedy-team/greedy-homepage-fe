@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Avatar } from "@/shared/ui/Avatar";
 import { Badge } from "@/shared/ui/Badge";
+import { getAvatarUrl } from "@/shared/lib/avatar";
 import { cn, focusRing } from "@/shared/lib/cn";
 import { formatStackPosition } from "@/entities/project/lib";
 import type { ProjectMember } from "@/entities/project/model";
@@ -20,7 +21,7 @@ export function Contributors({ members }: { members: ProjectMember[] }) {
               href={`/members/${member.memberId}`}
               className={cn("flex items-center gap-2 rounded-full", focusRing)}
             >
-              <Avatar name={member.name} size="sm" />
+              <Avatar name={member.name} src={getAvatarUrl(member)} size="sm" />
               <span className="text-body-sm text-text">{member.name}</span>
               <Badge variant="outline">{formatStackPosition(member.stackPosition)}</Badge>
             </Link>
