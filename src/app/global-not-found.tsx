@@ -5,6 +5,7 @@ import { Gnb } from "@/widgets/Gnb";
 import { Footer } from "@/widgets/Footer";
 import { SITE_NAME } from "@/shared/config/site";
 import { NOT_FOUND } from "./_sections/content";
+import { GlobalNotFoundNavigation } from "./_sections/GlobalNotFoundNavigation";
 import { NotFoundView } from "./_sections/NotFoundView";
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function GlobalNotFound() {
   return (
     <html lang="ko" className="h-full antialiased">
       <body className="flex min-h-full flex-col">
+        <GlobalNotFoundNavigation />
         <Gnb />
         <main className="flex-1">
           <NotFoundView />
