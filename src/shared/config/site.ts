@@ -14,10 +14,10 @@ export const GA_ID = "G-VKLBWJPHG1";
 export const CLARITY_ID = "y4vwd8zvl2";
 
 /** 모집 상태 스위치. GNB 버튼, 히어로, 하단 고정 CTA가 이 값 하나를 봐요. */
-export const IS_RECRUITING = true;
+export const IS_RECRUITING = false;
 
 /** 지금 진행 중인 기수. 기수가 바뀌면 이 값만 바꿔요. 모집 문구·통계·기수 필터가 전부 여기서 파생돼요. */
-export const CURRENT_GENERATION = 4;
+export const CURRENT_GENERATION = 5;
 
 /** 지원 폼(모집 기간). 모집이 열리면 주소를 채워요. */
 export const APPLY_FORM_URL =
